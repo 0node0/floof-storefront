@@ -1,0 +1,24 @@
+---
+import CartBadge from "@/components/CartBadge";
+const links = [
+  { href: "/store", label: "Shop" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+---
+<header class="sticky top-0 z-50 bg-floof-cream/90 backdrop-blur-md border-b border-floof-dark/5">
+  <nav class="mx-auto flex items-center justify-between px-6 py-4 max-w-7xl">
+    <a href="/" class="text-2xl font-bold tracking-tight text-floof-pink hover:text-floof-coral transition-colors">FLOOF</a>
+    <div class="hidden md:flex items-center gap-8">
+      {links.map(l => (<a href={l.href} class="text-sm font-medium text-floof-dark/70 hover:text-floof-pink transition-colors">{l.label}</a>))}
+    </div>
+    <div class="flex items-center gap-4">
+      <CartBadge client:load />
+      <button id="mobile-btn" class="md:hidden flex items-center text-floof-dark/70" aria-label="Toggle menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">{links.map(l => (<a href={l.href} class="block py-2 text-sm font-medium text-floof-dark/70 hover:text-floof-pink transition-colors">{l.label}</a>))}</div>
+</header>
+<script is:inline>document.getElementById("mobile-btn")?.addEventListener("click",()=>document.getElementById("mobile-menu")?.classList.toggle("hidden"))</script>

@@ -1,0 +1,9 @@
+name = "floof-storefront"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "./dist"
+
+[vars]
+PUBLIC_MEDUSA_URL = "https://api.floof.space"
+PUBLIC_MEDUSA_PK = ""
+PUBLIC_STRIPE_PK = ""

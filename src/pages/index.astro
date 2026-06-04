@@ -1,0 +1,41 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ProductCard from "@/components/ProductCard.astro";
+import type { FloofProduct } from "@/components/ProductCard.astro";
+import { listProducts } from "@/lib/medusa";
+
+let products: FloofProduct[] = [];
+try {
+  const { products: raw } = await listProducts();
+  products = raw.slice(0, 4).map(p => ({
+    id: p.id, slug: p.handle, name: p.title,
+    phrase: p.title.split(" ").slice(0, 3).join(" "),
+    description: p.description || "", price: (p.variants?.[0]?.prices?.[0]?.amount || 0) / 100,
+    category: (p.metadata?.category as string) || "tees",
+    colors: [...new Set(p.variants?.map(v => v.options?.find(o => o.option?.title === "Color")?.value).filter(Boolean) as string[])],
+    image: p.images?.[0]?.url || "",
+  }));
+} catch { /* empty — SSR will show empty state */ }
+
+const ogImage = products[0]?.image || "/favicon.svg";
+---
+<Layout title="Fun, witty threads from SW Florida" description="Floof is a fun, young, vibrant clothing brand from Southwest Florida. T-shirts, hoodies, hats & more." image={ogImage}>
+  <section class="relative overflow-hidden bg-floof-dark text-white">
+    <div class="absolute inset-0 bg-floof-gradient opacity-20"></div>
+    <div class="relative mx-auto max-w-7xl px-6 py-24 md:py-32 lg:py-40">
+      <div class="max-w-2xl">
+        <p class="text-sm font-semibold uppercase tracking-widest text-floof-yellow">Southwest Florida</p>
+        <h1 class="mt-4 text-5xl font-bold leading-tight md:text-7xl">Life's too short for <span class="text-floof-gradient">boring clothes.</span></h1>
+        <p class="mt-6 text-lg text-white/70 max-w-lg">Fun, witty threads made for sun-chasers, beach bums, and anyone who refuses to take themselves too seriously. Born in SW Florida.</p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="/store" class="inline-flex items-center rounded-full bg-floof-pink px-8 py-3.5 text-sm font-semibold text-white hover:bg-floof-coral transition-colors">Shop the Collection</a>
+          <a href="/about" class="inline-flex items-center rounded-full border border-white/20 px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors">Our Story</a>
+        </div>
+      </div>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0"><svg viewBox="0 0 1440 80" fill="none" class="w-full"><path d="M0 40L48 36C96 32 192 24 288 28C384 32 480 48 576 52C672 56 768 48 864 40C960 32 1056 24 1152 28C1248 32 1344 48 1392 56L1440 64V80H1392C1344 80 1248 80 1152 80C1056 80 960 80 864 80C768 80 672 80 576 80C480 80 384 80 288 80C192 80 96 80 48 80H0V40Z" fill="#FFF8F0"/></svg></div>
+  </section>
+  {products.length > 0 && <section class="mx-auto max-w-7xl px-6 py-20"><div class="text-center"><p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">New Drops</p><h2 class="mt-2 text-3xl font-bold md:text-4xl">Fan Favorites</h2></div><div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{products.map(p => <ProductCard product={p} />)}</div></section>}
+  {products.length === 0 && <section class="mx-auto max-w-3xl px-6 py-20 text-center"><p class="text-2xl font-bold text-floof-dark">No products yet — check back soon!</p></section>}
+  <section class="mx-auto max-w-7xl px-6 py-20 text-center"><h2 class="text-3xl font-bold md:text-4xl">Ready to <span class="text-floof-gradient">Floof</span> up your wardrobe?</h2><a href="/store" class="mt-8 inline-flex items-center rounded-full bg-floof-pink px-10 py-4 text-base font-semibold text-white hover:bg-floof-coral transition-colors">Shop Now</a></section>
+</Layout>

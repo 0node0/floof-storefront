@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --color-floof-dark: #1A1A2E;
+  --color-floof-pink: #FF6B9D;
+  --color-floof-coral: #FF8A65;
+  --color-floof-yellow: #FFD54F;
+  --color-floof-sand: #F5E6D3;
+  --color-floof-cream: #FFF8F0;
+  --color-floof-mint: #A8E6CF;
+  --color-floof-ocean: #4FC3F7;
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+}
+
+.text-floof-gradient {
+  background: linear-gradient(135deg, var(--color-floof-pink), var(--color-floof-coral), var(--color-floof-yellow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-floof-sand) 25%, var(--color-floof-cream) 50%, var(--color-floof-sand) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 12px;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-floof-cream); }
+::-webkit-scrollbar-thumb { background: var(--color-floof-pink); border-radius: 4px; }
+
+html { scroll-behavior: smooth; }
+
+*:focus-visible {
+  outline: 2px solid var(--color-floof-pink);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

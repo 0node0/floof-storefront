@@ -1,0 +1,20 @@
+---
+export interface FloofProduct { id: string; slug: string; name: string; phrase: string; description: string; price: number; category: string; colors: string[]; image?: string }
+interface Props { product: FloofProduct }
+const { product } = Astro.props;
+const colorMap: Record<string, string> = { Coral: "#FF8A65", Sand: "#F5E6D3", White: "#fff", "Ocean Blue": "#4FC3F7", "Floof Pink": "#FF6B9D", Black: "#1A1A2E", Lime: "#AED581", "Sky Blue": "#87CEEB", Natural: "#F5F0E8" };
+---
+<a href={`/products/${product.slug}`} class="group block overflow-hidden rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+  <div class="aspect-square overflow-hidden bg-gradient-to-br from-floof-sand to-floof-cream p-8 flex items-center justify-center">
+    {product.image ? <img src={product.image} alt={product.name} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" width="400" height="400" />
+    : <span class="text-4xl md:text-5xl font-bold text-floof-dark/80 leading-tight block">{product.phrase}</span>}
+  </div>
+  <div class="p-5">
+    <h3 class="font-semibold text-floof-dark group-hover:text-floof-pink transition-colors">{product.name}</h3>
+    <p class="mt-1 text-sm text-floof-dark/50 line-clamp-2">{product.description}</p>
+    <div class="mt-3 flex items-center justify-between">
+      <span class="text-lg font-bold text-floof-pink">${product.price.toFixed(2)}</span>
+      <div class="flex gap-1">{product.colors.map(color => <span class="inline-block w-4 h-4 rounded-full border border-floof-dark/10" style={`background: ${colorMap[color] || "#888"}`} title={color} />)}</div>
+    </div>
+  </div>
+</a>

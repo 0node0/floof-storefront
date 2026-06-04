@@ -1,0 +1,10 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import CartSummary from "@/components/CartSummary";
+---
+<Layout title="Checkout" description="Complete your Floof order.">
+  <section class="mx-auto max-w-5xl px-6 py-12">
+    <h1 class="text-3xl font-bold tracking-tight text-floof-dark mb-8">Checkout</h1>
+    <CartSummary client:visible />
+  </section>
+</Layout>
