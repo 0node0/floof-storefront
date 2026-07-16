@@ -7,14 +7,12 @@ RUN npm ci
 
 COPY . .
 
-ARG PUBLIC_MEDUSA_URL=https://floof-backend-production-6742.up.railway.app
-ARG PUBLIC_MEDUSA_PK
-ARG PUBLIC_STRIPE_PK=
-ENV PUBLIC_MEDUSA_URL=$PUBLIC_MEDUSA_URL
-ENV PUBLIC_MEDUSA_PK=$PUBLIC_MEDUSA_PK
-ENV PUBLIC_STRIPE_PK=$PUBLIC_STRIPE_PK
-
-RUN npm run build \
+# Railway injects PUBLIC_* service variables into the build environment.
+# Do not redeclare empty ARGs — that wipes them.
+RUN echo "Building with PUBLIC_MEDUSA_URL=${PUBLIC_MEDUSA_URL}" \
+ && test -n "$PUBLIC_MEDUSA_URL" \
+ && test -n "$PUBLIC_MEDUSA_PK" \
+ && npm run build \
  && npm prune --omit=dev
 
 FROM node:22-bookworm-slim AS runtime
