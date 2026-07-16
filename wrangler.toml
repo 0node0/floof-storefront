@@ -4,6 +4,6 @@ compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "./dist"
 
 [vars]
-PUBLIC_MEDUSA_URL = "https://api.floof.space"
+PUBLIC_MEDUSA_URL = "https://floof-backend-production-6742.up.railway.app"
 PUBLIC_MEDUSA_PK = ""
 PUBLIC_STRIPE_PK = ""
