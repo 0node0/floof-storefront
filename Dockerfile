@@ -2,16 +2,22 @@
 FROM node:22-bookworm-slim AS builder
 WORKDIR /app
 
+# Railway injects matching service variables as Docker build-args when declared.
+ARG PUBLIC_MEDUSA_URL
+ARG PUBLIC_MEDUSA_PK
+ARG PUBLIC_STRIPE_PK=
+ENV PUBLIC_MEDUSA_URL=$PUBLIC_MEDUSA_URL
+ENV PUBLIC_MEDUSA_PK=$PUBLIC_MEDUSA_PK
+ENV PUBLIC_STRIPE_PK=$PUBLIC_STRIPE_PK
+
 COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
 
-# Railway injects PUBLIC_* service variables into the build environment.
-# Do not redeclare empty ARGs — that wipes them.
 RUN echo "Building with PUBLIC_MEDUSA_URL=${PUBLIC_MEDUSA_URL}" \
- && test -n "$PUBLIC_MEDUSA_URL" \
- && test -n "$PUBLIC_MEDUSA_PK" \
+ && test -n "$PUBLIC_MEDUSA_URL" || (echo "PUBLIC_MEDUSA_URL missing at build time" && exit 1) \
+ && test -n "$PUBLIC_MEDUSA_PK" || (echo "PUBLIC_MEDUSA_PK missing at build time" && exit 1) \
  && npm run build \
  && npm prune --omit=dev
 
