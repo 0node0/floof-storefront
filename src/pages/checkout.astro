@@ -2,6 +2,14 @@
 import Layout from "@/layouts/Layout.astro";
 import CartSummary from "@/components/CartSummary";
 import TrustBar from "@/components/TrustBar.astro";
+import Icon from "@/components/Icon.astro";
+
+const perks: { icon: string; text: string; href?: string }[] = [
+  { icon: "lock", text: "Encrypted Stripe checkout" },
+  { icon: "pin", text: "Printed & shipped from the US" },
+  { icon: "package", text: "Tracking email when it ships" },
+  { icon: "return", text: "30-day returns", href: "/shipping-returns" },
+];
 ---
 <Layout
   title="Cart & Checkout"
@@ -25,10 +33,18 @@ import TrustBar from "@/components/TrustBar.astro";
         <div class="rounded-3xl bg-white p-6 ring-1 ring-floof-dark/5 sticky top-24">
           <h2 class="font-bold text-floof-dark">Order perks</h2>
           <ul class="mt-4 space-y-3 text-sm text-floof-dark/60">
-            <li class="flex gap-2"><span aria-hidden="true">🔒</span> Encrypted Stripe checkout</li>
-            <li class="flex gap-2"><span aria-hidden="true">🇺🇸</span> Printed & shipped from the US</li>
-            <li class="flex gap-2"><span aria-hidden="true">📦</span> Tracking email when it ships</li>
-            <li class="flex gap-2"><span aria-hidden="true">↩️</span> <a href="/shipping-returns" class="underline hover:text-floof-pink">30-day returns</a></li>
+            {perks.map((p) => (
+              <li class="flex gap-3 items-start">
+                <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-floof-sand text-floof-dark">
+                  <Icon name={p.icon} class="w-4 h-4" />
+                </span>
+                {p.href ? (
+                  <a href={p.href} class="underline hover:text-floof-pink pt-1">{p.text}</a>
+                ) : (
+                  <span class="pt-1">{p.text}</span>
+                )}
+              </li>
+            ))}
           </ul>
           <p class="mt-6 text-xs text-floof-dark/40 leading-relaxed">
             Need a different size? Change quantity here or remove items and re-add from the product page with the right size selected.

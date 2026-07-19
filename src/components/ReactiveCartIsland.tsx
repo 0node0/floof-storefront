@@ -4,6 +4,7 @@ import { formatPrice, type MedusaVariant } from "@/lib/medusa"
 import type { FloofProduct } from "@/lib/product"
 import { colorMap } from "@/lib/product"
 import SizeGuide from "./SizeGuide"
+import Icon from "./Icon"
 
 interface Props {
   product: FloofProduct
@@ -30,17 +31,23 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
   const sizes = useMemo(() => {
     const raw = [...new Set(variants.map((v) => opt(v, "Size")).filter(Boolean))] as string[]
     const order = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"]
-    return raw.sort((a, b) => (order.indexOf(a) === -1 ? 99 : order.indexOf(a)) - (order.indexOf(b) === -1 ? 99 : order.indexOf(b)))
+    return raw.sort(
+      (a, b) =>
+        (order.indexOf(a) === -1 ? 99 : order.indexOf(a)) -
+        (order.indexOf(b) === -1 ? 99 : order.indexOf(b))
+    )
   }, [variants])
 
   const [selColor, setSelColor] = useState(colors[0] || "")
   const [selSize, setSelSize] = useState(sizes[0] || "")
 
-  // Sizes available for selected color
   const availableSizes = useMemo(() => {
     if (!selColor) return new Set(sizes)
     return new Set(
-      variants.filter((v) => opt(v, "Color") === selColor).map((v) => opt(v, "Size")).filter(Boolean) as string[]
+      variants
+        .filter((v) => opt(v, "Color") === selColor)
+        .map((v) => opt(v, "Size"))
+        .filter(Boolean) as string[]
     )
   }, [variants, selColor, sizes])
 
@@ -57,7 +64,6 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
     setV(match || null)
   }, [selColor, selSize, variants, colors.length, sizes.length])
 
-  // If size unavailable for color, pick first available
   useEffect(() => {
     if (selSize && !availableSizes.has(selSize)) {
       const next = sizes.find((s) => availableSizes.has(s))
@@ -88,7 +94,10 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
   if (err || cartError) {
     return (
       <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-6">
-        <p className="text-sm text-red-600">⚠️ {err || cartError}</p>
+        <p className="text-sm text-red-600 flex gap-2 items-start">
+          <Icon name="alert" className="w-4 h-4 shrink-0 mt-0.5" />
+          <span>{err || cartError}</span>
+        </p>
         <button
           type="button"
           onClick={() => {
@@ -211,15 +220,20 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
           type="button"
           onClick={handleAdd}
           disabled={adding || unavailable}
-          className="w-full rounded-full bg-floof-pink py-4 text-base font-semibold text-white hover:bg-floof-coral transition-colors disabled:opacity-50 shadow-lg shadow-floof-pink/20"
+          className="w-full rounded-full bg-floof-pink py-4 text-base font-semibold text-white hover:bg-floof-coral transition-colors disabled:opacity-50 shadow-lg shadow-floof-pink/20 inline-flex items-center justify-center gap-2"
         >
-          {adding
-            ? "Adding…"
-            : added
-              ? "✓ Added to cart"
-              : unavailable
-                ? "Select options"
-                : `Add to cart — ${formatPrice(price * qty, cur)}`}
+          {adding ? (
+            "Adding…"
+          ) : added ? (
+            <>
+              <Icon name="check" className="w-5 h-5" />
+              Added to cart
+            </>
+          ) : unavailable ? (
+            "Select options"
+          ) : (
+            `Add to cart — ${formatPrice(price * qty, cur)}`
+          )}
         </button>
         {added && (
           <a
@@ -232,23 +246,32 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
       </div>
 
       {itemCount > 0 && !added && (
-        <p className="text-center text-sm text-floof-dark/50">
-          🛒 {itemCount} item{itemCount !== 1 ? "s" : ""} in cart ·{" "}
+        <p className="text-center text-sm text-floof-dark/50 inline-flex items-center justify-center gap-1.5 w-full">
+          <Icon name="cart" className="w-4 h-4" />
+          {itemCount} item{itemCount !== 1 ? "s" : ""} in cart ·{" "}
           <a href="/checkout" className="text-floof-pink underline">
             Checkout
           </a>
         </p>
       )}
 
-      <ul className="text-xs text-floof-dark/45 space-y-1.5 pt-2">
-        <li>✓ Ships from US print partners (typically 2–7 business days to print)</li>
-        <li>✓ Secure Stripe checkout · Free shipping over $75</li>
-        <li>
-          ✓{" "}
-          <a href="/shipping-returns" className="underline hover:text-floof-pink">
-            30-day returns
-          </a>{" "}
-          on unworn items
+      <ul className="text-xs text-floof-dark/45 space-y-2 pt-2">
+        <li className="flex gap-2 items-start">
+          <Icon name="check" className="w-3.5 h-3.5 shrink-0 mt-0.5 text-floof-pink" />
+          <span>Ships from US print partners (typically 2–7 business days to print)</span>
+        </li>
+        <li className="flex gap-2 items-start">
+          <Icon name="check" className="w-3.5 h-3.5 shrink-0 mt-0.5 text-floof-pink" />
+          <span>Secure Stripe checkout · Free shipping over $75</span>
+        </li>
+        <li className="flex gap-2 items-start">
+          <Icon name="check" className="w-3.5 h-3.5 shrink-0 mt-0.5 text-floof-pink" />
+          <span>
+            <a href="/shipping-returns" className="underline hover:text-floof-pink">
+              30-day returns
+            </a>{" "}
+            on unworn items
+          </span>
         </li>
       </ul>
     </div>

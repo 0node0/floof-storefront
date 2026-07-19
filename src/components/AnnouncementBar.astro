@@ -1,16 +1,15 @@
 ---
-/**
- * Clothing ecomm best practice: persistent promo/trust strip above the fold.
- * Communicates free-shipping threshold, fulfillment speed, and brand promise.
- */
+import Icon from "@/components/Icon.astro"
 ---
 <div class="bg-floof-dark text-white text-center text-xs sm:text-sm py-2.5 px-4">
-  <p class="font-medium tracking-wide">
-    <span class="text-floof-yellow">✦</span>
-    Free shipping over $75
-    <span class="mx-2 text-white/30">·</span>
-    Printed fresh &amp; ships from the US
-    <span class="mx-2 text-white/30 hidden sm:inline">·</span>
-    <a href="/shipping-returns" class="underline underline-offset-2 hover:text-floof-pink hidden sm:inline">30-day returns</a>
+  <p class="font-medium tracking-wide inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+    <Icon name="star" class="w-3.5 h-3.5 text-floof-yellow shrink-0" />
+    <span>Free shipping over $75</span>
+    <span class="text-white/30 hidden sm:inline">·</span>
+    <span class="hidden sm:inline">Printed fresh &amp; ships from the US</span>
+    <span class="text-white/30 hidden sm:inline">·</span>
+    <a href="/shipping-returns" class="underline underline-offset-2 hover:text-floof-pink hidden sm:inline">
+      30-day returns
+    </a>
   </p>
 </div>

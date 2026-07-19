@@ -7,6 +7,7 @@ import {
 } from "@/lib/medusa"
 import StripeCheckoutButton from "./StripeCheckoutButton"
 import ErrorBoundary from "./ErrorBoundary"
+import Icon from "./Icon"
 
 const FREE_SHIP_THRESHOLD_CENTS = 7500
 
@@ -45,9 +46,9 @@ export default function CartSummary() {
   if (!cart || cart.items.length === 0) {
     return (
       <div className="rounded-3xl bg-white p-10 text-center shadow-sm ring-1 ring-floof-dark/5">
-        <p className="text-4xl mb-4" aria-hidden="true">
-          🛒
-        </p>
+        <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-floof-sand text-floof-dark mb-4">
+          <Icon name="cart" size={28} className="w-7 h-7" />
+        </span>
         <h2 className="text-xl font-bold text-floof-dark">Your cart is empty</h2>
         <p className="mt-2 text-sm text-floof-dark/50">Find something loud for the weekend.</p>
         <a
@@ -68,26 +69,28 @@ export default function CartSummary() {
     <ErrorBoundary>
       <div className="space-y-6">
         {err && (
-          <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-4 text-sm text-red-600">
-            ⚠️ {err}
+          <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-4 text-sm text-red-600 flex gap-2 items-start">
+            <Icon name="alert" className="w-4 h-4 shrink-0 mt-0.5" />
+            <span>{err}</span>
           </div>
         )}
         {error && (
-          <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-4 text-sm text-red-600">
-            ⚠️ {error}
+          <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-4 text-sm text-red-600 flex gap-2 items-start">
+            <Icon name="alert" className="w-4 h-4 shrink-0 mt-0.5" />
+            <span>{error}</span>
           </div>
         )}
 
-        {/* Free shipping progress — classic apparel cart pattern */}
         <div className="rounded-2xl bg-floof-mint/30 px-5 py-4 ring-1 ring-floof-mint/40">
           {remaining > 0 ? (
             <p className="text-sm text-floof-dark/80">
-              You&apos;re <strong className="text-floof-dark">{formatPrice(remaining, cart.currency_code)}</strong> away
-              from <strong className="text-floof-dark">free shipping</strong>
+              You&apos;re <strong className="text-floof-dark">{formatPrice(remaining, cart.currency_code)}</strong>{" "}
+              away from <strong className="text-floof-dark">free shipping</strong>
             </p>
           ) : (
-            <p className="text-sm font-medium text-floof-dark">
-              🎉 You&apos;ve unlocked free US shipping
+            <p className="text-sm font-medium text-floof-dark inline-flex items-center gap-2">
+              <Icon name="check" className="w-4 h-4 text-floof-pink" />
+              You&apos;ve unlocked free US shipping
             </p>
           )}
           <div className="mt-2 h-2 rounded-full bg-white/80 overflow-hidden">
@@ -104,7 +107,7 @@ export default function CartSummary() {
               key={item.id}
               className="flex items-center gap-4 py-4 border-b border-floof-dark/5 last:border-0"
             >
-              <div className="w-16 h-16 rounded-xl bg-floof-sand flex items-center justify-center shrink-0 overflow-hidden">
+              <div className="w-16 h-16 rounded-xl bg-floof-sand flex items-center justify-center shrink-0 overflow-hidden text-floof-dark/40">
                 {item.thumbnail ? (
                   <img
                     src={item.thumbnail}
@@ -114,9 +117,7 @@ export default function CartSummary() {
                     height={64}
                   />
                 ) : (
-                  <span className="text-xl" aria-hidden="true">
-                    👕
-                  </span>
+                  <Icon name="shirt" className="w-6 h-6" />
                 )}
               </div>
               <div className="flex-1 min-w-0">

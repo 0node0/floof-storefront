@@ -1,13 +1,15 @@
 ---
+import Icon from "@/components/Icon.astro"
+
 interface Props {
   compact?: boolean
 }
 const { compact = false } = Astro.props
-const items = [
-  { icon: "🚚", title: "Ships from the US", body: "Print-on-demand — made when you order" },
-  { icon: "🔒", title: "Secure checkout", body: "Card payments powered by Stripe" },
-  { icon: "↩️", title: "Easy returns", body: "30 days on unworn items" },
-  { icon: "🌴", title: "SWFL brand", body: "Designed with Gulf Coast energy" },
+const items: { icon: string; title: string; body: string }[] = [
+  { icon: "truck", title: "Ships from the US", body: "Print-on-demand — made when you order" },
+  { icon: "lock", title: "Secure checkout", body: "Card payments powered by Stripe" },
+  { icon: "return", title: "Easy returns", body: "30 days on unworn items" },
+  { icon: "palm", title: "SWFL brand", body: "Designed with Gulf Coast energy" },
 ]
 ---
 <section class:list={["border-y border-floof-dark/5 bg-white", compact ? "py-6" : "py-10"]}>
@@ -15,7 +17,9 @@ const items = [
     <div class="grid grid-cols-2 gap-6 lg:grid-cols-4">
       {items.map((item) => (
         <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 text-center sm:text-left">
-          <span class="text-2xl sm:text-xl" aria-hidden="true">{item.icon}</span>
+          <span class="inline-flex h-10 w-10 mx-auto sm:mx-0 shrink-0 items-center justify-center rounded-xl bg-floof-sand text-floof-dark">
+            <Icon name={item.icon} class="w-5 h-5" />
+          </span>
           <div>
             <p class="text-sm font-semibold text-floof-dark">{item.title}</p>
             <p class="mt-0.5 text-xs text-floof-dark/50 leading-relaxed">{item.body}</p>

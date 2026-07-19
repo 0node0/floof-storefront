@@ -44,7 +44,9 @@ export default function SizeGuide({ category = "tees" }: Props) {
                 className="rounded-full w-9 h-9 flex items-center justify-center hover:bg-floof-sand text-floof-dark/60"
                 aria-label="Close"
               >
-                ✕
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
+                  <path d="M5 5l8 8M13 5l-8 8" />
+                </svg>
               </button>
             </div>
             <div className="px-6 py-5">

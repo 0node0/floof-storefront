@@ -1,18 +1,29 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import Icon from "@/components/Icon.astro";
 
 export const prerender = false;
 const { id } = Astro.params;
 ---
-<Layout title={`Order ${id || ""}`} description="Thanks for your Floof order!">
+<Layout title={`Order ${id || ""}`} description="Thanks for your Floof order!" noIndex={true}>
   <section class="mx-auto max-w-2xl px-6 py-20 text-center">
-    <p class="text-6xl mb-6">🎉</p>
+    <span class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-floof-mint/40 text-floof-dark mb-6">
+      <Icon name="check" class="w-8 h-8" size={32} />
+    </span>
     <h1 class="text-3xl font-bold text-floof-dark">Thanks for your order!</h1>
-    <p class="mt-4 text-lg text-floof-dark/60">Order <code class="bg-floof-sand px-2 py-0.5 rounded text-sm">{id}</code> has been placed.</p>
-    <p class="mt-2 text-floof-dark/50">You'll receive a confirmation email with tracking info once it ships.</p>
+    <p class="mt-4 text-lg text-floof-dark/60">
+      Order <code class="bg-floof-sand px-2 py-0.5 rounded text-sm">{id}</code> has been placed.
+    </p>
+    <p class="mt-2 text-floof-dark/50">
+      You'll receive a confirmation email with tracking info once it ships.
+    </p>
     <div class="mt-8 flex flex-wrap gap-4 justify-center">
-      <a href="/store" class="rounded-full bg-floof-pink px-8 py-3 text-sm font-semibold text-white hover:bg-floof-coral">Continue Shopping</a>
-      <a href="/" class="rounded-full border border-floof-dark/10 px-8 py-3 text-sm font-semibold text-floof-dark hover:border-floof-pink">Back to Home</a>
+      <a href="/store" class="rounded-full bg-floof-pink px-8 py-3 text-sm font-semibold text-white hover:bg-floof-coral">
+        Continue shopping
+      </a>
+      <a href="/" class="rounded-full border border-floof-dark/10 px-8 py-3 text-sm font-semibold text-floof-dark hover:border-floof-pink">
+        Back to home
+      </a>
     </div>
   </section>
 </Layout>

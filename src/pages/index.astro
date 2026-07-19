@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import ProductCard from "@/components/ProductCard.astro";
 import TrustBar from "@/components/TrustBar.astro";
+import Icon from "@/components/Icon.astro";
 import { listProducts } from "@/lib/medusa";
 import { mapProduct, type FloofProduct } from "@/lib/product";
 
@@ -14,10 +15,10 @@ try {
 } catch {}
 
 const ogImage = products[0]?.image || "/favicon.svg";
-const cats = [
-  { href: "/store?cat=tees", label: "T-Shirts", emoji: "👕", blurb: "Everyday soft tees" },
-  { href: "/store?cat=hoodies", label: "Hoodies", emoji: "🧥", blurb: "Cozy Gulf nights" },
-  { href: "/store", label: "Full shop", emoji: "✨", blurb: "See everything" },
+const cats: { href: string; label: string; icon: string; blurb: string }[] = [
+  { href: "/store?cat=tees", label: "T-Shirts", icon: "shirt", blurb: "Everyday soft tees" },
+  { href: "/store?cat=hoodies", label: "Hoodies", icon: "hoodie", blurb: "Cozy Gulf nights" },
+  { href: "/store", label: "Full shop", icon: "spark", blurb: "See everything" },
 ];
 ---
 <Layout
@@ -25,7 +26,6 @@ const cats = [
   description="Floof is a fun, young, vibrant clothing brand from Southwest Florida. T-shirts, hoodies & more — printed fresh when you order."
   image={ogImage}
 >
-  <!-- Hero -->
   <section class="relative overflow-hidden bg-floof-dark text-white">
     <div class="absolute inset-0 bg-gradient-to-br from-floof-pink/30 via-transparent to-floof-ocean/20 opacity-80"></div>
     <div class="relative mx-auto max-w-7xl px-6 py-20 md:py-28 lg:py-36">
@@ -45,10 +45,19 @@ const cats = [
             Our story
           </a>
         </div>
-        <dl class="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/50">
-          <div><dt class="sr-only">Shipping</dt><dd>🚚 Free ship $75+</dd></div>
-          <div><dt class="sr-only">Fulfillment</dt><dd>🇺🇸 Printed in the US</dd></div>
-          <div><dt class="sr-only">Returns</dt><dd>↩️ 30-day returns</dd></div>
+        <dl class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/55">
+          <div class="inline-flex items-center gap-2">
+            <Icon name="truck" class="w-4 h-4 text-floof-yellow" />
+            <dd>Free ship $75+</dd>
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <Icon name="pin" class="w-4 h-4 text-floof-yellow" />
+            <dd>Printed in the US</dd>
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <Icon name="return" class="w-4 h-4 text-floof-yellow" />
+            <dd>30-day returns</dd>
+          </div>
         </dl>
       </div>
     </div>
@@ -61,7 +70,6 @@ const cats = [
 
   <TrustBar />
 
-  <!-- Category tiles -->
   <section class="mx-auto max-w-7xl px-6 py-14">
     <div class="text-center mb-8">
       <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">Shop by vibe</p>
@@ -73,7 +81,9 @@ const cats = [
           href={c.href}
           class="group rounded-3xl bg-white p-8 ring-1 ring-floof-dark/5 hover:ring-floof-pink/30 hover:shadow-lg transition-all text-center"
         >
-          <span class="text-3xl" aria-hidden="true">{c.emoji}</span>
+          <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-floof-sand text-floof-dark group-hover:bg-floof-pink group-hover:text-white transition-colors">
+            <Icon name={c.icon} class="w-6 h-6" />
+          </span>
           <p class="mt-3 text-lg font-bold text-floof-dark group-hover:text-floof-pink transition-colors">{c.label}</p>
           <p class="mt-1 text-sm text-floof-dark/50">{c.blurb}</p>
         </a>
@@ -81,7 +91,6 @@ const cats = [
     </div>
   </section>
 
-  <!-- Featured products -->
   {products.length > 0 && (
     <section class="mx-auto max-w-7xl px-6 py-6 pb-20">
       <div class="flex items-end justify-between gap-4 mb-10">
@@ -108,7 +117,6 @@ const cats = [
     </section>
   )}
 
-  <!-- Social proof / brand strip -->
   <section class="bg-white border-y border-floof-dark/5 py-16">
     <div class="mx-auto max-w-3xl px-6 text-center">
       <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">Why Floof</p>
