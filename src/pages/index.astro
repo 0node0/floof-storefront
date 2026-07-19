@@ -1,41 +1,126 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import ProductCard from "@/components/ProductCard.astro";
-import type { FloofProduct } from "@/components/ProductCard.astro";
+import TrustBar from "@/components/TrustBar.astro";
 import { listProducts } from "@/lib/medusa";
+import { mapProduct, type FloofProduct } from "@/lib/product";
+
+export const prerender = false;
 
 let products: FloofProduct[] = [];
 try {
   const { products: raw } = await listProducts();
-  products = raw.slice(0, 4).map(p => ({
-    id: p.id, slug: p.handle, name: p.title,
-    phrase: p.title.split(" ").slice(0, 3).join(" "),
-    description: p.description || "", price: (p.variants?.[0]?.prices?.[0]?.amount || 0) / 100,
-    category: (p.metadata?.category as string) || "tees",
-    colors: [...new Set(p.variants?.map(v => v.options?.find(o => o.option?.title === "Color")?.value).filter(Boolean) as string[])],
-    image: p.images?.[0]?.url || "",
-  }));
-} catch { /* empty — SSR will show empty state */ }
+  products = raw.map(mapProduct).slice(0, 8);
+} catch {}
 
 const ogImage = products[0]?.image || "/favicon.svg";
+const cats = [
+  { href: "/store?cat=tees", label: "T-Shirts", emoji: "👕", blurb: "Everyday soft tees" },
+  { href: "/store?cat=hoodies", label: "Hoodies", emoji: "🧥", blurb: "Cozy Gulf nights" },
+  { href: "/store", label: "Full shop", emoji: "✨", blurb: "See everything" },
+];
 ---
-<Layout title="Fun, witty threads from SW Florida" description="Floof is a fun, young, vibrant clothing brand from Southwest Florida. T-shirts, hoodies, hats & more." image={ogImage}>
+<Layout
+  title="Fun, witty threads from SW Florida"
+  description="Floof is a fun, young, vibrant clothing brand from Southwest Florida. T-shirts, hoodies & more — printed fresh when you order."
+  image={ogImage}
+>
+  <!-- Hero -->
   <section class="relative overflow-hidden bg-floof-dark text-white">
-    <div class="absolute inset-0 bg-floof-gradient opacity-20"></div>
-    <div class="relative mx-auto max-w-7xl px-6 py-24 md:py-32 lg:py-40">
+    <div class="absolute inset-0 bg-gradient-to-br from-floof-pink/30 via-transparent to-floof-ocean/20 opacity-80"></div>
+    <div class="relative mx-auto max-w-7xl px-6 py-20 md:py-28 lg:py-36">
       <div class="max-w-2xl">
         <p class="text-sm font-semibold uppercase tracking-widest text-floof-yellow">Southwest Florida</p>
-        <h1 class="mt-4 text-5xl font-bold leading-tight md:text-7xl">Life's too short for <span class="text-floof-gradient">boring clothes.</span></h1>
-        <p class="mt-6 text-lg text-white/70 max-w-lg">Fun, witty threads made for sun-chasers, beach bums, and anyone who refuses to take themselves too seriously. Born in SW Florida.</p>
-        <div class="mt-8 flex flex-wrap gap-4">
-          <a href="/store" class="inline-flex items-center rounded-full bg-floof-pink px-8 py-3.5 text-sm font-semibold text-white hover:bg-floof-coral transition-colors">Shop the Collection</a>
-          <a href="/about" class="inline-flex items-center rounded-full border border-white/20 px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors">Our Story</a>
+        <h1 class="mt-4 text-5xl font-bold leading-[1.05] md:text-6xl lg:text-7xl">
+          Life's too short for <span class="text-floof-gradient">boring clothes.</span>
+        </h1>
+        <p class="mt-6 text-lg text-white/70 max-w-lg leading-relaxed">
+          Fun, witty threads for sun-chasers, beach bums, and anyone who refuses to take themselves too seriously.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/store" class="inline-flex items-center rounded-full bg-floof-pink px-8 py-3.5 text-sm font-semibold text-white hover:bg-floof-coral transition-colors shadow-lg shadow-floof-pink/25">
+            Shop the collection
+          </a>
+          <a href="/about" class="inline-flex items-center rounded-full border border-white/20 px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors">
+            Our story
+          </a>
         </div>
+        <dl class="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/50">
+          <div><dt class="sr-only">Shipping</dt><dd>🚚 Free ship $75+</dd></div>
+          <div><dt class="sr-only">Fulfillment</dt><dd>🇺🇸 Printed in the US</dd></div>
+          <div><dt class="sr-only">Returns</dt><dd>↩️ 30-day returns</dd></div>
+        </dl>
       </div>
     </div>
-    <div class="absolute bottom-0 left-0 right-0"><svg viewBox="0 0 1440 80" fill="none" class="w-full"><path d="M0 40L48 36C96 32 192 24 288 28C384 32 480 48 576 52C672 56 768 48 864 40C960 32 1056 24 1152 28C1248 32 1344 48 1392 56L1440 64V80H1392C1344 80 1248 80 1152 80C1056 80 960 80 864 80C768 80 672 80 576 80C480 80 384 80 288 80C192 80 96 80 48 80H0V40Z" fill="#FFF8F0"/></svg></div>
+    <div class="absolute bottom-0 left-0 right-0">
+      <svg viewBox="0 0 1440 80" fill="none" class="w-full" aria-hidden="true">
+        <path d="M0 40L48 36C96 32 192 24 288 28C384 32 480 48 576 52C672 56 768 48 864 40C960 32 1056 24 1152 28C1248 32 1344 48 1392 56L1440 64V80H1392C1344 80 1248 80 1152 80C1056 80 960 80 864 80C768 80 672 80 576 80C480 80 384 80 288 80C192 80 96 80 48 80H0V40Z" fill="#FFF8F0"/>
+      </svg>
+    </div>
   </section>
-  {products.length > 0 && <section class="mx-auto max-w-7xl px-6 py-20"><div class="text-center"><p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">New Drops</p><h2 class="mt-2 text-3xl font-bold md:text-4xl">Fan Favorites</h2></div><div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{products.map(p => <ProductCard product={p} />)}</div></section>}
-  {products.length === 0 && <section class="mx-auto max-w-3xl px-6 py-20 text-center"><p class="text-2xl font-bold text-floof-dark">No products yet — check back soon!</p></section>}
-  <section class="mx-auto max-w-7xl px-6 py-20 text-center"><h2 class="text-3xl font-bold md:text-4xl">Ready to <span class="text-floof-gradient">Floof</span> up your wardrobe?</h2><a href="/store" class="mt-8 inline-flex items-center rounded-full bg-floof-pink px-10 py-4 text-base font-semibold text-white hover:bg-floof-coral transition-colors">Shop Now</a></section>
+
+  <TrustBar />
+
+  <!-- Category tiles -->
+  <section class="mx-auto max-w-7xl px-6 py-14">
+    <div class="text-center mb-8">
+      <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">Shop by vibe</p>
+      <h2 class="mt-2 text-2xl md:text-3xl font-bold text-floof-dark">Find your fit</h2>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-3">
+      {cats.map((c) => (
+        <a
+          href={c.href}
+          class="group rounded-3xl bg-white p-8 ring-1 ring-floof-dark/5 hover:ring-floof-pink/30 hover:shadow-lg transition-all text-center"
+        >
+          <span class="text-3xl" aria-hidden="true">{c.emoji}</span>
+          <p class="mt-3 text-lg font-bold text-floof-dark group-hover:text-floof-pink transition-colors">{c.label}</p>
+          <p class="mt-1 text-sm text-floof-dark/50">{c.blurb}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Featured products -->
+  {products.length > 0 && (
+    <section class="mx-auto max-w-7xl px-6 py-6 pb-20">
+      <div class="flex items-end justify-between gap-4 mb-10">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">New drops</p>
+          <h2 class="mt-2 text-3xl font-bold md:text-4xl text-floof-dark">Fan favorites</h2>
+        </div>
+        <a href="/store" class="text-sm font-medium text-floof-pink underline shrink-0">View all</a>
+      </div>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {products.slice(0, 4).map((p, i) => <ProductCard product={p} priority={i < 2} />)}
+      </div>
+      {products.length > 4 && (
+        <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {products.slice(4, 8).map((p) => <ProductCard product={p} />)}
+        </div>
+      )}
+    </section>
+  )}
+
+  {products.length === 0 && (
+    <section class="mx-auto max-w-3xl px-6 py-20 text-center">
+      <p class="text-2xl font-bold text-floof-dark">No products yet — check back soon!</p>
+    </section>
+  )}
+
+  <!-- Social proof / brand strip -->
+  <section class="bg-white border-y border-floof-dark/5 py-16">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+      <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">Why Floof</p>
+      <h2 class="mt-3 text-2xl md:text-3xl font-bold text-floof-dark leading-snug">
+        Soft blanks. Louder slogans. Zero warehouse dust.
+      </h2>
+      <p class="mt-4 text-floof-dark/55 leading-relaxed">
+        We design in SW Florida and print each order fresh. Better for small drops, better for the planet than piles of deadstock, and always ready for the next silly idea.
+      </p>
+      <a href="/store" class="mt-8 inline-flex rounded-full bg-floof-pink px-10 py-4 text-base font-semibold text-white hover:bg-floof-coral transition-colors">
+        Shop now
+      </a>
+    </div>
+  </section>
 </Layout>

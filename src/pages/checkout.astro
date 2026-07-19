@@ -1,10 +1,44 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import CartSummary from "@/components/CartSummary";
+import TrustBar from "@/components/TrustBar.astro";
 ---
-<Layout title="Checkout" description="Complete your Floof order.">
-  <section class="mx-auto max-w-5xl px-6 py-12">
-    <h1 class="text-3xl font-bold tracking-tight text-floof-dark mb-8">Checkout</h1>
-    <CartSummary client:visible />
+<Layout
+  title="Cart & Checkout"
+  description="Review your Floof cart and checkout securely with Stripe."
+  noIndex={true}
+>
+  <section class="mx-auto max-w-5xl px-6 py-10 md:py-12">
+    <div class="mb-8">
+      <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">Almost there</p>
+      <h1 class="mt-1 text-3xl font-bold tracking-tight text-floof-dark">Your cart</h1>
+      <p class="mt-2 text-sm text-floof-dark/50">
+        Free US shipping on orders $75+. Secure payment via Stripe — we never store your card.
+      </p>
+    </div>
+
+    <div class="grid gap-8 lg:grid-cols-5">
+      <div class="lg:col-span-3">
+        <CartSummary client:load />
+      </div>
+      <aside class="lg:col-span-2 space-y-4">
+        <div class="rounded-3xl bg-white p-6 ring-1 ring-floof-dark/5 sticky top-24">
+          <h2 class="font-bold text-floof-dark">Order perks</h2>
+          <ul class="mt-4 space-y-3 text-sm text-floof-dark/60">
+            <li class="flex gap-2"><span aria-hidden="true">🔒</span> Encrypted Stripe checkout</li>
+            <li class="flex gap-2"><span aria-hidden="true">🇺🇸</span> Printed & shipped from the US</li>
+            <li class="flex gap-2"><span aria-hidden="true">📦</span> Tracking email when it ships</li>
+            <li class="flex gap-2"><span aria-hidden="true">↩️</span> <a href="/shipping-returns" class="underline hover:text-floof-pink">30-day returns</a></li>
+          </ul>
+          <p class="mt-6 text-xs text-floof-dark/40 leading-relaxed">
+            Need a different size? Change quantity here or remove items and re-add from the product page with the right size selected.
+          </p>
+          <a href="/store" class="mt-4 inline-block text-sm font-medium text-floof-pink underline">
+            Continue shopping
+          </a>
+        </div>
+      </aside>
+    </div>
   </section>
+  <TrustBar compact />
 </Layout>

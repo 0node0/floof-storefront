@@ -198,12 +198,15 @@ export async function addShippingMethod(
   return { cart: unwrapCart(payload) }
 }
 
+const PRODUCT_FIELDS =
+  "id,handle,title,description,metadata,*images,*variants,*variants.prices,*variants.options,*variants.options.option"
+
 export async function listProducts(): Promise<{
   products: MedusaProduct[]
   count: number
 }> {
   return medusaFetch(
-    "/store/products?fields=id,handle,title,description,*images,*variants,*variants.prices,*variants.options,*variants.options.option"
+    `/store/products?limit=100&fields=${PRODUCT_FIELDS}`
   )
 }
 
@@ -211,7 +214,8 @@ export async function getProduct(
   handle: string
 ): Promise<{ product: MedusaProduct }> {
   const r = await medusaFetch<{ products: MedusaProduct[] }>(
-    `/store/products?handle=${encodeURIComponent(handle)}&fields=id,handle,title,description,*images,*variants,*variants.prices,*variants.options,*variants.options.option`
+    `/store/products?handle=${encodeURIComponent(handle)}&fields=${PRODUCT_FIELDS}`
   )
   return { product: r.products?.[0] }
 }
+

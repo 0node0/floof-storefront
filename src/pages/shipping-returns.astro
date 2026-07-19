@@ -1,0 +1,62 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import TrustBar from "@/components/TrustBar.astro";
+---
+<Layout
+  title="Shipping & Returns"
+  description="Floof shipping times, free shipping threshold, and 30-day return policy for print-on-demand apparel."
+>
+  <section class="bg-floof-dark text-white py-14">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold">Shipping &amp; Returns</h1>
+      <p class="mt-3 text-white/60">Clear policies so you can order with confidence.</p>
+    </div>
+  </section>
+
+  <TrustBar compact />
+
+  <article class="mx-auto max-w-3xl px-6 py-14 prose prose-floof space-y-10">
+    <section>
+      <h2 class="text-xl font-bold text-floof-dark">How shipping works</h2>
+      <p class="mt-3 text-floof-dark/65 leading-relaxed">
+        Every Floof piece is <strong class="text-floof-dark">print-on-demand</strong>. When you order, your item is printed and packed by our US fulfillment partner (Printful) — no warehouse sitting around in dusty boxes.
+      </p>
+      <ul class="mt-4 space-y-2 text-floof-dark/65 text-sm list-disc pl-5">
+        <li><strong class="text-floof-dark">Production:</strong> typically 2–5 business days</li>
+        <li><strong class="text-floof-dark">Transit (US):</strong> typically 3–7 business days after ship</li>
+        <li><strong class="text-floof-dark">Free shipping:</strong> orders $75+ within the US</li>
+        <li>You'll get tracking by email once your order ships</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-bold text-floof-dark">Returns & exchanges</h2>
+      <p class="mt-3 text-floof-dark/65 leading-relaxed">
+        We want you to love your Floof. You have <strong class="text-floof-dark">30 days</strong> from delivery to start a return on unworn items with tags attached.
+      </p>
+      <ul class="mt-4 space-y-2 text-floof-dark/65 text-sm list-disc pl-5">
+        <li>Items must be clean, unworn, and in original condition</li>
+        <li>Because products are made to order, we can't accept returns for buyer's remorse on custom-fit issues without trying sizing carefully first — use the size guide</li>
+        <li>Defective or misprinted items: contact us and we'll make it right</li>
+      </ul>
+      <p class="mt-4 text-sm text-floof-dark/65">
+        Start a return: <a href="/contact" class="text-floof-pink underline">hello@floof.space</a> with your order number.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-bold text-floof-dark">Sizing tips</h2>
+      <p class="mt-3 text-floof-dark/65 leading-relaxed">
+        Most Floof apparel is unisex. Measure a shirt or hoodie you already love and compare to the size chart on each product page. If you're between sizes, we usually recommend sizing up for a relaxed fit.
+      </p>
+    </section>
+
+    <section class="rounded-3xl bg-white p-8 ring-1 ring-floof-dark/5">
+      <h2 class="text-xl font-bold text-floof-dark">Still have questions?</h2>
+      <p class="mt-2 text-sm text-floof-dark/60">We're a small SWFL brand — humans answer the inbox.</p>
+      <a href="/contact" class="mt-5 inline-flex rounded-full bg-floof-pink px-6 py-3 text-sm font-semibold text-white hover:bg-floof-coral transition-colors">
+        Contact us
+      </a>
+    </section>
+  </article>
+</Layout>

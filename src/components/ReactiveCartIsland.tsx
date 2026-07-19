@@ -1,43 +1,256 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useCart } from "@/lib/CartContext"
 import { formatPrice, type MedusaVariant } from "@/lib/medusa"
-import type { FloofProduct } from "@/components/ProductCard.astro"
+import type { FloofProduct } from "@/lib/product"
+import { colorMap } from "@/lib/product"
+import SizeGuide from "./SizeGuide"
 
-interface Props { product: FloofProduct; variants: MedusaVariant[] }
+interface Props {
+  product: FloofProduct
+  variants: MedusaVariant[]
+}
+
+function opt(v: MedusaVariant, title: string) {
+  return v.options?.find((o) => o.option?.title?.toLowerCase() === title.toLowerCase())?.value
+}
 
 export default function ReactiveCartIsland({ product, variants = [] }: Props) {
   const { addItem, itemCount, error: cartError, clearError } = useCart()
   const [selectedVariant, setV] = useState<MedusaVariant | null>(variants[0] || null)
-  const [qty, setQty] = useState(1); const [adding, setAdding] = useState(false)
-  const [added, setAdded] = useState(false); const [err, setErr] = useState<string | null>(null)
+  const [qty, setQty] = useState(1)
+  const [adding, setAdding] = useState(false)
+  const [added, setAdded] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
 
-  const colors = [...new Set(variants.map(v => v.options?.find(o => o.option?.title?.toLowerCase() === "color")?.value).filter(Boolean))] as string[]
-  const sizes = [...new Set(variants.map(v => v.options?.find(o => o.option?.title?.toLowerCase() === "size")?.value).filter(Boolean))] as string[]
-  const [selColor, setSelColor] = useState(colors[0] || ""); const [selSize, setSelSize] = useState(sizes[0] || "")
+  const colors = useMemo(
+    () =>
+      [...new Set(variants.map((v) => opt(v, "Color")).filter(Boolean))] as string[],
+    [variants]
+  )
+  const sizes = useMemo(() => {
+    const raw = [...new Set(variants.map((v) => opt(v, "Size")).filter(Boolean))] as string[]
+    const order = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"]
+    return raw.sort((a, b) => (order.indexOf(a) === -1 ? 99 : order.indexOf(a)) - (order.indexOf(b) === -1 ? 99 : order.indexOf(b)))
+  }, [variants])
+
+  const [selColor, setSelColor] = useState(colors[0] || "")
+  const [selSize, setSelSize] = useState(sizes[0] || "")
+
+  // Sizes available for selected color
+  const availableSizes = useMemo(() => {
+    if (!selColor) return new Set(sizes)
+    return new Set(
+      variants.filter((v) => opt(v, "Color") === selColor).map((v) => opt(v, "Size")).filter(Boolean) as string[]
+    )
+  }, [variants, selColor, sizes])
 
   useEffect(() => {
-    if (!colors.length && !sizes.length) { setV(variants[0] || null); return }
-    const match = variants.find(v => { const vc = v.options?.find(o => o.option?.title?.toLowerCase() === "color")?.value; const vs = v.options?.find(o => o.option?.title?.toLowerCase() === "size")?.value; return (!selColor || vc === selColor) && (!selSize || vs === selSize) })
-    if (match) setV(match)
-  }, [selColor, selSize, variants])
+    if (!colors.length && !sizes.length) {
+      setV(variants[0] || null)
+      return
+    }
+    const match = variants.find((v) => {
+      const vc = opt(v, "Color")
+      const vs = opt(v, "Size")
+      return (!selColor || vc === selColor) && (!selSize || vs === selSize)
+    })
+    setV(match || null)
+  }, [selColor, selSize, variants, colors.length, sizes.length])
+
+  // If size unavailable for color, pick first available
+  useEffect(() => {
+    if (selSize && !availableSizes.has(selSize)) {
+      const next = sizes.find((s) => availableSizes.has(s))
+      if (next) setSelSize(next)
+    }
+  }, [availableSizes, selSize, sizes])
 
   async function handleAdd() {
-    if (!selectedVariant) return; setAdding(true); setErr(null); clearError()
-    try { await addItem(selectedVariant.id, qty); setAdded(true); setTimeout(() => setAdded(false), 2000) }
-    catch (e: any) { setErr(e.message || "Failed to add") } finally { setAdding(false) }
+    if (!selectedVariant) return
+    setAdding(true)
+    setErr(null)
+    clearError()
+    try {
+      await addItem(selectedVariant.id, qty)
+      setAdded(true)
+      setTimeout(() => setAdded(false), 2500)
+    } catch (e: any) {
+      setErr(e.message || "Failed to add")
+    } finally {
+      setAdding(false)
+    }
   }
 
   const price = selectedVariant?.prices?.[0]?.amount ?? Math.round(product.price * 100)
   const cur = selectedVariant?.prices?.[0]?.currency_code || "usd"
+  const unavailable = !selectedVariant
 
-  if (err || cartError) return <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-6"><p className="text-sm text-red-600">⚠️ {err || cartError}</p><button onClick={() => { setErr(null); clearError() }} className="mt-2 text-sm text-red-500 underline">Dismiss</button></div>
+  if (err || cartError) {
+    return (
+      <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-6">
+        <p className="text-sm text-red-600">⚠️ {err || cartError}</p>
+        <button
+          type="button"
+          onClick={() => {
+            setErr(null)
+            clearError()
+          }}
+          className="mt-2 text-sm text-red-500 underline"
+        >
+          Dismiss
+        </button>
+      </div>
+    )
+  }
 
-  return <div className="mt-8 space-y-6">
-    <p className="text-3xl font-bold text-floof-dark">{formatPrice(price, cur)}</p>
-    {colors.length > 0 && <div><p className="text-sm font-medium text-floof-dark/70 mb-2">Color: <span className="text-floof-dark">{selColor}</span></p><div className="flex gap-2 flex-wrap">{colors.map(c => <button key={c} onClick={() => setSelColor(c)} className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selColor === c ? "bg-floof-dark text-white" : "bg-floof-cream text-floof-dark/70 hover:bg-floof-sand"}`}>{c}</button>)}</div></div>}
-    {sizes.length > 0 && <div><p className="text-sm font-medium text-floof-dark/70 mb-2">Size: <span className="text-floof-dark">{selSize}</span></p><div className="flex gap-2 flex-wrap">{sizes.map(s => <button key={s} onClick={() => setSelSize(s)} className={`w-12 h-12 rounded-xl text-sm font-medium transition-all ${selSize === s ? "bg-floof-dark text-white" : "bg-floof-cream text-floof-dark/70 hover:bg-floof-sand"}`}>{s}</button>)}</div></div>}
-    <div><p className="text-sm font-medium text-floof-dark/70 mb-2">Quantity</p><div className="flex items-center gap-3"><button onClick={() => setQty(Math.max(1, qty - 1))} className="w-10 h-10 rounded-xl border border-floof-dark/10 flex items-center justify-center hover:border-floof-pink">−</button><span className="w-10 text-center font-semibold text-lg">{qty}</span><button onClick={() => setQty(qty + 1)} className="w-10 h-10 rounded-xl border border-floof-dark/10 flex items-center justify-center hover:border-floof-pink">+</button></div></div>
-    <button onClick={handleAdd} disabled={adding || !selectedVariant} className="w-full rounded-full bg-floof-pink py-4 text-base font-semibold text-white hover:bg-floof-coral transition-colors disabled:opacity-50">{adding ? "Adding…" : added ? "✓ Added!" : `Add to Cart — ${formatPrice(price * qty, cur)}`}</button>
-    {itemCount > 0 && <p className="text-center text-sm text-floof-dark/50">🛒 {itemCount} item{itemCount !== 1 ? "s" : ""} in cart</p>}
-  </div>
+  return (
+    <div className="mt-6 space-y-6">
+      <div className="flex items-baseline justify-between gap-4">
+        <p className="text-3xl font-bold text-floof-dark">{formatPrice(price, cur)}</p>
+        <p className="text-xs text-floof-dark/40">USD · tax at checkout</p>
+      </div>
+
+      {colors.length > 0 && (
+        <div>
+          <p className="text-sm font-medium text-floof-dark/70 mb-2">
+            Color: <span className="text-floof-dark font-semibold">{selColor}</span>
+          </p>
+          <div className="flex gap-2 flex-wrap" role="listbox" aria-label="Color">
+            {colors.map((c) => {
+              const swatch = colorMap[c] || "#888"
+              const selected = selColor === c
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  title={c}
+                  onClick={() => setSelColor(c)}
+                  className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-all ${
+                    selected
+                      ? "border-floof-dark bg-floof-dark text-white"
+                      : "border-floof-dark/10 bg-white text-floof-dark/70 hover:border-floof-pink"
+                  }`}
+                >
+                  <span
+                    className="w-4 h-4 rounded-full border border-black/10 shrink-0"
+                    style={{ background: swatch }}
+                  />
+                  {c}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {sizes.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm font-medium text-floof-dark/70">
+              Size: <span className="text-floof-dark font-semibold">{selSize || "—"}</span>
+            </p>
+            <SizeGuide category={product.category} />
+          </div>
+          <div className="flex gap-2 flex-wrap" role="listbox" aria-label="Size">
+            {sizes.map((s) => {
+              const avail = availableSizes.has(s)
+              const selected = selSize === s
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  disabled={!avail}
+                  onClick={() => avail && setSelSize(s)}
+                  className={`min-w-12 h-12 px-3 rounded-xl text-sm font-medium transition-all ${
+                    !avail
+                      ? "bg-floof-sand/50 text-floof-dark/25 line-through cursor-not-allowed"
+                      : selected
+                        ? "bg-floof-dark text-white"
+                        : "bg-floof-cream text-floof-dark/70 hover:bg-floof-sand"
+                  }`}
+                >
+                  {s}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      <div>
+        <p className="text-sm font-medium text-floof-dark/70 mb-2">Quantity</p>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setQty(Math.max(1, qty - 1))}
+            className="w-10 h-10 rounded-xl border border-floof-dark/10 flex items-center justify-center hover:border-floof-pink"
+            aria-label="Decrease quantity"
+          >
+            −
+          </button>
+          <span className="w-10 text-center font-semibold text-lg" aria-live="polite">
+            {qty}
+          </span>
+          <button
+            type="button"
+            onClick={() => setQty(Math.min(10, qty + 1))}
+            className="w-10 h-10 rounded-xl border border-floof-dark/10 flex items-center justify-center hover:border-floof-pink"
+            aria-label="Increase quantity"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-3 sticky bottom-0 sm:static bg-floof-cream/95 sm:bg-transparent py-3 sm:py-0 -mx-2 px-2 sm:mx-0 sm:px-0 backdrop-blur sm:backdrop-blur-none border-t sm:border-0 border-floof-dark/5">
+        <button
+          type="button"
+          onClick={handleAdd}
+          disabled={adding || unavailable}
+          className="w-full rounded-full bg-floof-pink py-4 text-base font-semibold text-white hover:bg-floof-coral transition-colors disabled:opacity-50 shadow-lg shadow-floof-pink/20"
+        >
+          {adding
+            ? "Adding…"
+            : added
+              ? "✓ Added to cart"
+              : unavailable
+                ? "Select options"
+                : `Add to cart — ${formatPrice(price * qty, cur)}`}
+        </button>
+        {added && (
+          <a
+            href="/checkout"
+            className="block w-full text-center rounded-full border-2 border-floof-dark py-3 text-sm font-semibold text-floof-dark hover:bg-floof-dark hover:text-white transition-colors"
+          >
+            View cart & checkout
+          </a>
+        )}
+      </div>
+
+      {itemCount > 0 && !added && (
+        <p className="text-center text-sm text-floof-dark/50">
+          🛒 {itemCount} item{itemCount !== 1 ? "s" : ""} in cart ·{" "}
+          <a href="/checkout" className="text-floof-pink underline">
+            Checkout
+          </a>
+        </p>
+      )}
+
+      <ul className="text-xs text-floof-dark/45 space-y-1.5 pt-2">
+        <li>✓ Ships from US print partners (typically 2–7 business days to print)</li>
+        <li>✓ Secure Stripe checkout · Free shipping over $75</li>
+        <li>
+          ✓{" "}
+          <a href="/shipping-returns" className="underline hover:text-floof-pink">
+            30-day returns
+          </a>{" "}
+          on unworn items
+        </li>
+      </ul>
+    </div>
+  )
 }

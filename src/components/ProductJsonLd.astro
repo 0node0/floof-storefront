@@ -1,0 +1,30 @@
+---
+import type { FloofProduct } from "@/lib/product"
+import { site } from "@/lib/site"
+
+interface Props {
+  product: FloofProduct
+  availability?: "InStock" | "OutOfStock" | "PreOrder"
+}
+const { product, availability = "InStock" } = Astro.props
+const url = `${site.url}/products/${product.slug}`
+const data = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: product.name,
+  description: product.description || product.name,
+  image: product.image ? [product.image] : undefined,
+  sku: product.slug,
+  brand: { "@type": "Brand", name: site.name },
+  offers: {
+    "@type": "Offer",
+    url,
+    priceCurrency: "USD",
+    price: product.price.toFixed(2),
+    availability: `https://schema.org/${availability}`,
+    itemCondition: "https://schema.org/NewCondition",
+    seller: { "@type": "Organization", name: site.name },
+  },
+}
+---
+<script type="application/ld+json" set:html={JSON.stringify(data)} />
