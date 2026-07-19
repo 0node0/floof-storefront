@@ -285,6 +285,130 @@ a.card-surface:hover,
   overflow: hidden;
 }
 
+/* ── Cart badge dance ─────────────────────────────── */
+.cart-badge--bump .cart-badge__icon {
+  animation: cart-icon-bump 0.65s var(--ease-out) both;
+}
+.cart-badge__count--pop {
+  animation: cart-count-pop 0.55s var(--ease-out) both;
+}
+
+@keyframes cart-icon-bump {
+  0%   { transform: scale(1) rotate(0deg); }
+  20%  { transform: scale(1.25) rotate(-12deg); }
+  40%  { transform: scale(0.92) rotate(10deg); }
+  60%  { transform: scale(1.12) rotate(-6deg); }
+  80%  { transform: scale(1.02) rotate(3deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes cart-count-pop {
+  0%   { transform: scale(0.2); opacity: 0; }
+  50%  { transform: scale(1.35); opacity: 1; }
+  75%  { transform: scale(0.92); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ── Full-screen add-to-cart celebration ───────────── */
+.cart-celeb {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  padding: var(--space-md);
+}
+.cart-celeb__backdrop {
+  position: absolute;
+  inset: 0;
+  background: oklch(22% 0.02 45 / 0.35);
+  backdrop-filter: blur(3px);
+  animation: celeb-fade-in 180ms var(--ease-out) both;
+}
+.cart-celeb__card {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 22rem);
+  text-align: center;
+  padding: 1.75rem 1.5rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-paper);
+  outline: 1px solid color-mix(in oklch, var(--color-ink) 8%, transparent);
+  box-shadow: 0 24px 60px -20px oklch(22% 0.02 45 / 0.35);
+  animation: celeb-card-in 420ms var(--ease-out) both;
+}
+.cart-celeb__burst {
+  display: inline-flex;
+  color: var(--color-accent);
+  margin-bottom: 0.5rem;
+  animation: celeb-check 500ms var(--ease-out) both;
+}
+.cart-celeb__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-deep);
+}
+.cart-celeb__title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  margin-top: 0.25rem;
+}
+.cart-celeb__name {
+  margin-top: 0.35rem;
+  font-size: 0.9375rem;
+  color: var(--color-ink-2);
+  line-height: 1.35;
+}
+.cart-celeb__hint {
+  margin-top: 0.65rem;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+.cart-celeb__actions {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+.cart-celeb__particle {
+  position: absolute;
+  top: -12px;
+  z-index: 1;
+  border-radius: 999px;
+  opacity: 0;
+  animation-name: celeb-fall;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.35, 1);
+  animation-fill-mode: both;
+  pointer-events: none;
+}
+
+@keyframes celeb-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes celeb-card-in {
+  0%   { opacity: 0; transform: translateY(16px) scale(0.92); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes celeb-check {
+  0%   { transform: scale(0.4); opacity: 0; }
+  60%  { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes celeb-fall {
+  0%   { transform: translateY(0) rotate(0deg) scale(0.6); opacity: 0; }
+  12%  { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(420deg) scale(1); opacity: 0.15; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .btn,
@@ -297,5 +421,14 @@ a.card-surface:hover,
   .btn:active,
   a.card-surface:hover {
     transform: none;
+  }
+  .cart-badge--bump .cart-badge__icon,
+  .cart-badge__count--pop,
+  .cart-celeb__particle,
+  .cart-celeb__burst {
+    animation: none !important;
+  }
+  .cart-celeb__card {
+    animation: celeb-fade-in 150ms ease both;
   }
 }

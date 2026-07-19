@@ -77,9 +77,12 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
     setErr(null)
     clearError()
     try {
-      await addItem(selectedVariant.id, qty)
+      await addItem(selectedVariant.id, qty, {
+        productName: product.name,
+        celebrate: true,
+      })
       setAdded(true)
-      setTimeout(() => setAdded(false), 2500)
+      setTimeout(() => setAdded(false), 2800)
     } catch (e: any) {
       setErr(e.message || "Failed to add")
     } finally {
