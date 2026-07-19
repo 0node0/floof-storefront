@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import { useCart } from "@/lib/CartContext"
 import { formatPrice, type MedusaVariant } from "@/lib/medusa"
 import type { FloofProduct } from "@/lib/product"
@@ -22,6 +22,7 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
   const [adding, setAdding] = useState(false)
   const [added, setAdded] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const addBtnRef = useRef<HTMLButtonElement>(null)
 
   const colors = useMemo(
     () =>
@@ -76,13 +77,24 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
     setAdding(true)
     setErr(null)
     clearError()
+
+    // Prefer product photo as fly origin; fall back to button center
+    const sourceEl =
+      document.querySelector<HTMLElement>("[data-product-fly-source]") || addBtnRef.current
+    const rect = sourceEl?.getBoundingClientRect()
+    const flyFrom = rect
+      ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+      : undefined
+
     try {
       await addItem(selectedVariant.id, qty, {
         productName: product.name,
+        productImage: product.image || undefined,
+        flyFrom,
         celebrate: true,
       })
       setAdded(true)
-      setTimeout(() => setAdded(false), 2800)
+      setTimeout(() => setAdded(false), 5200)
     } catch (e: any) {
       setErr(e.message || "Failed to add")
     } finally {
@@ -220,6 +232,7 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
 
       <div className="space-y-3 sticky bottom-0 sm:static bg-floof-cream/95 sm:bg-transparent py-3 sm:py-0 -mx-2 px-2 sm:mx-0 sm:px-0 backdrop-blur sm:backdrop-blur-none border-t sm:border-0 border-floof-dark/5">
         <button
+          ref={addBtnRef}
           type="button"
           onClick={handleAdd}
           disabled={adding || unavailable}

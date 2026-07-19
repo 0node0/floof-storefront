@@ -9,11 +9,13 @@ import {
   clearCart as apiClear,
   type MedusaCart,
 } from "./medusa"
-import { emitCartPulse } from "./cart-events"
+import { emitCartPulse, type CartFlyFrom } from "./cart-events"
 
 export type AddItemMeta = {
   productName?: string
   celebrate?: boolean
+  productImage?: string
+  flyFrom?: CartFlyFrom
 }
 
 interface UseCartResult {
@@ -77,12 +79,14 @@ export function useCart(): UseCartResult {
       const optimistic = countRef.current + qty
       countRef.current = optimistic
       setItemCount(optimistic)
-      // Fire celebration + badge dance immediately (before network)
+      // Fire celebration + fly-to-cart immediately (before network)
       emitCartPulse({
         itemCount: optimistic,
         addedQty: qty,
         celebrate,
         productName: meta?.productName,
+        productImage: meta?.productImage,
+        flyFrom: meta?.flyFrom,
         pending: true,
       })
 
