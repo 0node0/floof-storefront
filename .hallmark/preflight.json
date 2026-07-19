@@ -1,0 +1,9 @@
+{
+  "scanned": "2026-07-19",
+  "framework": "Astro 6 + Node SSR (Railway)",
+  "fonts": "Fraunces + DM Sans + DM Mono (post-redesign); was Space Grotesk",
+  "palette": "custom OKLCH sun-warm atelier via tokens.css + floof-* aliases",
+  "motion": "motion-cut (no framer/gsap)",
+  "design_md": true,
+  "spacing": "4pt named scale in tokens.css"
+}

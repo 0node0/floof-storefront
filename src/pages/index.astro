@@ -20,71 +20,94 @@ const cats: { href: string; label: string; icon: string; blurb: string }[] = [
   { href: "/store?cat=hoodies", label: "Hoodies", icon: "hoodie", blurb: "Cozy Gulf nights" },
   { href: "/store", label: "Full shop", icon: "spark", blurb: "See everything" },
 ];
+const heroImg = products[0]?.image;
 ---
 <Layout
   title="Fun, witty threads from SW Florida"
   description="Floof is a fun, young, vibrant clothing brand from Southwest Florida. T-shirts, hoodies & more — printed fresh when you order."
   image={ogImage}
 >
-  <section class="relative overflow-hidden bg-floof-dark text-white">
-    <div class="absolute inset-0 bg-gradient-to-br from-floof-pink/30 via-transparent to-floof-ocean/20 opacity-80"></div>
-    <div class="relative mx-auto max-w-7xl px-6 py-20 md:py-28 lg:py-36">
-      <div class="max-w-2xl">
-        <p class="text-sm font-semibold uppercase tracking-widest text-floof-yellow">Southwest Florida</p>
-        <h1 class="mt-4 text-5xl font-bold leading-[1.05] md:text-6xl lg:text-7xl">
-          Life's too short for <span class="text-floof-gradient">boring clothes.</span>
-        </h1>
-        <p class="mt-6 text-lg text-white/70 max-w-lg leading-relaxed">
-          Fun, witty threads for sun-chasers, beach bums, and anyone who refuses to take themselves too seriously.
-        </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a href="/store" class="inline-flex items-center rounded-full bg-floof-pink px-8 py-3.5 text-sm font-semibold text-white hover:bg-floof-coral transition-colors shadow-lg shadow-floof-pink/25">
-            Shop the collection
-          </a>
-          <a href="/about" class="inline-flex items-center rounded-full border border-white/20 px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors">
-            Our story
-          </a>
+  {/* Photographic fold hero — sun-warm atelier */}
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-floof-sand"></div>
+    <div class="absolute inset-0 opacity-40" style="background: radial-gradient(ellipse 80% 60% at 70% 20%, oklch(84% 0.12 85 / 0.45), transparent 55%), radial-gradient(ellipse 50% 40% at 10% 80%, oklch(62% 0.14 38 / 0.12), transparent 50%);"></div>
+    <div class="relative mx-auto max-w-7xl px-6 py-16 md:py-24 lg:py-28">
+      <div class="grid items-center gap-12 lg:grid-cols-12">
+        <div class="lg:col-span-6 xl:col-span-5">
+          <p class="eyebrow">Southwest Florida · est. for sun-chasers</p>
+          <h1 class="mt-4 font-display text-[clamp(2.5rem,5vw+0.5rem,4rem)] font-semibold text-floof-dark leading-[1.05]">
+            Life&rsquo;s too short for <span class="text-floof-pink">boring clothes.</span>
+          </h1>
+          <p class="mt-6 text-lg text-floof-dark/60 max-w-md leading-relaxed">
+            Fun, witty threads for beach bums and anyone who refuses to take themselves too seriously — printed fresh, never warehouse-stale.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="/store" class="btn btn--lg">
+              Shop the collection
+            </a>
+            <a href="/about" class="btn btn--outline btn--lg">
+              Our story
+            </a>
+          </div>
+          <dl class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-floof-dark/50">
+            <div class="inline-flex items-center gap-2">
+              <Icon name="truck" class="w-4 h-4 text-floof-coral" />
+              <dd>Free ship $75+</dd>
+            </div>
+            <div class="inline-flex items-center gap-2">
+              <Icon name="pin" class="w-4 h-4 text-floof-coral" />
+              <dd>Printed in the US</dd>
+            </div>
+            <div class="inline-flex items-center gap-2">
+              <Icon name="return" class="w-4 h-4 text-floof-coral" />
+              <dd>30-day returns</dd>
+            </div>
+          </dl>
         </div>
-        <dl class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/55">
-          <div class="inline-flex items-center gap-2">
-            <Icon name="truck" class="w-4 h-4 text-floof-yellow" />
-            <dd>Free ship $75+</dd>
+        <div class="lg:col-span-6 xl:col-span-7">
+          <div class="relative mx-auto max-w-lg lg:max-w-none">
+            <div class="aspect-[4/5] sm:aspect-square rounded-[1.25rem] bg-white/70 p-6 md:p-10 shadow-[0_20px_50px_-20px_oklch(22%_0.02_45_/_0.2)] outline outline-1 outline-floof-dark/6 flex items-center justify-center overflow-hidden">
+              {heroImg ? (
+                <img
+                  src={heroImg}
+                  alt="Featured Floof apparel"
+                  class="w-full h-full object-contain"
+                  width="560"
+                  height="560"
+                  loading="eager"
+                />
+              ) : (
+                <p class="font-display text-3xl md:text-4xl text-floof-dark/30 text-center px-6">
+                  Soft blanks.<br />Louder slogans.
+                </p>
+              )}
+            </div>
+            <div class="absolute -bottom-3 -left-2 sm:left-4 rounded-full bg-floof-dark text-floof-cream px-4 py-2 text-xs font-mono uppercase tracking-wider shadow-lg">
+              Made to order
+            </div>
           </div>
-          <div class="inline-flex items-center gap-2">
-            <Icon name="pin" class="w-4 h-4 text-floof-yellow" />
-            <dd>Printed in the US</dd>
-          </div>
-          <div class="inline-flex items-center gap-2">
-            <Icon name="return" class="w-4 h-4 text-floof-yellow" />
-            <dd>30-day returns</dd>
-          </div>
-        </dl>
+        </div>
       </div>
-    </div>
-    <div class="absolute bottom-0 left-0 right-0">
-      <svg viewBox="0 0 1440 80" fill="none" class="w-full" aria-hidden="true">
-        <path d="M0 40L48 36C96 32 192 24 288 28C384 32 480 48 576 52C672 56 768 48 864 40C960 32 1056 24 1152 28C1248 32 1344 48 1392 56L1440 64V80H1392C1344 80 1248 80 1152 80C1056 80 960 80 864 80C768 80 672 80 576 80C480 80 384 80 288 80C192 80 96 80 48 80H0V40Z" fill="#FFF8F0"/>
-      </svg>
     </div>
   </section>
 
   <TrustBar />
 
   <section class="mx-auto max-w-7xl px-6 py-14">
-    <div class="text-center mb-8">
-      <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">Shop by vibe</p>
-      <h2 class="mt-2 text-2xl md:text-3xl font-bold text-floof-dark">Find your fit</h2>
+    <div class="mb-8 max-w-xl">
+      <p class="eyebrow">Shop by vibe</p>
+      <h2 class="mt-2 font-display text-2xl md:text-3xl font-semibold text-floof-dark">Find your fit</h2>
     </div>
     <div class="grid gap-4 sm:grid-cols-3">
       {cats.map((c) => (
         <a
           href={c.href}
-          class="group rounded-3xl bg-white p-8 ring-1 ring-floof-dark/5 hover:ring-floof-pink/30 hover:shadow-lg transition-all text-center"
+          class="group rounded-[1rem] bg-white p-8 outline outline-1 outline-floof-dark/6 hover:outline-floof-pink/25 hover:shadow-[0_16px_36px_-14px_oklch(22%_0.02_45_/_0.14)] transition-all text-left"
         >
-          <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-floof-sand text-floof-dark group-hover:bg-floof-pink group-hover:text-white transition-colors">
+          <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-floof-sand text-floof-coral group-hover:bg-floof-pink group-hover:text-accent-ink transition-colors">
             <Icon name={c.icon} class="w-6 h-6" />
           </span>
-          <p class="mt-3 text-lg font-bold text-floof-dark group-hover:text-floof-pink transition-colors">{c.label}</p>
+          <p class="mt-4 font-display text-lg font-semibold text-floof-dark group-hover:text-floof-pink transition-colors">{c.label}</p>
           <p class="mt-1 text-sm text-floof-dark/50">{c.blurb}</p>
         </a>
       ))}
@@ -92,43 +115,43 @@ const cats: { href: string; label: string; icon: string; blurb: string }[] = [
   </section>
 
   {products.length > 0 && (
-    <section class="mx-auto max-w-7xl px-6 py-6 pb-20">
-      <div class="flex items-end justify-between gap-4 mb-10">
-        <div>
-          <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">New drops</p>
-          <h2 class="mt-2 text-3xl font-bold md:text-4xl text-floof-dark">Fan favorites</h2>
+    <section class="bg-floof-sand/40 border-y border-floof-dark/5">
+      <div class="mx-auto max-w-7xl px-6 py-16 md:py-20">
+        <div class="flex items-end justify-between gap-4 mb-10">
+          <div>
+            <p class="eyebrow">New drops</p>
+            <h2 class="mt-2 font-display text-3xl font-semibold md:text-4xl text-floof-dark">Fan favorites</h2>
+          </div>
+          <a href="/store" class="text-sm font-medium text-floof-pink underline underline-offset-4 shrink-0">View all</a>
         </div>
-        <a href="/store" class="text-sm font-medium text-floof-pink underline shrink-0">View all</a>
-      </div>
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {products.slice(0, 4).map((p, i) => <ProductCard product={p} priority={i < 2} />)}
-      </div>
-      {products.length > 4 && (
-        <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {products.slice(4, 8).map((p) => <ProductCard product={p} />)}
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {products.slice(0, 4).map((p, i) => <ProductCard product={p} priority={i < 2} />)}
         </div>
-      )}
+        {products.length > 4 && (
+          <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {products.slice(4, 8).map((p) => <ProductCard product={p} />)}
+          </div>
+        )}
+      </div>
     </section>
   )}
 
   {products.length === 0 && (
     <section class="mx-auto max-w-3xl px-6 py-20 text-center">
-      <p class="text-2xl font-bold text-floof-dark">No products yet — check back soon!</p>
+      <p class="font-display text-2xl font-semibold text-floof-dark">No products yet — check back soon!</p>
     </section>
   )}
 
-  <section class="bg-white border-y border-floof-dark/5 py-16">
-    <div class="mx-auto max-w-3xl px-6 text-center">
-      <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">Why Floof</p>
-      <h2 class="mt-3 text-2xl md:text-3xl font-bold text-floof-dark leading-snug">
-        Soft blanks. Louder slogans. Zero warehouse dust.
-      </h2>
-      <p class="mt-4 text-floof-dark/55 leading-relaxed">
-        We design in SW Florida and print each order fresh. Better for small drops, better for the planet than piles of deadstock, and always ready for the next silly idea.
-      </p>
-      <a href="/store" class="mt-8 inline-flex rounded-full bg-floof-pink px-10 py-4 text-base font-semibold text-white hover:bg-floof-coral transition-colors">
-        Shop now
-      </a>
-    </div>
+  <section class="mx-auto max-w-3xl px-6 py-20 text-center">
+    <p class="eyebrow">Why Floof</p>
+    <h2 class="mt-3 font-display text-2xl md:text-3xl font-semibold text-floof-dark leading-snug">
+      Soft blanks. Louder slogans. Zero warehouse dust.
+    </h2>
+    <p class="mt-4 text-floof-dark/55 leading-relaxed">
+      We design in SW Florida and print each order fresh. Better for small drops, better for the planet than piles of deadstock, and always ready for the next silly idea.
+    </p>
+    <a href="/store" class="btn btn--lg mt-8">
+      Shop now
+    </a>
   </section>
 </Layout>

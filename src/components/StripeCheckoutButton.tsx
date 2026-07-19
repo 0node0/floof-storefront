@@ -40,7 +40,7 @@ export default function StripeCheckoutButton() {
         type="button"
         onClick={handleCheckout}
         disabled={loading}
-        className="w-full rounded-full bg-floof-pink py-4 text-base font-semibold text-white hover:bg-floof-coral transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
+        className="btn btn--lg w-full"
       >
         <Icon name="lock" className="w-4 h-4" />
         {loading ? "Opening Stripe Checkout…" : "Pay with Stripe"}

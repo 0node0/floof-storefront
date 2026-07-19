@@ -24,7 +24,6 @@ try {
   variants = raw.variants || [];
   image = product.image || "/favicon.svg";
 
-  // Related products same category
   try {
     const { products } = await listProducts();
     related = products
@@ -50,7 +49,7 @@ const catLabel = categoryLabels[product.category] || product.category;
   <ProductJsonLd product={product} />
 
   <div class="mx-auto max-w-7xl px-6 py-8 md:py-12">
-    <nav class="mb-8 text-sm text-floof-dark/50" aria-label="Breadcrumb">
+    <nav class="mb-8 text-sm text-floof-dark/45" aria-label="Breadcrumb">
       <ol class="flex flex-wrap items-center gap-1">
         <li><a href="/" class="hover:text-floof-pink">Home</a></li>
         <li aria-hidden="true" class="mx-1">/</li>
@@ -63,9 +62,8 @@ const catLabel = categoryLabels[product.category] || product.category;
     </nav>
 
     <div class="grid gap-10 lg:grid-cols-2 lg:gap-14">
-      <!-- Gallery -->
       <div class="space-y-4">
-        <div class="aspect-square rounded-3xl bg-gradient-to-br from-floof-sand to-floof-cream p-8 md:p-12 flex items-center justify-center overflow-hidden ring-1 ring-floof-dark/5">
+        <div class="aspect-square rounded-[1.25rem] bg-floof-sand p-8 md:p-12 flex items-center justify-center overflow-hidden outline outline-1 outline-floof-dark/6">
           {image && image !== "/favicon.svg" ? (
             <img
               src={image}
@@ -76,25 +74,24 @@ const catLabel = categoryLabels[product.category] || product.category;
               height="600"
             />
           ) : (
-            <span class="text-4xl md:text-6xl font-bold text-floof-dark/80 leading-tight text-center">
+            <span class="font-display text-4xl md:text-5xl font-semibold text-floof-dark/80 leading-tight text-center">
               {product.phrase}
             </span>
           )}
         </div>
-        <p class="text-center text-xs text-floof-dark/40">
+        <p class="text-center text-xs font-mono text-floof-dark/40">
           Colors shown as digital mockups · final print may vary slightly
         </p>
       </div>
 
-      <!-- Buy box -->
       <div class="flex flex-col lg:justify-center">
         {product.isWip && (
-          <span class="inline-flex w-fit rounded-full bg-floof-yellow/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-floof-dark mb-3">
+          <span class="inline-flex w-fit rounded-full bg-floof-yellow/35 px-3 py-1 text-xs font-mono font-medium uppercase tracking-wider text-floof-dark mb-3">
             Design preview
           </span>
         )}
-        <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">{catLabel}</p>
-        <h1 class="mt-2 text-3xl font-bold md:text-4xl text-floof-dark leading-tight">{product.name}</h1>
+        <p class="eyebrow">{catLabel}</p>
+        <h1 class="mt-2 font-display text-3xl font-semibold md:text-4xl text-floof-dark leading-tight">{product.name}</h1>
         <p class="mt-4 text-base md:text-lg text-floof-dark/60 leading-relaxed">{product.description}</p>
 
         {variants.length > 0 ? (
@@ -103,7 +100,6 @@ const catLabel = categoryLabels[product.category] || product.category;
           <p class="mt-8 text-sm italic text-floof-dark/50">Variants syncing — check back shortly.</p>
         )}
 
-        <!-- Accordion-style details -->
         <div class="mt-10 divide-y divide-floof-dark/10 border-t border-floof-dark/10">
           <details class="group py-4" open>
             <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-floof-dark">
@@ -152,10 +148,10 @@ const catLabel = categoryLabels[product.category] || product.category;
     <section class="mx-auto max-w-7xl px-6 py-16">
       <div class="flex items-end justify-between gap-4 mb-8">
         <div>
-          <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">You may also like</p>
-          <h2 class="mt-1 text-2xl font-bold md:text-3xl text-floof-dark">More from the collection</h2>
+          <p class="eyebrow">You may also like</p>
+          <h2 class="mt-1 font-display text-2xl font-semibold md:text-3xl text-floof-dark">More from the collection</h2>
         </div>
-        <a href="/store" class="text-sm font-medium text-floof-pink underline shrink-0">Shop all</a>
+        <a href="/store" class="text-sm font-medium text-floof-pink underline underline-offset-4 shrink-0">Shop all</a>
       </div>
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {related.map((p) => <ProductCard product={p} />)}

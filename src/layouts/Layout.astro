@@ -32,7 +32,10 @@ const ogImage = image.startsWith("http") ? image : new URL(image, site.url).href
   <meta name="generator" content={Astro.generator} />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    rel="stylesheet"
+  />
   <title>{pageTitle}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalUrl} />
@@ -47,12 +50,12 @@ const ogImage = image.startsWith("http") ? image : new URL(image, site.url).href
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
-  <meta name="theme-color" content="#FF6B9D" />
+  <meta name="theme-color" content="#c46a45" />
 </head>
 <body class="min-h-screen bg-floof-cream text-floof-dark antialiased font-sans">
   <a
     href="#main-content"
-    class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[200] focus:rounded-full focus:bg-floof-pink focus:px-4 focus:py-2 focus:text-white focus:text-sm"
+    class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[200] focus:rounded-full focus:bg-floof-pink focus:px-4 focus:py-2 focus:text-accent-ink focus:text-sm"
   >
     Skip to content
   </a>

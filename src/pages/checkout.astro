@@ -18,8 +18,8 @@ const perks: { icon: string; text: string; href?: string }[] = [
 >
   <section class="mx-auto max-w-5xl px-6 py-10 md:py-12">
     <div class="mb-8">
-      <p class="text-sm font-semibold uppercase tracking-widest text-floof-coral">Almost there</p>
-      <h1 class="mt-1 text-3xl font-bold tracking-tight text-floof-dark">Your cart</h1>
+      <p class="eyebrow">Almost there</p>
+      <h1 class="mt-1 font-display text-3xl font-semibold tracking-tight text-floof-dark">Your cart</h1>
       <p class="mt-2 text-sm text-floof-dark/50">
         Free US shipping on orders $75+. Secure payment via Stripe — we never store your card.
       </p>
@@ -30,12 +30,12 @@ const perks: { icon: string; text: string; href?: string }[] = [
         <CartSummary client:load />
       </div>
       <aside class="lg:col-span-2 space-y-4">
-        <div class="rounded-3xl bg-white p-6 ring-1 ring-floof-dark/5 sticky top-24">
-          <h2 class="font-bold text-floof-dark">Order perks</h2>
+        <div class="rounded-[1.25rem] bg-white p-6 outline outline-1 outline-floof-dark/6 sticky top-24">
+          <h2 class="font-display font-semibold text-floof-dark">Order perks</h2>
           <ul class="mt-4 space-y-3 text-sm text-floof-dark/60">
             {perks.map((p) => (
               <li class="flex gap-3 items-start">
-                <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-floof-sand text-floof-dark">
+                <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-floof-sand text-floof-coral">
                   <Icon name={p.icon} class="w-4 h-4" />
                 </span>
                 {p.href ? (
@@ -49,7 +49,7 @@ const perks: { icon: string; text: string; href?: string }[] = [
           <p class="mt-6 text-xs text-floof-dark/40 leading-relaxed">
             Need a different size? Change quantity here or remove items and re-add from the product page with the right size selected.
           </p>
-          <a href="/store" class="mt-4 inline-block text-sm font-medium text-floof-pink underline">
+          <a href="/store" class="mt-4 inline-block text-sm font-medium text-floof-pink underline underline-offset-4">
             Continue shopping
           </a>
         </div>

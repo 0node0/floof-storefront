@@ -49,12 +49,9 @@ export default function CartSummary() {
         <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-floof-sand text-floof-dark mb-4">
           <Icon name="cart" size={28} className="w-7 h-7" />
         </span>
-        <h2 className="text-xl font-bold text-floof-dark">Your cart is empty</h2>
+        <h2 className="font-display text-xl font-semibold text-floof-dark">Your cart is empty</h2>
         <p className="mt-2 text-sm text-floof-dark/50">Find something loud for the weekend.</p>
-        <a
-          href="/store"
-          className="mt-6 inline-flex rounded-full bg-floof-pink px-8 py-3 text-sm font-semibold text-white hover:bg-floof-coral"
-        >
+        <a href="/store" className="btn mt-6">
           Browse products
         </a>
       </div>

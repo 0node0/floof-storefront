@@ -15,54 +15,65 @@ function isActive(href: string) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 ---
-<header class="sticky top-0 z-50 bg-floof-cream/95 backdrop-blur-md border-b border-floof-dark/5">
-  <nav class="mx-auto flex items-center justify-between px-6 py-3.5 max-w-7xl" aria-label="Main">
-    <a href="/" class="text-2xl font-bold tracking-tight text-floof-pink hover:text-floof-coral transition-colors" aria-label="Floof home">
-      FLOOF
-    </a>
-    <div class="hidden md:flex items-center gap-7">
-      {links.map((l) => (
-        <a
-          href={l.href}
-          class:list={[
-            "text-sm font-medium transition-colors",
-            isActive(l.href) ? "text-floof-pink" : "text-floof-dark/70 hover:text-floof-pink",
-          ]}
-          aria-current={isActive(l.href) ? "page" : undefined}
-        >
-          {l.label}
-        </a>
-      ))}
+{/* Hallmark · nav: N6 masthead · design-system: design.md */}
+<header class="sticky top-0 z-50 border-b border-floof-dark/8 bg-floof-cream/92 backdrop-blur-md">
+  <div class="mx-auto max-w-7xl px-6">
+    <!-- Masthead top line -->
+    <div class="hidden sm:flex items-center justify-between border-b border-floof-dark/6 py-1.5 text-[11px] font-mono uppercase tracking-[0.14em] text-floof-dark/45">
+      <span>Southwest Florida</span>
+      <span class="text-floof-coral">Handmade energy · Printed fresh</span>
     </div>
-    <div class="flex items-center gap-3">
+    <nav class="flex items-center justify-between py-3.5" aria-label="Main">
       <a
-        href="/checkout"
-        class="hidden sm:inline-flex items-center rounded-full bg-floof-pink px-4 py-2 text-xs font-semibold text-white hover:bg-floof-coral transition-colors"
+        href="/"
+        class="font-display text-[1.65rem] font-semibold tracking-tight text-floof-dark hover:text-floof-pink transition-colors"
+        aria-label="Floof home"
       >
-        Cart
+        Floof
       </a>
-      <CartBadge client:load />
-      <button
-        id="mobile-btn"
-        type="button"
-        class="md:hidden flex items-center text-floof-dark/70 p-1"
-        aria-label="Open menu"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
-        </svg>
-      </button>
-    </div>
-  </nav>
-  <div id="mobile-menu" class="hidden md:hidden border-t border-floof-dark/5 px-6 py-3 bg-floof-cream">
+      <div class="hidden md:flex items-center gap-8">
+        {links.map((l) => (
+          <a
+            href={l.href}
+            class:list={[
+              "text-[13px] font-medium tracking-wide transition-colors whitespace-nowrap",
+              isActive(l.href)
+                ? "text-floof-pink"
+                : "text-floof-dark/65 hover:text-floof-dark",
+            ]}
+            aria-current={isActive(l.href) ? "page" : undefined}
+          >
+            {l.label}
+          </a>
+        ))}
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/checkout" class="btn btn--sm hidden sm:inline-flex">
+          Cart
+        </a>
+        <CartBadge client:load />
+        <button
+          id="mobile-btn"
+          type="button"
+          class="md:hidden flex items-center text-floof-dark/70 p-1"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden border-t border-floof-dark/6 px-6 py-3 bg-floof-cream">
     {links.map((l) => (
       <a href={l.href} class="block py-2.5 text-sm font-medium text-floof-dark/70 hover:text-floof-pink transition-colors">
         {l.label}
       </a>
     ))}
-    <a href="/checkout" class="mt-2 block rounded-full bg-floof-pink py-2.5 text-center text-sm font-semibold text-white">
+    <a href="/checkout" class="btn mt-3 w-full">
       View cart
     </a>
   </div>

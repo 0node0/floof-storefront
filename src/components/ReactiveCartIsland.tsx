@@ -115,7 +115,7 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
   return (
     <div className="mt-6 space-y-6">
       <div className="flex items-baseline justify-between gap-4">
-        <p className="text-3xl font-bold text-floof-dark">{formatPrice(price, cur)}</p>
+        <p className="font-display text-3xl font-semibold text-floof-dark tabular-nums">{formatPrice(price, cur)}</p>
         <p className="text-xs text-floof-dark/40">USD · tax at checkout</p>
       </div>
 
@@ -220,7 +220,7 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
           type="button"
           onClick={handleAdd}
           disabled={adding || unavailable}
-          className="w-full rounded-full bg-floof-pink py-4 text-base font-semibold text-white hover:bg-floof-coral transition-colors disabled:opacity-50 shadow-lg shadow-floof-pink/20 inline-flex items-center justify-center gap-2"
+          className="btn btn--lg w-full"
         >
           {adding ? (
             "Adding…"
@@ -238,7 +238,7 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
         {added && (
           <a
             href="/checkout"
-            className="block w-full text-center rounded-full border-2 border-floof-dark py-3 text-sm font-semibold text-floof-dark hover:bg-floof-dark hover:text-white transition-colors"
+            className="btn btn--outline w-full"
           >
             View cart & checkout
           </a>
