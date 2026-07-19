@@ -55,10 +55,8 @@ export default function CartCelebration() {
     const onMq = () => setReduceMotion(mq.matches)
     mq.addEventListener("change", onMq)
 
-    let hideTimer = 0
     const unsub = onCartPulse((detail) => {
       if (!detail.celebrate) return
-      window.clearTimeout(hideTimer)
       window.clearTimeout(waveTimer.current)
 
       countRef.current = detail.itemCount
@@ -73,7 +71,7 @@ export default function CartCelebration() {
         waveTimer.current = window.setTimeout(() => {
           setParticles((prev) => [...prev, ...makeParticles(48, 1)])
         }, 700)
-        // Wave 3: encore near the end
+        // Wave 3: encore
         window.setTimeout(() => {
           setParticles((prev) => [...prev, ...makeParticles(36, 2)])
         }, 1800)
@@ -81,6 +79,7 @@ export default function CartCelebration() {
         setParticles([])
       }
 
+      // Stays open until View cart or Keep shopping
       setOpen(true)
 
       // Flying item → cart
@@ -165,15 +164,11 @@ export default function CartCelebration() {
         emitCartImpact({ itemCount: countRef.current })
         setFlyDone(true)
       }
-
-      // Long hold — loud mode
-      hideTimer = window.setTimeout(() => setOpen(false), mq.matches ? 2200 : 5200)
     })
 
     return () => {
       unsub()
       mq.removeEventListener("change", onMq)
-      window.clearTimeout(hideTimer)
       window.clearTimeout(waveTimer.current)
     }
   }, [])
@@ -202,8 +197,15 @@ export default function CartCelebration() {
       )}
 
       {open && (
-        <div className="cart-celeb cart-celeb--loud" role="status" aria-live="polite" aria-atomic="true">
-          <div className="cart-celeb__backdrop" onClick={() => setOpen(false)} />
+        <div
+          className="cart-celeb cart-celeb--loud"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cart-celeb-title"
+          aria-live="polite"
+        >
+          {/* Backdrop is visual only — dismiss via the two CTAs */}
+          <div className="cart-celeb__backdrop" aria-hidden="true" />
 
           {!reduceMotion &&
             particles.map((p) => (
@@ -237,13 +239,13 @@ export default function CartCelebration() {
               </svg>
             </div>
             <p className="cart-celeb__eyebrow">Hell yeah</p>
-            <p className="cart-celeb__title">
+            <p id="cart-celeb-title" className="cart-celeb__title">
               {qty > 1 ? `${qty}× in the bag!` : "It's in the bag!"}
             </p>
             {name && <p className="cart-celeb__name">{name}</p>}
             <p className="cart-celeb__hint">
               {flyDone
-                ? "Cart updated up top — keep stacking or check out."
+                ? "Cart updated up top — check out or keep stacking."
                 : "Watch it fly into your cart…"}
             </p>
             <div className="cart-celeb__actions">
