@@ -535,6 +535,296 @@ a.card-surface:hover,
   }
 }
 
+/* ── Whimsy / play layer ──────────────────────────── */
+.play-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  pointer-events: none;
+  overflow: hidden;
+}
+.play-spark {
+  position: fixed;
+  pointer-events: none;
+  z-index: 501;
+  animation: play-spark-out var(--dur-mid) var(--ease-out) forwards;
+  box-shadow: 0 0 0 1px oklch(100% 0 0 / 0.15);
+}
+.play-toast {
+  position: fixed;
+  z-index: 502;
+  transform: translate(-50%, -100%);
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: play-toast-up 1.3s var(--ease-out) forwards;
+  box-shadow: 0 8px 20px -8px oklch(24% 0.045 250 / 0.35);
+}
+@keyframes play-spark-out {
+  0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0); opacity: 0; }
+}
+@keyframes play-toast-up {
+  0%   { opacity: 0; transform: translate(-50%, -80%) scale(0.85); }
+  15%  { opacity: 1; transform: translate(-50%, -120%) scale(1.05); }
+  70%  { opacity: 1; transform: translate(-50%, -140%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -170%) scale(0.95); }
+}
+
+/* Magnetic large buttons */
+.play-on .btn--lg,
+.play-on [data-play="magnet"] {
+  transition:
+    transform var(--dur-short) var(--ease-press),
+    box-shadow var(--dur-short) var(--ease-press),
+    background-color 160ms;
+}
+.play-on .btn--lg:hover,
+.play-on [data-play="magnet"]:hover {
+  transform: translate(var(--mx, 0), calc(var(--my, 0) - 2px));
+}
+
+/* Product / card 3D tilt */
+.play-on .card-surface {
+  transform-style: preserve-3d;
+  perspective: 800px;
+}
+.play-on .card-surface.play-tilting {
+  transform:
+    translateY(-4px)
+    rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
+  box-shadow: var(--shadow-card-hover);
+  transition: box-shadow var(--dur-mid) var(--ease-out);
+}
+.play-on .card-surface.play-tilting::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    400px circle at var(--glare-x, 50%) var(--glare-y, 50%),
+    oklch(100% 0 0 / 0.35),
+    transparent 45%
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0.85;
+}
+
+/* Logo spin / party */
+#site-logo.play-logo-spin {
+  animation: play-logo-wiggle 0.55s cubic-bezier(0.34, 1.5, 0.64, 1);
+}
+@keyframes play-logo-wiggle {
+  0%   { transform: scale(1) rotate(0); }
+  30%  { transform: scale(1.12) rotate(-8deg); }
+  55%  { transform: scale(0.96) rotate(8deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+html.play-party body {
+  animation: play-party-hue 4s linear;
+}
+@keyframes play-party-hue {
+  0%   { filter: none; }
+  25%  { filter: hue-rotate(20deg) saturate(1.15); }
+  50%  { filter: hue-rotate(-15deg) saturate(1.2); }
+  75%  { filter: hue-rotate(10deg); }
+  100% { filter: none; }
+}
+.play-poke {
+  animation: play-poke-bounce 0.45s cubic-bezier(0.34, 1.55, 0.64, 1);
+}
+@keyframes play-poke-bounce {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.2) rotate(-6deg); }
+  100% { transform: scale(1); }
+}
+
+/* Stickers on hero */
+.play-stickers {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.play-sticker {
+  position: absolute;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.55rem 0.65rem 0.4rem;
+  border: 0;
+  border-radius: 1rem;
+  background: oklch(100% 0.005 100 / 0.92);
+  box-shadow:
+    0 8px 20px -8px oklch(24% 0.045 250 / 0.25),
+    0 0 0 2px oklch(70% 0.14 var(--sticker-hue, 25) / 0.35);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  transition: box-shadow 160ms var(--ease-out);
+  z-index: 6;
+}
+.play-sticker:active { cursor: grabbing; }
+.play-sticker:hover {
+  box-shadow:
+    0 12px 28px -8px oklch(24% 0.045 250 / 0.3),
+    0 0 0 3px oklch(70% 0.16 var(--sticker-hue, 25) / 0.55);
+}
+.play-sticker__face {
+  font-size: 1.35rem;
+  line-height: 1;
+  color: oklch(55% 0.14 var(--sticker-hue, 25));
+  font-weight: 800;
+}
+.play-sticker__label {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+}
+.play-stickers__hint {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 1rem;
+  font-size: 0.6875rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+  opacity: 0.65;
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  .play-stickers { display: none; } /* avoid clutter on small screens */
+}
+
+/* Mood bar */
+.mood-bar {
+  border-block: 1px solid color-mix(in oklch, var(--color-ink) 6%, transparent);
+  background: var(--color-surface);
+}
+.mood-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid color-mix(in oklch, var(--color-ink) 10%, transparent);
+  background: var(--color-paper);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: transform 140ms var(--ease-press), border-color 160ms, background 160ms;
+}
+.mood-chip:hover {
+  transform: translateY(-2px) scale(1.03);
+  border-color: color-mix(in oklch, var(--color-accent) 50%, transparent);
+}
+.mood-chip:active { transform: translateY(1px) scale(0.98); }
+.mood-chip__dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+}
+.mood-chip__dot--sunset { background: oklch(66% 0.21 25); }
+.mood-chip__dot--gulf   { background: oklch(68% 0.13 210); }
+.mood-chip__dot--lemon  { background: oklch(88% 0.16 95); }
+.mood-chip__dot--palm   { background: oklch(78% 0.13 155); }
+
+/* Temporary mood palettes */
+html[data-mood="sunset"] {
+  --color-accent: oklch(64% 0.23 22);
+  --color-accent-deep: oklch(50% 0.2 20);
+  --color-secondary: oklch(72% 0.14 50);
+  --color-floof-pink: oklch(64% 0.23 22);
+  --color-floof-coral: oklch(50% 0.2 20);
+}
+html[data-mood="gulf"] {
+  --color-accent: oklch(62% 0.14 210);
+  --color-accent-deep: oklch(48% 0.12 220);
+  --color-secondary: oklch(70% 0.12 195);
+  --color-floof-pink: oklch(62% 0.14 210);
+  --color-floof-coral: oklch(48% 0.12 220);
+  --color-floof-ocean: oklch(70% 0.12 195);
+}
+html[data-mood="lemon"] {
+  --color-accent: oklch(82% 0.17 95);
+  --color-accent-deep: oklch(68% 0.14 85);
+  --color-accent-ink: oklch(24% 0.045 250);
+  --color-secondary: oklch(70% 0.12 55);
+  --color-floof-pink: oklch(82% 0.17 95);
+  --color-floof-coral: oklch(68% 0.14 85);
+  --color-floof-yellow: oklch(90% 0.15 100);
+}
+html[data-mood="palm"] {
+  --color-accent: oklch(62% 0.15 155);
+  --color-accent-deep: oklch(48% 0.12 150);
+  --color-secondary: oklch(72% 0.1 140);
+  --color-floof-pink: oklch(62% 0.15 155);
+  --color-floof-coral: oklch(48% 0.12 150);
+  --color-floof-mint: oklch(78% 0.14 150);
+}
+
+/* Marquee */
+.vibe-marquee {
+  overflow: hidden;
+  border-block: 1px solid color-mix(in oklch, var(--color-ink) 8%, transparent);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  padding: 0.85rem 0;
+  user-select: none;
+}
+.vibe-marquee__track {
+  display: flex;
+  width: max-content;
+  gap: 2.5rem;
+  animation: vibe-scroll 38s linear infinite;
+}
+.vibe-marquee:hover .vibe-marquee__track {
+  animation-play-state: paused;
+}
+.vibe-marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.vibe-marquee__star {
+  color: oklch(88% 0.16 95);
+  font-size: 0.75rem;
+}
+@keyframes vibe-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Trust icons pokeable */
+.trust-icon-play {
+  cursor: pointer;
+  transition: transform 160ms var(--ease-press);
+}
+.trust-icon-play:hover {
+  transform: scale(1.12) rotate(-4deg);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .btn,
@@ -555,10 +845,19 @@ a.card-surface:hover,
   .cart-badge--ring::after,
   .cart-celeb__particle,
   .cart-celeb__burst,
-  .cart-fly {
+  .cart-fly,
+  .vibe-marquee__track,
+  .play-spark,
+  .play-toast,
+  #site-logo.play-logo-spin,
+  html.play-party body {
     animation: none !important;
   }
   .cart-celeb__card {
     animation: celeb-fade-in 150ms ease both;
+  }
+  .play-stickers,
+  .play-layer {
+    display: none !important;
   }
 }

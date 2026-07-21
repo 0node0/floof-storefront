@@ -1,0 +1,24 @@
+---
+const phrases = [
+  "Life's too short for boring clothes",
+  "Printed fresh · never dusty",
+  "SWFL sun-chasers only",
+  "Soft blanks · loud slogans",
+  "Gulf breeze approved",
+  "Main character energy",
+  "Free ship over $75",
+  "Floof around and find out",
+]
+// Double for seamless loop
+const loop = [...phrases, ...phrases]
+---
+<section class="vibe-marquee" aria-label="Brand vibes">
+  <div class="vibe-marquee__track">
+    {loop.map((p, i) => (
+      <span class="vibe-marquee__item">
+        <span class="vibe-marquee__star" aria-hidden="true">✦</span>
+        {p}
+      </span>
+    ))}
+  </div>
+</section>

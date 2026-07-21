@@ -1,0 +1,32 @@
+---
+const moods = [
+  { id: "sunset", label: "Sunset", hint: "coral glow" },
+  { id: "gulf", label: "Gulf", hint: "aqua cool" },
+  { id: "lemon", label: "Lemonade", hint: "sun pop" },
+  { id: "palm", label: "Palm", hint: "green juice" },
+]
+---
+<section class="mood-bar" aria-label="Pick a color mood">
+  <div class="mx-auto max-w-7xl px-6 py-8">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+      <div class="shrink-0">
+        <p class="eyebrow">Play with color</p>
+        <p class="mt-1 text-sm text-floof-dark/55">Tap a mood — the site shifts for a bit.</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        {moods.map((m) => (
+          <button
+            type="button"
+            class="mood-chip"
+            data-mood={m.id}
+            data-play="burst"
+            title={m.hint}
+          >
+            <span class={`mood-chip__dot mood-chip__dot--${m.id}`} aria-hidden="true" />
+            {m.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

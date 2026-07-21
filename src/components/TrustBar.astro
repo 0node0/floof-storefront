@@ -17,7 +17,13 @@ const items: { icon: string; title: string; body: string }[] = [
     <div class="grid grid-cols-2 gap-6 lg:grid-cols-4">
       {items.map((item) => (
         <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 text-center sm:text-left">
-          <span class="inline-flex h-10 w-10 mx-auto sm:mx-0 shrink-0 items-center justify-center rounded-xl bg-floof-sand text-floof-coral">
+          <span
+            class="trust-icon-play inline-flex h-10 w-10 mx-auto sm:mx-0 shrink-0 items-center justify-center rounded-xl bg-floof-sand text-floof-coral"
+            data-play="poke"
+            data-play-msg={item.title}
+            role="img"
+            aria-label={item.title}
+          >
             <Icon name={item.icon} class="w-5 h-5" />
           </span>
           <div>

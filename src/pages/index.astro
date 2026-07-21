@@ -3,6 +3,9 @@ import Layout from "@/layouts/Layout.astro";
 import ProductCard from "@/components/ProductCard.astro";
 import TrustBar from "@/components/TrustBar.astro";
 import Icon from "@/components/Icon.astro";
+import PlayStickers from "@/components/PlayStickers";
+import MoodBar from "@/components/MoodBar.astro";
+import VibeMarquee from "@/components/VibeMarquee.astro";
 import { listProducts } from "@/lib/medusa";
 import { mapProduct, type FloofProduct } from "@/lib/product";
 
@@ -29,6 +32,7 @@ const heroImg = products[0]?.image;
 >
   {/* Bright SWFL sun-splash hero */}
   <section class="relative overflow-hidden sun-wash">
+    <PlayStickers client:load />
     <div class="relative mx-auto max-w-7xl px-6 py-16 md:py-24 lg:py-28">
       <div class="grid items-center gap-12 lg:grid-cols-12">
         <div class="lg:col-span-6 xl:col-span-5">
@@ -86,19 +90,31 @@ const heroImg = products[0]?.image;
                 </p>
               )}
             </div>
-            <div class="absolute -bottom-3 -left-2 sm:left-4 rounded-full bg-floof-pink text-white px-4 py-2 text-xs font-mono font-semibold uppercase tracking-wider shadow-lg shadow-floof-pink/30">
+            <button
+              type="button"
+              class="absolute -bottom-3 -left-2 sm:left-4 rounded-full bg-floof-pink text-white px-4 py-2 text-xs font-mono font-semibold uppercase tracking-wider shadow-lg shadow-floof-pink/30 cursor-pointer"
+              data-play="poke"
+              data-play-msg="fresh off the press!"
+            >
               Made to order
-            </div>
-            <div class="absolute -top-2 -right-1 sm:right-4 rounded-full bg-floof-yellow text-floof-dark px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide shadow-md">
+            </button>
+            <button
+              type="button"
+              class="absolute -top-2 -right-1 sm:right-4 rounded-full bg-floof-yellow text-floof-dark px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide shadow-md cursor-pointer"
+              data-play="poke"
+              data-play-msg="maximum SWFL!"
+            >
               SWFL vibes
-            </div>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <VibeMarquee />
   <TrustBar />
+  <MoodBar />
 
   <section class="mx-auto max-w-7xl px-6 py-14">
     <div class="mb-8 max-w-xl">
@@ -109,13 +125,17 @@ const heroImg = products[0]?.image;
       {cats.map((c) => (
         <a
           href={c.href}
-          class="group rounded-[1.15rem] bg-white p-8 outline outline-1 outline-floof-dark/6 hover:outline-floof-pink/30 hover:shadow-[0_16px_36px_-14px_oklch(55%_0.12_25_/_0.2)] transition-all text-left"
+          class="card-surface group block p-8 text-left"
+          data-play-tilt
         >
-          <span class:list={["inline-flex h-12 w-12 items-center justify-center rounded-2xl text-floof-dark group-hover:scale-105 transition-transform", c.tint]}>
+          <span class:list={["inline-flex h-12 w-12 items-center justify-center rounded-2xl text-floof-dark group-hover:scale-110 transition-transform", c.tint]}>
             <Icon name={c.icon} class="w-6 h-6" />
           </span>
           <p class="mt-4 font-display text-lg font-bold text-floof-dark group-hover:text-floof-pink transition-colors">{c.label}</p>
           <p class="mt-1 text-sm text-floof-dark/50">{c.blurb}</p>
+          <p class="mt-3 text-[11px] font-mono uppercase tracking-wider text-floof-ocean opacity-0 group-hover:opacity-100 transition-opacity">
+            tilt me · then go →
+          </p>
         </a>
       ))}
     </div>
