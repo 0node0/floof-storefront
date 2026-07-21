@@ -1,40 +1,40 @@
-/* Hallmark · genre: playful · macrostructure: multi-page · design-system: design.md · designed-as-app
- * theme: custom (sun-warm atelier) · nav: N6 masthead · footer: Ft5 statement
+/* Hallmark · genre: playful · design-system: design.md · designed-as-app
+ * theme: custom (SWFL sun splash) · nav: N6 masthead · footer: Ft5 statement
  */
 @import "tailwindcss";
 @import "../../tokens.css";
 
 @theme {
-  /* Semantic utilities */
-  --color-paper: oklch(97.5% 0.012 75);
-  --color-paper-2: oklch(94% 0.018 72);
-  --color-paper-3: oklch(90% 0.024 68);
-  --color-ink: oklch(22% 0.02 45);
-  --color-ink-2: oklch(42% 0.018 50);
-  --color-muted: oklch(52% 0.016 55);
-  --color-rule: oklch(78% 0.012 70);
-  --color-accent: oklch(62% 0.14 38);
-  --color-accent-deep: oklch(48% 0.12 35);
-  --color-accent-soft: oklch(88% 0.06 55);
-  --color-accent-ink: oklch(98% 0.01 75);
-  --color-secondary: oklch(58% 0.08 210);
-  --color-sun: oklch(84% 0.12 85);
-  --color-surface: oklch(99% 0.006 75);
-  --color-focus: oklch(55% 0.14 38);
-  --color-mint: oklch(82% 0.07 155);
+  /* Semantic utilities — SWFL sun splash */
+  --color-paper: oklch(99% 0.01 100);
+  --color-paper-2: oklch(96.5% 0.035 95);
+  --color-paper-3: oklch(93% 0.05 90);
+  --color-ink: oklch(24% 0.045 250);
+  --color-ink-2: oklch(40% 0.035 245);
+  --color-muted: oklch(50% 0.025 240);
+  --color-rule: oklch(86% 0.02 220);
+  --color-accent: oklch(66% 0.21 25);
+  --color-accent-deep: oklch(54% 0.19 22);
+  --color-accent-soft: oklch(92% 0.06 30);
+  --color-accent-ink: oklch(99.5% 0.005 100);
+  --color-secondary: oklch(68% 0.13 210);
+  --color-sun: oklch(88% 0.16 95);
+  --color-surface: oklch(100% 0.005 100);
+  --color-focus: oklch(60% 0.18 25);
+  --color-mint: oklch(78% 0.13 155);
 
-  /* Legacy floof-* aliases → atelier system */
-  --color-floof-dark: oklch(22% 0.02 45);
-  --color-floof-pink: oklch(62% 0.14 38);
-  --color-floof-coral: oklch(48% 0.12 35);
-  --color-floof-yellow: oklch(84% 0.12 85);
-  --color-floof-sand: oklch(94% 0.018 72);
-  --color-floof-cream: oklch(97.5% 0.012 75);
-  --color-floof-mint: oklch(82% 0.07 155);
-  --color-floof-ocean: oklch(58% 0.08 210);
+  /* Legacy floof-* aliases */
+  --color-floof-dark: oklch(24% 0.045 250);
+  --color-floof-pink: oklch(66% 0.21 25);
+  --color-floof-coral: oklch(54% 0.19 22);
+  --color-floof-yellow: oklch(88% 0.16 95);
+  --color-floof-sand: oklch(96.5% 0.035 95);
+  --color-floof-cream: oklch(99% 0.01 100);
+  --color-floof-mint: oklch(78% 0.13 155);
+  --color-floof-ocean: oklch(68% 0.13 210);
 
   --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
-  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  --font-display: "Outfit", system-ui, -apple-system, sans-serif;
   --font-mono: "DM Mono", ui-monospace, "Cascadia Code", monospace;
 }
 
@@ -56,19 +56,34 @@ body {
 h1, h2, h3, .font-display {
   font-family: var(--font-display);
   font-style: normal;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.12;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
   overflow-wrap: anywhere;
   min-width: 0;
 }
 
-/* Solid craft accent — no rainbow gradient text */
+/* Intentional SWFL sunset — coral → mango (not rainbow slop) */
 .text-floof-gradient {
-  color: var(--color-accent);
-  background: none;
-  -webkit-text-fill-color: unset;
-  background-clip: unset;
+  background: linear-gradient(
+    115deg,
+    oklch(66% 0.21 25) 0%,
+    oklch(72% 0.18 45) 55%,
+    oklch(82% 0.15 85) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Sunny section wash utility */
+.sun-wash {
+  background:
+    radial-gradient(ellipse 90% 70% at 85% 0%, oklch(88% 0.16 95 / 0.55), transparent 55%),
+    radial-gradient(ellipse 70% 60% at 0% 100%, oklch(68% 0.13 210 / 0.22), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 80%, oklch(66% 0.21 25 / 0.12), transparent 45%),
+    var(--color-paper-2);
 }
 
 /* ── Buttons ──────────────────────────────────────── */
@@ -219,10 +234,10 @@ a.card-surface:hover,
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-accent-deep);
+  color: var(--color-secondary);
 }
 
 /* ── Skeleton ─────────────────────────────────────── */
