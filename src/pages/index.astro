@@ -3,7 +3,6 @@ import Layout from "@/layouts/Layout.astro";
 import ProductCard from "@/components/ProductCard.astro";
 import TrustBar from "@/components/TrustBar.astro";
 import Icon from "@/components/Icon.astro";
-import PlayStickers from "@/components/PlayStickers";
 import MoodBar from "@/components/MoodBar.astro";
 import VibeMarquee from "@/components/VibeMarquee.astro";
 import { listProducts } from "@/lib/medusa";
@@ -32,7 +31,6 @@ const heroImg = products[0]?.image;
 >
   {/* Bright SWFL sun-splash hero */}
   <section class="relative overflow-hidden sun-wash">
-    <PlayStickers client:load />
     <div class="relative mx-auto max-w-7xl px-6 py-16 md:py-24 lg:py-28">
       <div class="grid items-center gap-12 lg:grid-cols-12">
         <div class="lg:col-span-6 xl:col-span-5">
