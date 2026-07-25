@@ -8,25 +8,25 @@ type Particle = {
   duration: string
   size: string
   hue: string
-  shape: "dot" | "rect" | "ribbon" | "star"
+  shape: "dot" | "rect"
   drift: string
   rotate: string
 }
 
-const HUES = ["38", "55", "85", "210", "25", "350", "150", "95"]
+/** Soft coral / sand / gulf only — no rainbow party */
+const HUES = ["32", "40", "85", "220"]
 
-function makeParticles(n: number, wave = 0): Particle[] {
-  const shapes: Particle["shape"][] = ["dot", "rect", "ribbon", "star"]
+function makeParticles(n: number): Particle[] {
   return Array.from({ length: n }, (_, i) => ({
-    id: wave * 1000 + i,
-    left: `${2 + Math.random() * 96}%`,
-    delay: `${wave * 0.35 + Math.random() * 0.55}s`,
-    duration: `${2.4 + Math.random() * 2.2}s`,
-    size: `${5 + Math.random() * 12}px`,
+    id: i,
+    left: `${8 + Math.random() * 84}%`,
+    delay: `${Math.random() * 0.25}s`,
+    duration: `${1.8 + Math.random() * 1.2}s`,
+    size: `${4 + Math.random() * 6}px`,
     hue: HUES[i % HUES.length],
-    shape: shapes[i % shapes.length],
-    drift: `${(Math.random() - 0.5) * 120}px`,
-    rotate: `${360 + Math.random() * 720}deg`,
+    shape: i % 3 === 0 ? "rect" : "dot",
+    drift: `${(Math.random() - 0.5) * 48}px`,
+    rotate: `${180 + Math.random() * 200}deg`,
   }))
 }
 
@@ -47,7 +47,6 @@ export default function CartCelebration() {
   const [flyDone, setFlyDone] = useState(false)
   const flyRef = useRef<HTMLDivElement>(null)
   const countRef = useRef(0)
-  const waveTimer = useRef(0)
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -57,32 +56,16 @@ export default function CartCelebration() {
 
     const unsub = onCartPulse((detail) => {
       if (!detail.celebrate) return
-      window.clearTimeout(waveTimer.current)
 
       countRef.current = detail.itemCount
       setName(detail.productName)
       setQty(detail.addedQty ?? 1)
       setFlyDone(false)
 
-      if (!mq.matches) {
-        // Wave 1: immediate blast
-        setParticles(makeParticles(72, 0))
-        // Wave 2: mid celebration refill
-        waveTimer.current = window.setTimeout(() => {
-          setParticles((prev) => [...prev, ...makeParticles(48, 1)])
-        }, 700)
-        // Wave 3: encore
-        window.setTimeout(() => {
-          setParticles((prev) => [...prev, ...makeParticles(36, 2)])
-        }, 1800)
-      } else {
-        setParticles([])
-      }
-
-      // Stays open until View cart or Keep shopping
+      // One soft wave — not three mega blasts
+      setParticles(mq.matches ? [] : makeParticles(22))
       setOpen(true)
 
-      // Flying item → cart
       if (!mq.matches) {
         const badge = document.getElementById("cart-badge")
         const start = detail.flyFrom ?? {
@@ -96,7 +79,6 @@ export default function CartCelebration() {
           y: start.y,
         })
 
-        // Animate on next frame after fly node mounts
         requestAnimationFrame(() => {
           const el = flyRef.current
           if (!el) {
@@ -109,7 +91,7 @@ export default function CartCelebration() {
           const endX = endRect ? endRect.left + endRect.width / 2 : window.innerWidth - 48
           const endY = endRect ? endRect.top + endRect.height / 2 : 48
           const midX = start.x + (endX - start.x) * 0.45
-          const midY = Math.min(start.y, endY) - Math.max(100, Math.abs(start.y - endY) * 0.35)
+          const midY = Math.min(start.y, endY) - Math.max(80, Math.abs(start.y - endY) * 0.3)
 
           el.style.left = "0px"
           el.style.top = "0px"
@@ -117,28 +99,28 @@ export default function CartCelebration() {
           const anim = el.animate(
             [
               {
-                transform: `translate(${start.x - 36}px, ${start.y - 36}px) scale(1) rotate(-8deg)`,
+                transform: `translate(${start.x - 32}px, ${start.y - 32}px) scale(1)`,
                 opacity: 1,
                 offset: 0,
               },
               {
-                transform: `translate(${midX - 28}px, ${midY - 28}px) scale(0.85) rotate(12deg)`,
+                transform: `translate(${midX - 24}px, ${midY - 24}px) scale(0.88)`,
                 opacity: 1,
                 offset: 0.55,
               },
               {
-                transform: `translate(${endX - 14}px, ${endY - 14}px) scale(0.22) rotate(-4deg)`,
-                opacity: 0.95,
+                transform: `translate(${endX - 12}px, ${endY - 12}px) scale(0.2)`,
+                opacity: 0.9,
                 offset: 0.92,
               },
               {
-                transform: `translate(${endX - 10}px, ${endY - 10}px) scale(0.08) rotate(0deg)`,
+                transform: `translate(${endX - 8}px, ${endY - 8}px) scale(0.08)`,
                 opacity: 0,
                 offset: 1,
               },
             ],
             {
-              duration: 1100,
+              duration: 900,
               easing: "cubic-bezier(0.22, 1, 0.36, 1)",
               fill: "forwards",
             }
@@ -148,16 +130,6 @@ export default function CartCelebration() {
             setFly(null)
             setFlyDone(true)
             emitCartImpact({ itemCount: countRef.current })
-            // Cart-impact confetti burst near top-right
-            setParticles((prev) => [
-              ...prev,
-              ...makeParticles(40, 3).map((p) => ({
-                ...p,
-                left: `${78 + Math.random() * 18}%`,
-                delay: "0s",
-                duration: `${1.6 + Math.random() * 1.2}s`,
-              })),
-            ])
           }
         })
       } else {
@@ -169,7 +141,6 @@ export default function CartCelebration() {
     return () => {
       unsub()
       mq.removeEventListener("change", onMq)
-      window.clearTimeout(waveTimer.current)
     }
   }, [])
 
@@ -177,7 +148,6 @@ export default function CartCelebration() {
 
   return (
     <>
-      {/* Flying thumbnail — above everything, even when card open */}
       {fly && !reduceMotion && (
         <div
           ref={flyRef}
@@ -187,7 +157,7 @@ export default function CartCelebration() {
         >
           <div className="cart-fly__chip">
             {fly.image ? (
-              <img src={fly.image} alt="" width={72} height={72} />
+              <img src={fly.image} alt="" width={64} height={64} />
             ) : (
               <span className="cart-fly__fallback">✦</span>
             )}
@@ -198,13 +168,12 @@ export default function CartCelebration() {
 
       {open && (
         <div
-          className="cart-celeb cart-celeb--loud"
+          className="cart-celeb"
           role="dialog"
           aria-modal="true"
           aria-labelledby="cart-celeb-title"
           aria-live="polite"
         >
-          {/* Backdrop is visual only — dismiss via the two CTAs */}
           <div className="cart-celeb__backdrop" aria-hidden="true" />
 
           {!reduceMotion &&
@@ -217,8 +186,8 @@ export default function CartCelebration() {
                   animationDelay: p.delay,
                   animationDuration: p.duration,
                   width: p.size,
-                  height: p.shape === "ribbon" ? `${parseFloat(p.size) * 2.2}px` : p.size,
-                  background: `oklch(72% 0.16 ${p.hue})`,
+                  height: p.size,
+                  background: `oklch(62% 0.12 ${p.hue})`,
                   ["--drift" as string]: p.drift,
                   ["--spin" as string]: p.rotate,
                 } as React.CSSProperties}
@@ -227,26 +196,26 @@ export default function CartCelebration() {
 
           <div className={`cart-celeb__card ${flyDone ? "cart-celeb__card--landed" : ""}`}>
             <div className="cart-celeb__burst" aria-hidden="true">
-              <svg width="72" height="72" viewBox="0 0 56 56" fill="none">
-                <circle cx="28" cy="28" r="26" stroke="currentColor" strokeWidth="2" opacity="0.25" />
+              <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+                <circle cx="28" cy="28" r="26" stroke="currentColor" strokeWidth="1.75" opacity="0.2" />
                 <path
                   d="M18 29l7 7 13-15"
                   stroke="currentColor"
-                  strokeWidth="3.5"
+                  strokeWidth="3"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
             </div>
-            <p className="cart-celeb__eyebrow">Hell yeah</p>
+            <p className="cart-celeb__eyebrow">Added</p>
             <p id="cart-celeb-title" className="cart-celeb__title">
-              {qty > 1 ? `${qty}× in the bag!` : "It's in the bag!"}
+              {qty > 1 ? `${qty}× in your cart` : "In your cart"}
             </p>
             {name && <p className="cart-celeb__name">{name}</p>}
             <p className="cart-celeb__hint">
               {flyDone
-                ? "Cart updated up top — check out or keep stacking."
-                : "Watch it fly into your cart…"}
+                ? "Checkout when you’re ready — or keep browsing."
+                : "Heading to your cart…"}
             </p>
             <div className="cart-celeb__actions">
               <a href="/checkout" className="btn btn--lg">
