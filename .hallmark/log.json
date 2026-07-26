@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-07-25",
+    "scope": "page",
+    "route": "/alt",
+    "macrostructure": "Manifesto + Lookbook strip",
+    "theme": "custom",
+    "theme_axes": "dark / display-heavy / chromatic-other (magenta)",
+    "vibe": "ink, magenta, cyan, SWFL heat on paper",
+    "enrichment": "none — type + product photography",
+    "nav": "N7 brutal slab",
+    "footer": "Ft1 stamp strip",
+    "brief": "Wildly different alt homepage — risograph zine / late-night print shop"
+  },
+  {
     "date": "2026-07-19",
     "scope": "app",
     "macrostructure": "Photographic + Catalogue / Workbench / Long Document",

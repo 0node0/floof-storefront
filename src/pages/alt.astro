@@ -1,0 +1,233 @@
+---
+/**
+ * Experimental alternate homepage — intentionally not on the main design system.
+ * Production home remains `/`. Shop/PDP/checkout stay unchanged.
+ */
+import { listProducts } from "@/lib/medusa";
+import { mapProduct, categoryLabels, type FloofProduct } from "@/lib/product";
+import { site } from "@/lib/site";
+import "@/styles/alt.css";
+
+export const prerender = false;
+
+let products: FloofProduct[] = [];
+try {
+  const { products: raw } = await listProducts();
+  products = raw.map(mapProduct).slice(0, 8);
+} catch {}
+
+const heroImg = products[0]?.image;
+const ogImage = heroImg || `${site.url}/favicon.svg`;
+const pageTitle = `Alt · ${site.name}`;
+const description =
+  "An alternate Floof homepage — risograph zine energy. Soft blanks, sharp wit, printed to order on the Gulf Coast.";
+const canonicalUrl = new URL("/alt", site.url).href;
+
+const manifesto = [
+  { n: "01", line: "No warehouse dust.", tag: "print on demand" },
+  { n: "02", line: "Soft blanks. Sharp wit.", tag: "product" },
+  { n: "03", line: "Designed in SW Florida.", tag: "origin" },
+  { n: "04", line: "Made when you order.", tag: "fulfillment" },
+  { n: "05", line: "Life's too short for boring clothes.", tag: "thesis" },
+];
+
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="generator" content={Astro.generator} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <title>{pageTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
+  <meta name="robots" content="noindex,follow" />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:site_name" content={site.name} />
+  <meta property="og:image" content={ogImage.startsWith("http") ? ogImage : new URL(ogImage, site.url).href} />
+  <meta name="theme-color" content="#1a1524" />
+</head>
+<body class="alt-root">
+  <a class="sr-only" href="#alt-main">Skip to content</a>
+
+  <header class="alt-nav">
+    <a href="/alt" class="alt-nav__brand" aria-label="Floof alt home">
+      Floof
+      <span>alt · 01</span>
+    </a>
+    <p class="alt-nav__center">Experimental homepage · not the main site</p>
+    <nav class="alt-nav__links" aria-label="Alt">
+      <a href="/">Main site</a>
+      <a href="/store">Shop</a>
+      <a href="/about">About</a>
+      <a href="/checkout" class="is-primary">Cart</a>
+    </nav>
+  </header>
+
+  <main id="alt-main">
+    <section class="alt-hero" aria-labelledby="alt-hero-title">
+      <div class="alt-hero__grid">
+        <div class="alt-hero__copy">
+          <div>
+            <p class="alt-hero__kicker">
+              <b>Press run</b>
+              <span>SWFL · POD · small drops</span>
+            </p>
+            <h1 id="alt-hero-title" class="alt-hero__title">
+              Ink first.<em>Clothes second.</em>
+            </h1>
+            <p class="alt-hero__lede">
+              A late-night print-shop cut of Floof — same brand, different temperature.
+              Witty apparel from the Gulf Coast, set like a zine cover and sold as limited runs.
+            </p>
+            <div class="alt-hero__actions">
+              <a href="/store" class="alt-btn alt-btn--fill">Enter the shop</a>
+              <a href="/" class="alt-btn alt-btn--ghost">See main homepage</a>
+            </div>
+          </div>
+          <dl class="alt-hero__meta">
+            <div>
+              <dt>Format</dt>
+              <dd>Made to order</dd>
+            </div>
+            <div>
+              <dt>Origin</dt>
+              <dd>Gulf Coast</dd>
+            </div>
+            <div>
+              <dt>Ship</dt>
+              <dd>Free $75+</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="alt-hero__art">
+          <div class="alt-hero__stamp" aria-hidden="true">
+            Printed<br />fresh<br />not stocked
+          </div>
+          <div class="alt-hero__frame">
+            {heroImg ? (
+              <img
+                src={heroImg}
+                alt="Featured Floof piece"
+                width="520"
+                height="650"
+                loading="eager"
+              />
+            ) : (
+              <p class="alt-hero__placeholder">Soft blanks.<br />Sharp wit.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="alt-manifesto" aria-labelledby="alt-man-title">
+      <div class="alt-manifesto__head">
+        <span id="alt-man-title">House rules</span>
+        <span>Five lines · no fluff</span>
+      </div>
+      <ol class="alt-manifesto__list">
+        {manifesto.map((item) => (
+          <li>
+            <span class="n">{item.n}</span>
+            <span>{item.line}</span>
+            <span class="tag">{item.tag}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="alt-lookbook" aria-labelledby="alt-look-title">
+      <div class="alt-lookbook__head">
+        <div>
+          <h2 id="alt-look-title">Current press</h2>
+          <p>Scroll the strip — same catalog as the main shop, restaged as a lookbook rail.</p>
+        </div>
+        <a href="/store">Full inventory →</a>
+      </div>
+
+      {products.length > 0 ? (
+        <div class="alt-lookbook__rail" role="list">
+          {products.map((p, i) => (
+            <a
+              href={`/products/${p.slug}`}
+              class="alt-card"
+              role="listitem"
+            >
+              <div class="alt-card__media">
+                <span class="alt-card__idx">{String(i + 1).padStart(2, "0")}</span>
+                {p.image ? (
+                  <img
+                    src={p.image}
+                    alt={`${p.name} — Floof`}
+                    width="400"
+                    height="400"
+                    loading={i < 2 ? "eager" : "lazy"}
+                  />
+                ) : (
+                  <span class="alt-card__name" style="color: var(--alt-paper); padding: 1rem; text-align: center;">
+                    {p.phrase}
+                  </span>
+                )}
+              </div>
+              <div class="alt-card__body">
+                <span class="alt-card__cat">{categoryLabels[p.category] || p.category}</span>
+                <span class="alt-card__name">{p.name}</span>
+                <span class="alt-card__price">
+                  <strong>${p.price.toFixed(2)}</strong>
+                  <span>view piece</span>
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="alt-empty">
+          <p>No pieces loaded yet — the press is warming up.</p>
+          <a href="/store" class="alt-btn alt-btn--fill" style="margin-top: 1.25rem;">Visit the shop</a>
+        </div>
+      )}
+    </section>
+
+    <section class="alt-split">
+      <div class="alt-split__panel">
+        <h2>Prefer the calm cut?</h2>
+        <p>
+          The main Floof site is the boutique cut — warm paper, quieter type, same clothes.
+          This page is the loud twin for comparison.
+        </p>
+        <a href="/" class="alt-btn alt-btn--ghost">Open main homepage</a>
+      </div>
+      <div class="alt-split__panel">
+        <h2>Ready to wear it?</h2>
+        <p>
+          Checkout, shipping, and returns are the real system — not a demo skin.
+          Pick a size and we print it.
+        </p>
+        <a href="/store" class="alt-btn alt-btn--ghost">Shop the collection</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="alt-foot">
+    <p>© {year} Floof · alt homepage experiment</p>
+    <div class="alt-foot__links">
+      <a href="/shipping-returns">Shipping</a>
+      <a href="/contact">Contact</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/">Main site</a>
+    </div>
+  </footer>
+</body>
+</html>
