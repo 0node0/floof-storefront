@@ -7,17 +7,17 @@ const { id } = Astro.params;
 ---
 <Layout title={`Order ${id || ""}`} description="Thanks for your Floof order!" noIndex={true}>
   <section class="mx-auto max-w-2xl px-6 py-20 text-center">
-    <span class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-floof-mint/50 text-floof-dark mb-6">
+    <span class="inline-flex h-16 w-16 items-center justify-center border-[3px] border-ink bg-secondary text-paper mb-6">
       <Icon name="check" class="w-8 h-8" size={32} />
     </span>
-    <h1 class="font-display text-3xl font-semibold text-floof-dark">Thanks for your order!</h1>
-    <p class="mt-4 text-lg text-floof-dark/60">
-      Order <code class="bg-floof-sand px-2 py-0.5 rounded text-sm font-mono">{id}</code> has been placed.
+    <h1 class="font-display text-3xl text-ink">Thanks for your order!</h1>
+    <p class="mt-4 text-lg text-ink-2 normal-case tracking-normal font-normal">
+      Order <code class="bg-paper-2 border border-ink px-2 py-0.5 text-sm font-mono text-accent">{id}</code> has been placed.
     </p>
-    <p class="mt-2 text-floof-dark/50">
-      You'll receive a confirmation email with tracking info once it ships.
+    <p class="mt-2 text-ink-2 normal-case tracking-normal font-normal">
+      You&rsquo;ll receive a confirmation email with tracking info once it ships.
     </p>
-    <div class="mt-8 flex flex-wrap gap-4 justify-center">
+    <div class="mt-8 flex flex-wrap gap-3 justify-center">
       <a href="/store" class="btn">
         Continue shopping
       </a>

@@ -16,11 +16,11 @@ const perks: { icon: string; text: string; href?: string }[] = [
   description="Review your Floof cart and checkout securely with Stripe."
   noIndex={true}
 >
-  <section class="mx-auto max-w-5xl px-6 py-10 md:py-12">
-    <div class="mb-8">
+  <section class="mx-auto max-w-5xl px-5 md:px-6 py-10 md:py-12">
+    <div class="mb-8 border-b-[3px] border-ink pb-6">
       <p class="eyebrow">Almost there</p>
-      <h1 class="mt-1 font-display text-3xl font-semibold tracking-tight text-floof-dark">Your cart</h1>
-      <p class="mt-2 text-sm text-floof-dark/50">
+      <h1 class="mt-1 font-display text-3xl tracking-tight text-ink">Your cart</h1>
+      <p class="mt-2 text-sm text-ink-2 normal-case tracking-normal font-normal">
         Free US shipping on orders $75+. Secure payment via Stripe — we never store your card.
       </p>
     </div>
@@ -30,26 +30,26 @@ const perks: { icon: string; text: string; href?: string }[] = [
         <CartSummary client:load />
       </div>
       <aside class="lg:col-span-2 space-y-4">
-        <div class="rounded-[1.25rem] bg-white p-6 outline outline-1 outline-floof-dark/6 sticky top-24">
-          <h2 class="font-display font-semibold text-floof-dark">Order perks</h2>
-          <ul class="mt-4 space-y-3 text-sm text-floof-dark/60">
+        <div class="border-[3px] border-ink bg-paper-2 p-6 sticky top-24">
+          <h2 class="font-display text-ink">Order perks</h2>
+          <ul class="mt-4 space-y-3 text-sm text-ink-2 normal-case tracking-normal font-normal">
             {perks.map((p) => (
               <li class="flex gap-3 items-start">
-                <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-floof-sand text-floof-coral">
+                <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center border-[2px] border-ink bg-accent text-accent-ink">
                   <Icon name={p.icon} class="w-4 h-4" />
                 </span>
                 {p.href ? (
-                  <a href={p.href} class="underline hover:text-floof-pink pt-1">{p.text}</a>
+                  <a href={p.href} class="underline hover:text-accent pt-1">{p.text}</a>
                 ) : (
                   <span class="pt-1">{p.text}</span>
                 )}
               </li>
             ))}
           </ul>
-          <p class="mt-6 text-xs text-floof-dark/40 leading-relaxed">
-            Need a different size? Change quantity here or remove items and re-add from the product page with the right size selected.
+          <p class="mt-6 text-xs text-muted leading-relaxed normal-case tracking-normal font-normal">
+            Need a different size? Change quantity here or remove items and re-add from the product page.
           </p>
-          <a href="/store" class="mt-4 inline-block text-sm font-medium text-floof-pink underline underline-offset-4">
+          <a href="/store" class="mt-4 inline-block text-sm font-semibold tracking-wider uppercase text-accent underline underline-offset-4">
             Continue shopping
           </a>
         </div>

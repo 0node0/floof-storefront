@@ -48,22 +48,22 @@ const catLabel = categoryLabels[product.category] || product.category;
 <Layout title={product.name} description={product.description || `Shop ${product.name} from Floof.`} image={ogImage}>
   <ProductJsonLd product={product} />
 
-  <div class="mx-auto max-w-7xl px-6 py-8 md:py-12">
-    <nav class="mb-8 text-sm text-floof-dark/45" aria-label="Breadcrumb">
+  <div class="mx-auto max-w-7xl px-5 md:px-6 py-8 md:py-12">
+    <nav class="mb-8 text-xs font-medium tracking-[0.1em] uppercase text-muted" aria-label="Breadcrumb">
       <ol class="flex flex-wrap items-center gap-1">
-        <li><a href="/" class="hover:text-floof-pink">Home</a></li>
-        <li aria-hidden="true" class="mx-1">/</li>
-        <li><a href="/store" class="hover:text-floof-pink">Shop</a></li>
-        <li aria-hidden="true" class="mx-1">/</li>
-        <li><a href={`/store?cat=${product.category}`} class="hover:text-floof-pink capitalize">{catLabel}</a></li>
-        <li aria-hidden="true" class="mx-1">/</li>
-        <li class="text-floof-dark truncate max-w-[12rem] sm:max-w-none">{product.name}</li>
+        <li><a href="/" class="hover:text-accent">Home</a></li>
+        <li aria-hidden="true" class="mx-1 text-ink/20">/</li>
+        <li><a href="/store" class="hover:text-accent">Shop</a></li>
+        <li aria-hidden="true" class="mx-1 text-ink/20">/</li>
+        <li><a href={`/store?cat=${product.category}`} class="hover:text-accent">{catLabel}</a></li>
+        <li aria-hidden="true" class="mx-1 text-ink/20">/</li>
+        <li class="text-ink truncate max-w-[12rem] sm:max-w-none normal-case tracking-normal">{product.name}</li>
       </ol>
     </nav>
 
-    <div class="grid gap-10 lg:grid-cols-2 lg:gap-14">
-      <div class="space-y-4">
-        <div class="aspect-square rounded-[1.25rem] bg-floof-sand p-8 md:p-12 flex items-center justify-center overflow-hidden outline outline-1 outline-floof-dark/6">
+    <div class="grid gap-0 lg:grid-cols-2 border-[3px] border-ink">
+      <div class="border-b-[3px] lg:border-b-0 lg:border-r-[3px] border-ink">
+        <div class="aspect-square bg-cream p-8 md:p-12 flex items-center justify-center overflow-hidden">
           {image && image !== "/favicon.svg" ? (
             <img
               src={image}
@@ -75,66 +75,66 @@ const catLabel = categoryLabels[product.category] || product.category;
               data-product-fly-source
             />
           ) : (
-            <span class="font-display text-4xl md:text-5xl font-semibold text-floof-dark/80 leading-tight text-center">
+            <span class="font-display text-4xl md:text-5xl text-paper leading-tight text-center">
               {product.phrase}
             </span>
           )}
         </div>
-        <p class="text-center text-xs font-mono text-floof-dark/40">
+        <p class="text-center text-xs font-mono text-muted py-3 border-t-[3px] border-ink bg-paper-2">
           Colors shown as digital mockups · final print may vary slightly
         </p>
       </div>
 
-      <div class="flex flex-col lg:justify-center">
+      <div class="flex flex-col p-6 md:p-10 bg-paper">
         {product.isWip && (
-          <span class="inline-flex w-fit rounded-full bg-floof-yellow/35 px-3 py-1 text-xs font-mono font-medium uppercase tracking-wider text-floof-dark mb-3">
+          <span class="inline-flex w-fit px-3 py-1 text-xs font-mono font-semibold uppercase tracking-wider bg-accent text-accent-ink border-[3px] border-ink mb-3">
             Design preview
           </span>
         )}
         <p class="eyebrow">{catLabel}</p>
-        <h1 class="mt-2 font-display text-3xl font-semibold md:text-4xl text-floof-dark leading-tight">{product.name}</h1>
-        <p class="mt-4 text-base md:text-lg text-floof-dark/60 leading-relaxed">{product.description}</p>
+        <h1 class="mt-2 font-display text-3xl md:text-4xl text-ink leading-tight">{product.name}</h1>
+        <p class="mt-4 text-base md:text-lg text-ink-2 leading-relaxed normal-case tracking-normal font-normal">{product.description}</p>
 
         {variants.length > 0 ? (
           <ReactiveCartIsland client:load product={product} variants={variants} />
         ) : (
-          <p class="mt-8 text-sm italic text-floof-dark/50">Variants syncing — check back shortly.</p>
+          <p class="mt-8 text-sm text-muted">Variants syncing — check back shortly.</p>
         )}
 
-        <div class="mt-10 divide-y divide-floof-dark/10 border-t border-floof-dark/10">
-          <details class="group py-4" open>
-            <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-floof-dark">
+        <div class="mt-10 border-t-[3px] border-ink">
+          <details class="group border-b-[3px] border-ink" open>
+            <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-ink py-4 uppercase tracking-wide text-sm">
               Shipping & fulfillment
-              <span class="text-floof-dark/40 group-open:rotate-180 transition-transform inline-block">
+              <span class="text-muted group-open:rotate-180 transition-transform inline-block">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 7l4 4 4-4"/></svg>
               </span>
             </summary>
-            <div class="mt-3 text-sm text-floof-dark/60 space-y-2 leading-relaxed">
+            <div class="pb-4 text-sm text-ink-2 space-y-2 leading-relaxed normal-case tracking-normal font-normal">
               <p>Printed on demand in the US when you order — usually ships within 2–7 business days after production.</p>
-              <p><strong class="text-floof-dark">Free standard shipping</strong> on orders $75+ (US).</p>
-              <p><a href="/shipping-returns" class="text-floof-pink underline">Full shipping & returns policy</a></p>
+              <p><strong class="text-ink">Free standard shipping</strong> on orders $75+ (US).</p>
+              <p><a href="/shipping-returns" class="text-accent underline">Full shipping & returns policy</a></p>
             </div>
           </details>
-          <details class="group py-4">
-            <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-floof-dark">
+          <details class="group border-b-[3px] border-ink">
+            <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-ink py-4 uppercase tracking-wide text-sm">
               Materials & care
-              <span class="text-floof-dark/40 group-open:rotate-180 transition-transform inline-block">
+              <span class="text-muted group-open:rotate-180 transition-transform inline-block">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 7l4 4 4-4"/></svg>
               </span>
             </summary>
-            <div class="mt-3 text-sm text-floof-dark/60 space-y-2 leading-relaxed">
+            <div class="pb-4 text-sm text-ink-2 space-y-2 leading-relaxed normal-case tracking-normal font-normal">
               <p>Soft retail blanks (tees & hoodies). Exact fabric depends on the style you pick.</p>
               <p>Machine wash cold, inside out. Tumble dry low. Do not iron directly on the print.</p>
             </div>
           </details>
-          <details class="group py-4">
-            <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-floof-dark">
+          <details class="group">
+            <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-ink py-4 uppercase tracking-wide text-sm">
               Returns
-              <span class="text-floof-dark/40 group-open:rotate-180 transition-transform inline-block">
+              <span class="text-muted group-open:rotate-180 transition-transform inline-block">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 7l4 4 4-4"/></svg>
               </span>
             </summary>
-            <div class="mt-3 text-sm text-floof-dark/60 space-y-2 leading-relaxed">
+            <div class="pb-4 text-sm text-ink-2 space-y-2 leading-relaxed normal-case tracking-normal font-normal">
               <p>30 days on unworn items with tags. Because items are made to order, please double-check size before checkout.</p>
             </div>
           </details>
@@ -146,16 +146,23 @@ const catLabel = categoryLabels[product.category] || product.category;
   <TrustBar compact />
 
   {related.length > 0 && (
-    <section class="mx-auto max-w-7xl px-6 py-16">
+    <section class="mx-auto max-w-7xl px-5 md:px-6 py-16">
       <div class="flex items-end justify-between gap-4 mb-8">
         <div>
-          <p class="eyebrow">You may also like</p>
-          <h2 class="mt-1 font-display text-2xl font-semibold md:text-3xl text-floof-dark">More from the collection</h2>
+          <p class="eyebrow">More from the press</p>
+          <h2 class="mt-1 font-display text-2xl md:text-3xl text-ink">Related pieces</h2>
         </div>
-        <a href="/store" class="text-sm font-medium text-floof-pink underline underline-offset-4 shrink-0">Shop all</a>
+        <a href="/store" class="text-[0.72rem] font-semibold tracking-[0.12em] uppercase text-accent underline underline-offset-4 shrink-0">Shop all</a>
       </div>
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {related.map((p) => <ProductCard product={p} />)}
+      <div class="grid gap-0 sm:grid-cols-2 lg:grid-cols-4 border-[3px] border-ink">
+        {related.map((p, i) => (
+          <div class:list={[
+            "border-ink border-b-[3px] sm:border-b-0",
+            i < related.length - 1 && "sm:border-r-[3px]",
+          ]}>
+            <ProductCard product={p} index={i} />
+          </div>
+        ))}
       </div>
     </section>
   )}

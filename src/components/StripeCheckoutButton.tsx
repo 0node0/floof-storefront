@@ -31,7 +31,7 @@ export default function StripeCheckoutButton() {
   return (
     <div className="space-y-3">
       {err && (
-        <p className="text-sm text-red-600 flex gap-2 items-start">
+        <p className="text-sm text-accent flex gap-2 items-start">
           <Icon name="alert" className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{err}</span>
         </p>
@@ -45,7 +45,7 @@ export default function StripeCheckoutButton() {
         <Icon name="lock" className="w-4 h-4" />
         {loading ? "Opening Stripe Checkout…" : "Pay with Stripe"}
       </button>
-      <p className="text-xs text-floof-dark/40 text-center">
+      <p className="text-xs text-muted text-center normal-case tracking-normal font-normal">
         Secure checkout powered by Stripe. Your payment info is never stored on our servers.
       </p>
     </div>

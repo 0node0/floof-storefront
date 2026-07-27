@@ -1,50 +1,45 @@
-/* Hallmark · genre: refined-playful · theme: custom (Gulf Coast boutique)
- * paper: warm gallery white · accent: refined coral-clay · secondary: quiet gulf
- * display: Fraunces · body: DM Sans · axes: light / serif-display / warm-coral
+/* Hallmark · genre: editorial · theme: custom (risograph zine / late-night print shop)
+ * paper: near-black ink · accent: magenta · secondary: cyan
+ * display: Archivo Black · body: IBM Plex Mono
  * design-system: design.md · designed-as-app
  */
 
 :root {
-  /* Color — sun-warm boutique (not neon splash) */
-  --color-paper: oklch(98% 0.01 80);
-  --color-paper-2: oklch(95% 0.02 75);
-  --color-paper-3: oklch(91% 0.028 70);
-  --color-ink: oklch(22% 0.025 50);
-  --color-ink-2: oklch(42% 0.02 50);
-  --color-muted: oklch(52% 0.016 55);
-  --color-rule: oklch(82% 0.015 70);
-  --color-rule-2: oklch(90% 0.01 75);
+  --color-paper: oklch(14% 0.02 280);
+  --color-paper-2: oklch(18% 0.025 275);
+  --color-paper-3: oklch(24% 0.03 270);
+  --color-ink: oklch(96% 0.01 95);
+  --color-ink-2: oklch(78% 0.02 95);
+  --color-muted: oklch(58% 0.02 260);
+  --color-rule: oklch(96% 0.01 95 / 0.14);
+  --color-rule-2: oklch(96% 0.01 95 / 0.08);
 
-  /* Refined coral-clay — primary brand */
-  --color-accent: oklch(58% 0.155 32);
-  --color-accent-deep: oklch(46% 0.14 30);
-  --color-accent-soft: oklch(90% 0.05 40);
-  --color-accent-ink: oklch(98.5% 0.008 80);
+  --color-accent: oklch(68% 0.28 350);
+  --color-accent-deep: oklch(52% 0.24 350);
+  --color-accent-soft: oklch(68% 0.28 350 / 0.18);
+  --color-accent-ink: oklch(14% 0.02 280);
 
-  /* Support only */
-  --color-secondary: oklch(52% 0.07 220);
-  --color-sun: oklch(82% 0.1 85);
-  --color-mint: oklch(78% 0.08 155);
-  --color-focus: oklch(52% 0.14 32);
-  --color-surface: oklch(99.5% 0.005 80);
+  --color-secondary: oklch(78% 0.14 210);
+  --color-cream: oklch(94% 0.03 95);
+  --color-sun: oklch(94% 0.03 95);
+  --color-mint: oklch(78% 0.14 210 / 0.35);
+  --color-focus: oklch(78% 0.14 210);
+  --color-surface: oklch(18% 0.025 275);
 
-  /* Type */
-  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
-  --font-body: "DM Sans", system-ui, -apple-system, sans-serif;
-  --font-mono: "DM Mono", ui-monospace, "Cascadia Code", monospace;
+  --font-display: "Archivo Black", "Arial Black", Impact, system-ui, sans-serif;
+  --font-body: "IBM Plex Mono", ui-monospace, "Cascadia Code", monospace;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", monospace;
 
-  /* Scale */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
-  --text-md: 1.0625rem;
-  --text-lg: 1.25rem;
-  --text-xl: 1.5rem;
-  --text-2xl: 1.875rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.35rem;
+  --text-2xl: 1.75rem;
   --text-3xl: 2.25rem;
-  --text-display: clamp(2.5rem, 4.5vw + 1rem, 4.25rem);
-  --text-display-s: clamp(1.75rem, 2.5vw + 0.75rem, 2.75rem);
+  --text-display: clamp(2.75rem, 8vw + 0.5rem, 5.5rem);
+  --text-display-s: clamp(1.75rem, 3vw + 0.5rem, 2.75rem);
 
-  /* Space (4pt) */
   --space-3xs: 0.25rem;
   --space-2xs: 0.5rem;
   --space-xs: 0.75rem;
@@ -55,22 +50,20 @@
   --space-2xl: 4.5rem;
   --space-3xl: 7rem;
 
-  /* Radius — softer boutique, not toy-round */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-card: 16px;
-  --radius-lg: 20px;
-  --radius-pill: 999px;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-card: 0;
+  --radius-lg: 0;
+  --radius-pill: 0;
 
-  /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-press: cubic-bezier(0.2, 0.7, 0.3, 1);
   --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
   --dur-short: 140ms;
   --dur-mid: 220ms;
 
-  /* Shadows — warm, quiet */
-  --shadow-card: 0 8px 24px -12px oklch(22% 0.02 50 / 0.12);
-  --shadow-card-hover: 0 16px 36px -14px oklch(22% 0.02 50 / 0.18);
-  --shadow-btn-cast: oklch(46% 0.14 30 / 0.32);
+  --shadow-card: 6px 6px 0 0 oklch(78% 0.14 210 / 0.35);
+  --shadow-card-hover: 8px 8px 0 0 oklch(68% 0.28 350 / 0.55);
+  --shadow-btn-cast: oklch(78% 0.14 210);
+  --rule-w: 3px;
 }

@@ -33,20 +33,20 @@ if (sortParam === "price-asc") {
 }
 
 const countLabel =
-  filtered.length === 1 ? "1 product" : `${filtered.length} products`;
+  filtered.length === 1 ? "1 piece" : `${filtered.length} pieces`;
 ---
 <Layout
   title={catParam !== "all" ? categoryLabels[catParam] || "Shop" : "Shop"}
   description="Browse Floof tees, hoodies, and more — witty SW Florida apparel, printed fresh when you order."
 >
-  <section class="border-b border-floof-dark/6 bg-floof-sand/50">
-    <div class="mx-auto max-w-7xl px-6 py-12 md:py-16">
-      <p class="eyebrow">Shop</p>
-      <h1 class="mt-2 font-display text-4xl font-semibold md:text-5xl text-floof-dark">
+  <section class="page-band">
+    <div class="mx-auto max-w-7xl px-5 md:px-6 py-12 md:py-16">
+      <p class="eyebrow">Shop · inventory</p>
+      <h1 class="mt-2 font-display text-4xl md:text-5xl text-ink">
         The Collection
       </h1>
-      <p class="mt-3 text-floof-dark/55 text-sm md:text-base max-w-xl">
-        Soft blanks, loud slogans. Pick a size — we print it fresh.
+      <p class="mt-3 text-ink-2 text-sm md:text-base max-w-xl normal-case tracking-normal font-normal">
+        Soft blanks, sharp wit. Pick a size — we print it fresh.
       </p>
     </div>
   </section>
@@ -55,16 +55,16 @@ const countLabel =
 
   {all.length === 0 && (
     <div class="mx-auto max-w-2xl px-6 py-20 text-center">
-      <p class="font-display text-2xl font-semibold text-floof-dark">No products yet</p>
-      <p class="mt-3 text-floof-dark/50">Check back soon — new drops are on the way.</p>
+      <p class="font-display text-2xl text-ink">No products yet</p>
+      <p class="mt-3 text-ink-2 normal-case tracking-normal font-normal">Check back soon — new drops are on the way.</p>
     </div>
   )}
 
   {all.length > 0 && (
-    <section class="mx-auto max-w-7xl px-6 py-10 md:py-12">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-floof-dark/6 pb-6">
-        <div class="flex flex-wrap gap-2" role="tablist" aria-label="Category">
-          {categories.map((c) => {
+    <section class="mx-auto max-w-7xl px-5 md:px-6 py-10 md:py-12">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b-[3px] border-ink pb-6">
+        <div class="flex flex-wrap gap-0 border-[3px] border-ink" role="tablist" aria-label="Category">
+          {categories.map((c, i) => {
             const href =
               c.id === "all"
                 ? `/store?sort=${sortParam}`
@@ -76,10 +76,11 @@ const countLabel =
                 role="tab"
                 aria-selected={active}
                 class:list={[
-                  "rounded-full px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap",
+                  "px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] uppercase transition-colors whitespace-nowrap",
+                  i > 0 && "border-l-[3px] border-ink",
                   active
-                    ? "bg-floof-dark text-floof-cream"
-                    : "bg-white text-floof-dark/70 ring-1 ring-floof-dark/10 hover:ring-floof-pink/40",
+                    ? "bg-ink text-paper"
+                    : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper",
                 ]}
               >
                 {c.label}
@@ -88,11 +89,11 @@ const countLabel =
           })}
         </div>
         <div class="flex items-center gap-3">
-          <p class="text-sm font-mono text-floof-dark/45">{countLabel}</p>
+          <p class="text-sm font-mono text-muted">{countLabel}</p>
           <label class="sr-only" for="sort">Sort</label>
           <select
             id="sort"
-            class="rounded-full border border-floof-dark/10 bg-white px-4 py-2 text-sm text-floof-dark focus:border-floof-pink focus:outline-none"
+            class="border-[3px] border-ink bg-paper px-4 py-2 text-sm text-ink focus:border-accent focus:outline-none"
             onchange={`const cat='${catParam}'; const v=this.value; location.href='/store'+(cat!=='all'?'?cat='+cat+'&sort='+v:'?sort='+v)`}
           >
             <option value="featured" selected={sortParam === "featured"}>Featured</option>
@@ -105,21 +106,29 @@ const countLabel =
 
       {filtered.length === 0 ? (
         <div class="py-20 text-center">
-          <p class="text-lg font-semibold text-floof-dark">Nothing in this category yet</p>
-          <a href="/store" class="mt-4 inline-block text-floof-pink underline">View all products</a>
+          <p class="text-lg font-display text-ink">Nothing in this category yet</p>
+          <a href="/store" class="mt-4 inline-block text-accent underline">View all products</a>
         </div>
       ) : (
-        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div class="mt-8 grid gap-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 border-[3px] border-ink">
           {filtered.map((p, i) => (
-            <ProductCard product={p} priority={i < 4} />
+            <div class:list={[
+              "border-ink",
+              "border-b-[3px] sm:border-b-[3px]",
+              (i % 2 !== 1) && "sm:border-r-[3px]",
+              (i % 3 !== 2) && "lg:border-r-[3px]",
+              (i % 4 !== 3) && "xl:border-r-[3px]",
+            ]}>
+              <ProductCard product={p} priority={i < 4} index={i} />
+            </div>
           ))}
         </div>
       )}
 
-      <div class="mt-14 rounded-[1.25rem] bg-white p-8 md:p-10 outline outline-1 outline-floof-dark/6 text-center md:text-left md:flex md:items-center md:justify-between gap-6">
+      <div class="mt-14 border-[3px] border-ink bg-paper-2 p-8 md:p-10 md:flex md:items-center md:justify-between gap-6">
         <div>
-          <h2 class="font-display text-xl font-semibold text-floof-dark">Not sure about sizing?</h2>
-          <p class="mt-2 text-sm text-floof-dark/55 max-w-md">
+          <h2 class="font-display text-xl text-ink">Not sure about sizing?</h2>
+          <p class="mt-2 text-sm text-ink-2 max-w-md normal-case tracking-normal font-normal">
             Unisex fits with room to move. Size guides live on every product page — when in doubt, size up.
           </p>
         </div>

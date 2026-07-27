@@ -12,21 +12,25 @@ const items: { icon: string; title: string; body: string }[] = [
   { icon: "palm", title: "SWFL brand", body: "Designed on the Gulf Coast" },
 ]
 ---
-<section class:list={["border-y border-floof-dark/6 bg-white/70", compact ? "py-6" : "py-10"]}>
-  <div class="mx-auto max-w-7xl px-6">
-    <div class="grid grid-cols-2 gap-6 lg:grid-cols-4">
-      {items.map((item) => (
-        <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 text-center sm:text-left">
+<section class:list={["border-y-[3px] border-ink bg-paper-2", compact ? "py-5" : "py-8"]}>
+  <div class="mx-auto max-w-7xl px-5 md:px-6">
+    <div class="grid grid-cols-2 gap-0 lg:grid-cols-4 border-[3px] border-ink">
+      {items.map((item, i) => (
+        <div class:list={[
+          "flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 p-4 md:p-5 text-center sm:text-left",
+          i < items.length - 1 && "border-b-[3px] lg:border-b-0 lg:border-r-[3px] border-ink",
+          i === 1 && "border-b-[3px] lg:border-b-0 border-ink",
+        ]}>
           <span
-            class="inline-flex h-10 w-10 mx-auto sm:mx-0 shrink-0 items-center justify-center rounded-xl bg-floof-sand text-floof-coral"
+            class="inline-flex h-10 w-10 mx-auto sm:mx-0 shrink-0 items-center justify-center border-[3px] border-ink bg-accent text-accent-ink"
             role="img"
             aria-label={item.title}
           >
             <Icon name={item.icon} class="w-5 h-5" />
           </span>
           <div>
-            <p class="text-sm font-semibold text-floof-dark">{item.title}</p>
-            <p class="mt-0.5 text-xs text-floof-dark/50 leading-relaxed">{item.body}</p>
+            <p class="text-sm font-semibold text-ink uppercase tracking-wide">{item.title}</p>
+            <p class="mt-0.5 text-xs text-ink-2 leading-relaxed">{item.body}</p>
           </div>
         </div>
       ))}

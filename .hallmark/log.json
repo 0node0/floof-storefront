@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-07-26",
+    "scope": "app",
+    "macrostructure": "Manifesto + Lookbook / Catalogue slab / Long Document",
+    "theme": "custom",
+    "theme_axes": "dark / display-heavy / chromatic-other (magenta)",
+    "vibe": "ink, magenta, cyan, SWFL heat on paper",
+    "enrichment": "none — type + product photography",
+    "nav": "N7 brutal slab",
+    "footer": "Ft5 statement",
+    "brief": "Site-wide risograph zine system — promoted from /alt experiment"
+  },
+  {
     "date": "2026-07-25",
     "scope": "page",
     "route": "/alt",

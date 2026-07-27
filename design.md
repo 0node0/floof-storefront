@@ -4,71 +4,56 @@ A locked design system for this app. Every page redesign reads this file before
 emitting code. Do not regenerate per page — extend or amend this file when the
 system needs to grow.
 
-/* Hallmark · genre: refined-playful · theme: custom (Gulf Coast boutique) · designed-as-app */
+/* Hallmark · genre: editorial · theme: custom (risograph zine / late-night print shop) · designed-as-app */
 
 ## Genre
-**Refined playful** — witty coastal apparel with boutique restraint.
-Balance of **fun · elegance · exclusivity**. Not toy-app loud. Not muted atelier-only.
+**Editorial · risograph zine** — late-night print-shop energy. Loud type, hard rules, magenta + cyan on ink.
 
 ## Macrostructure family
-- Marketing pages (`/`, `/about`): Photographic fold + Catalogue product grids
-- App / shop pages (`/store`, PDP, checkout): Catalogue / Workbench
-- Content pages (shipping, legal, contact): Long Document
+- Marketing (`/`, `/about`): Manifesto + Lookbook
+- Shop / PDP / checkout: Catalogue / Workbench with slab chrome
+- Content (shipping, legal, contact): Long Document on ink paper
 
 ## Theme
-Custom *tuned* — vibe: **"Gulf Coast boutique · sun-warm, not sun-splash"**
+Custom *tuned* — vibe: **"ink, magenta, cyan, SWFL heat on paper"**
 
 | Token | Value | Role |
 | --- | --- | --- |
-| paper | `oklch(98% 0.01 80)` | Warm gallery white |
-| paper-2 | `oklch(95% 0.02 75)` | Soft sand |
-| paper-3 | `oklch(91% 0.028 70)` | Sand depth |
-| ink | `oklch(22% 0.025 50)` | Warm espresso-navy |
-| ink-2 | `oklch(42% 0.02 50)` | Secondary text |
-| accent | `oklch(58% 0.155 32)` | Refined coral-clay |
-| accent-deep | `oklch(46% 0.14 30)` | Button edge |
-| secondary | `oklch(52% 0.07 220)` | Quiet gulf blue |
-| sun | `oklch(82% 0.1 85)` | Soft gold (sparing) |
+| paper | `oklch(14% 0.02 280)` | Near-black ink field |
+| paper-2 | `oklch(18% 0.025 275)` | Raised ink |
+| paper-3 | `oklch(24% 0.03 270)` | Depth |
+| ink | `oklch(96% 0.01 95)` | Cream type on ink |
+| ink-2 | `oklch(78% 0.02 95)` | Secondary type |
+| cream | `oklch(94% 0.03 95)` | Light slabs / product frames |
+| accent | `oklch(68% 0.28 350)` | Magenta |
+| accent-deep | `oklch(52% 0.24 350)` | Magenta edge |
+| secondary | `oklch(78% 0.14 210)` | Cyan labels / links |
 
-One primary accent. Secondary and sun are support only — never a rainbow wash.
-
-Legacy `floof-*` Tailwind aliases map onto these.
+Legacy `floof-*` aliases map onto these (dark site).
 
 ## Typography
-- Display: **Fraunces** 500–600, tracking -0.02em (editorial, exclusive)
-- Body: **DM Sans** 400/500
-- Mono labels: **DM Mono** 500 (eyebrows, craft labels)
-- Accent words: solid accent color — **no multi-stop gradient text**
+- Display: **Archivo Black** (roman, uppercase friendly)
+- Body / UI: **IBM Plex Mono** 400/500/600
+- No Fraunces, no Outfit, no gradient text
 
 ## Spacing
-4-point named scale in `tokens.css`.
+4-point named scale in `tokens.css`. Hard **3px** rules for chrome.
 
 ## Motion
-- Subtle hover lift + press on CTAs
-- Add-to-cart: fly-to-cart + **one soft particle wave** + quiet confirm modal
-- No site-wide sparkles, logo party, mood swaps, 3D tilt, magnetic buttons
-- Reduced-motion respected (opacity-only ≤ 150ms)
+- Offset-shadow press on CTAs (`translate` + cast cyan/magenta)
+- Soft add-to-cart confirm only
+- Reduced-motion respected
 
 ## CTA voice
-- Primary: refined push button — coral face, soft deep edge, white/cream label
-- Secondary: outline ink, coral hover
-- Soft: sand face
-
-## Brand voice (copy)
-- Fun: dry wit, never chaotic meme-speak
-- Elegance: short, confident lines
-- Exclusivity: made-to-order, small drops, printed fresh — not “main character energy”
+- Primary: magenta fill, thick border, offset shadow on hover
+- Ghost: transparent + cream/ink border
+- Ink invert: cream face on dark panels
 
 ## What pages MUST share
-- Wordmark **Floof** in Fraunces, accent or ink
-- Single coral accent (≤ ~5% solid fill of viewport)
-- Warm paper; no pure #000 / #fff full fields
-- CTA button system
+- Wordmark **Floof** in Archivo Black on magenta slab (nav)
+- 3px cream/ink rules
+- Magenta + cyan accents only (no coral-clay, no multi-sun splash)
+- Dark paper default
 
-## What pages MUST NOT do
-- Floating stickers, vibe marquees, color-mood toys
-- “Hell yeah” / chaos / poke-everywhere interactions
-- Hot multi-accent sun-splash gradients as default chrome
-
-## Axes (custom)
-light / classical-serif-display + humanist-sans / warm-coral-clay
+## Axes
+dark / display-heavy / chromatic-other (magenta)

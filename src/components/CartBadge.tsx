@@ -82,7 +82,7 @@ export default function CartBadge() {
       href="/checkout"
       id="cart-badge"
       data-cart-count={displayCount}
-      className={`cart-badge relative flex items-center justify-center w-10 h-10 rounded-full text-floof-dark/75 hover:text-floof-pink hover:bg-floof-sand/80 transition-colors ${
+      className={`cart-badge relative flex items-center justify-center w-10 h-10 text-ink-2 hover:text-accent transition-colors ${
         bump ? "cart-badge--bump" : ""
       } ${ring ? "cart-badge--ring" : ""}`}
       aria-label={`Cart with ${displayCount} item${displayCount === 1 ? "" : "s"}`}
@@ -107,7 +107,7 @@ export default function CartBadge() {
       {showBadge && (
         <span
           key={`${label}-${badgePop}`}
-          className={`cart-badge__count absolute -top-0.5 -right-0.5 min-w-5 h-5 px-1 rounded-full bg-floof-pink text-accent-ink text-[11px] font-bold flex items-center justify-center tabular-nums shadow-sm ${
+          className={`cart-badge__count absolute -top-0.5 -right-0.5 min-w-5 h-5 px-1 bg-accent text-accent-ink text-[11px] font-bold flex items-center justify-center tabular-nums border-2 border-ink ${
             badgePop ? "cart-badge__count--pop" : ""
           }`}
         >

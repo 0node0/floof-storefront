@@ -108,8 +108,8 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
 
   if (err || cartError) {
     return (
-      <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-6">
-        <p className="text-sm text-red-600 flex gap-2 items-start">
+      <div className="border-[3px] border-accent bg-paper p-6">
+        <p className="text-sm text-accent flex gap-2 items-start">
           <Icon name="alert" className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{err || cartError}</span>
         </p>
@@ -119,7 +119,7 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
             setErr(null)
             clearError()
           }}
-          className="mt-2 text-sm text-red-500 underline"
+          className="mt-2 text-sm text-ink-2 underline"
         >
           Dismiss
         </button>
@@ -129,18 +129,18 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
 
   return (
     <div className="mt-6 space-y-6">
-      <div className="flex items-baseline justify-between gap-4">
-        <p className="font-display text-3xl font-semibold text-floof-dark tabular-nums">{formatPrice(price, cur)}</p>
-        <p className="text-xs text-floof-dark/40">USD · tax at checkout</p>
+      <div className="flex items-baseline justify-between gap-4 border-b-[3px] border-ink pb-4">
+        <p className="font-display text-3xl text-accent tabular-nums">{formatPrice(price, cur)}</p>
+        <p className="text-xs text-muted uppercase tracking-wider">USD · tax at checkout</p>
       </div>
 
       {colors.length > 0 && (
         <div>
-          <p className="text-sm font-medium text-floof-dark/70 mb-2">
-            Color: <span className="text-floof-dark font-semibold">{selColor}</span>
+          <p className="text-sm font-medium text-ink-2 mb-2 uppercase tracking-wide">
+            Color: <span className="text-ink font-semibold">{selColor}</span>
           </p>
-          <div className="flex gap-2 flex-wrap" role="listbox" aria-label="Color">
-            {colors.map((c) => {
+          <div className="flex gap-0 flex-wrap border-[3px] border-ink" role="listbox" aria-label="Color">
+            {colors.map((c, i) => {
               const swatch = colorMap[c] || "#888"
               const selected = selColor === c
               return (
@@ -151,14 +151,16 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
                   aria-selected={selected}
                   title={c}
                   onClick={() => setSelColor(c)}
-                  className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-all ${
+                  className={`flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors ${
+                    i > 0 ? "border-l-[3px] border-ink" : ""
+                  } ${
                     selected
-                      ? "border-floof-dark bg-floof-dark text-white"
-                      : "border-floof-dark/10 bg-white text-floof-dark/70 hover:border-floof-pink"
+                      ? "bg-ink text-paper"
+                      : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper"
                   }`}
                 >
                   <span
-                    className="w-4 h-4 rounded-full border border-black/10 shrink-0"
+                    className="w-4 h-4 border border-ink/40 shrink-0"
                     style={{ background: swatch }}
                   />
                   {c}
@@ -172,13 +174,13 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
       {sizes.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-floof-dark/70">
-              Size: <span className="text-floof-dark font-semibold">{selSize || "—"}</span>
+            <p className="text-sm font-medium text-ink-2 uppercase tracking-wide">
+              Size: <span className="text-ink font-semibold">{selSize || "—"}</span>
             </p>
             <SizeGuide category={product.category} />
           </div>
-          <div className="flex gap-2 flex-wrap" role="listbox" aria-label="Size">
-            {sizes.map((s) => {
+          <div className="flex gap-0 flex-wrap border-[3px] border-ink" role="listbox" aria-label="Size">
+            {sizes.map((s, i) => {
               const avail = availableSizes.has(s)
               const selected = selSize === s
               return (
@@ -189,12 +191,14 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
                   aria-selected={selected}
                   disabled={!avail}
                   onClick={() => avail && setSelSize(s)}
-                  className={`min-w-12 h-12 px-3 rounded-xl text-sm font-medium transition-all ${
+                  className={`min-w-12 h-12 px-3 text-sm font-medium transition-colors ${
+                    i > 0 ? "border-l-[3px] border-ink" : ""
+                  } ${
                     !avail
-                      ? "bg-floof-sand/50 text-floof-dark/25 line-through cursor-not-allowed"
+                      ? "bg-paper-2 text-muted line-through cursor-not-allowed"
                       : selected
-                        ? "bg-floof-dark text-white"
-                        : "bg-floof-cream text-floof-dark/70 hover:bg-floof-sand"
+                        ? "bg-ink text-paper"
+                        : "bg-paper text-ink-2 hover:bg-accent hover:text-accent-ink"
                   }`}
                 >
                   {s}
@@ -206,23 +210,23 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
       )}
 
       <div>
-        <p className="text-sm font-medium text-floof-dark/70 mb-2">Quantity</p>
-        <div className="flex items-center gap-3">
+        <p className="text-sm font-medium text-ink-2 mb-2 uppercase tracking-wide">Quantity</p>
+        <div className="inline-flex items-center border-[3px] border-ink">
           <button
             type="button"
             onClick={() => setQty(Math.max(1, qty - 1))}
-            className="w-10 h-10 rounded-xl border border-floof-dark/10 flex items-center justify-center hover:border-floof-pink"
+            className="w-10 h-10 flex items-center justify-center hover:bg-accent hover:text-accent-ink border-r-[3px] border-ink"
             aria-label="Decrease quantity"
           >
             −
           </button>
-          <span className="w-10 text-center font-semibold text-lg" aria-live="polite">
+          <span className="w-12 text-center font-semibold text-lg" aria-live="polite">
             {qty}
           </span>
           <button
             type="button"
             onClick={() => setQty(Math.min(10, qty + 1))}
-            className="w-10 h-10 rounded-xl border border-floof-dark/10 flex items-center justify-center hover:border-floof-pink"
+            className="w-10 h-10 flex items-center justify-center hover:bg-accent hover:text-accent-ink border-l-[3px] border-ink"
             aria-label="Increase quantity"
           >
             +
@@ -230,7 +234,7 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
         </div>
       </div>
 
-      <div className="space-y-3 sticky bottom-0 sm:static bg-floof-cream/95 sm:bg-transparent py-3 sm:py-0 -mx-2 px-2 sm:mx-0 sm:px-0 backdrop-blur sm:backdrop-blur-none border-t sm:border-0 border-floof-dark/5">
+      <div className="space-y-3 sticky bottom-0 sm:static bg-paper/95 sm:bg-transparent py-3 sm:py-0 -mx-2 px-2 sm:mx-0 sm:px-0 backdrop-blur sm:backdrop-blur-none border-t-[3px] sm:border-0 border-ink">
         <button
           ref={addBtnRef}
           type="button"
@@ -252,38 +256,35 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
           )}
         </button>
         {added && (
-          <a
-            href="/checkout"
-            className="btn btn--outline w-full"
-          >
+          <a href="/checkout" className="btn btn--outline w-full">
             View cart & checkout
           </a>
         )}
       </div>
 
       {itemCount > 0 && !added && (
-        <p className="text-center text-sm text-floof-dark/50 inline-flex items-center justify-center gap-1.5 w-full">
+        <p className="text-center text-sm text-ink-2 inline-flex items-center justify-center gap-1.5 w-full normal-case tracking-normal font-normal">
           <Icon name="cart" className="w-4 h-4" />
           {itemCount} item{itemCount !== 1 ? "s" : ""} in cart ·{" "}
-          <a href="/checkout" className="text-floof-pink underline">
+          <a href="/checkout" className="text-accent underline">
             Checkout
           </a>
         </p>
       )}
 
-      <ul className="text-xs text-floof-dark/45 space-y-2 pt-2">
+      <ul className="text-xs text-muted space-y-2 pt-2 normal-case tracking-normal font-normal">
         <li className="flex gap-2 items-start">
-          <Icon name="check" className="w-3.5 h-3.5 shrink-0 mt-0.5 text-floof-pink" />
+          <Icon name="check" className="w-3.5 h-3.5 shrink-0 mt-0.5 text-accent" />
           <span>Ships from US print partners (typically 2–7 business days to print)</span>
         </li>
         <li className="flex gap-2 items-start">
-          <Icon name="check" className="w-3.5 h-3.5 shrink-0 mt-0.5 text-floof-pink" />
+          <Icon name="check" className="w-3.5 h-3.5 shrink-0 mt-0.5 text-accent" />
           <span>Secure Stripe checkout · Free shipping over $75</span>
         </li>
         <li className="flex gap-2 items-start">
-          <Icon name="check" className="w-3.5 h-3.5 shrink-0 mt-0.5 text-floof-pink" />
+          <Icon name="check" className="w-3.5 h-3.5 shrink-0 mt-0.5 text-accent" />
           <span>
-            <a href="/shipping-returns" className="underline hover:text-floof-pink">
+            <a href="/shipping-returns" className="underline hover:text-accent">
               30-day returns
             </a>{" "}
             on unworn items

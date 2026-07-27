@@ -5,23 +5,27 @@ import { colorMap, categoryLabels } from "@/lib/product"
 interface Props {
   product: FloofProduct
   priority?: boolean
+  index?: number
 }
-const { product, priority = false } = Astro.props
+const { product, priority = false, index } = Astro.props
 const catLabel = categoryLabels[product.category] || product.category
+const idx = typeof index === "number" ? String(index + 1).padStart(2, "0") : null
 ---
 <a
   href={`/products/${product.slug}`}
   class="card-surface group block overflow-hidden"
 >
-  <div class="relative aspect-square overflow-hidden bg-floof-sand p-6 sm:p-8 flex items-center justify-center">
+  <div class="relative aspect-square overflow-hidden bg-cream p-5 sm:p-6 flex items-center justify-center border-b-[3px] border-ink">
+    {idx && (
+      <span class="absolute top-0 left-0 z-10 px-2 py-1 text-[0.65rem] font-semibold tracking-[0.1em] bg-paper text-accent border-r-[3px] border-b-[3px] border-ink">
+        {idx}
+      </span>
+    )}
     {product.isWip && (
-      <span class="absolute top-3 left-3 z-10 rounded-full bg-floof-dark/90 px-2.5 py-1 text-[10px] font-mono font-medium uppercase tracking-wider text-floof-yellow">
+      <span class="absolute top-0 right-0 z-10 px-2 py-1 text-[0.65rem] font-semibold tracking-[0.1em] uppercase bg-accent text-accent-ink border-l-[3px] border-b-[3px] border-ink">
         Preview
       </span>
     )}
-    <span class="absolute top-3 right-3 z-10 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-floof-dark/55 opacity-0 group-hover:opacity-100 transition-opacity">
-      View
-    </span>
     {product.image ? (
       <img
         src={product.image}
@@ -32,22 +36,24 @@ const catLabel = categoryLabels[product.category] || product.category
         height="400"
       />
     ) : (
-      <span class="font-display text-2xl md:text-3xl font-semibold text-floof-dark/80 leading-tight text-center px-2">
+      <span class="font-display text-2xl md:text-3xl text-paper leading-tight text-center px-2">
         {product.phrase}
       </span>
     )}
   </div>
-  <div class="p-5">
+  <div class="p-4 md:p-5">
     <p class="eyebrow">{catLabel}</p>
-    <h3 class="mt-1.5 font-display text-lg font-semibold text-floof-dark group-hover:text-floof-pink transition-colors line-clamp-2">
+    <h3 class="mt-1.5 font-display text-lg text-ink group-hover:text-accent transition-colors line-clamp-2">
       {product.name}
     </h3>
-    <p class="mt-1 text-sm text-floof-dark/50 line-clamp-2">{product.description}</p>
-    <div class="mt-3 flex items-center justify-between gap-2">
+    <p class="mt-1 text-sm text-ink-2 line-clamp-2 normal-case tracking-normal font-normal font-sans">
+      {product.description}
+    </p>
+    <div class="mt-3 flex items-center justify-between gap-2 border-t border-ink/15 pt-3">
       <div>
-        <span class="text-lg font-semibold text-floof-pink tabular-nums">${product.price.toFixed(2)}</span>
+        <span class="text-base font-semibold text-accent tabular-nums">${product.price.toFixed(2)}</span>
         {product.sizes.length > 0 && (
-          <p class="text-[11px] font-mono text-floof-dark/40 mt-0.5">
+          <p class="text-[11px] font-mono text-muted mt-0.5">
             {product.sizes[0]}–{product.sizes[product.sizes.length - 1]}
           </p>
         )}
@@ -56,14 +62,11 @@ const catLabel = categoryLabels[product.category] || product.category
         <div class="flex gap-1 items-center" aria-label={`${product.colors.length} colors`}>
           {product.colors.slice(0, 5).map((color) => (
             <span
-              class="inline-block w-4 h-4 rounded-full border border-floof-dark/15 shadow-sm"
+              class="inline-block w-3.5 h-3.5 border border-ink/40"
               style={`background: ${colorMap[color] || "#888"}`}
               title={color}
             />
           ))}
-          {product.colors.length > 5 && (
-            <span class="text-[10px] text-floof-dark/40">+{product.colors.length - 5}</span>
-          )}
         </div>
       )}
     </div>
