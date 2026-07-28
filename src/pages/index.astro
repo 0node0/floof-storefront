@@ -72,11 +72,11 @@ const cats: { href: string; label: string; icon: string; blurb: string }[] = [
           </div>
         </dl>
       </div>
-      <div class="lg:col-span-5 relative flex items-center justify-center p-6 md:p-10 bg-paper-2">
-        <div class="absolute top-4 right-4 w-20 h-20 border-[3px] border-accent rounded-full grid place-items-center text-center text-[0.55rem] font-semibold tracking-[0.08em] uppercase leading-snug text-accent rotate-12 bg-paper/60">
+      <div class="lg:col-span-5 relative flex items-center justify-center p-6 md:p-10 pb-10 md:pb-10 bg-paper-2 overflow-x-clip">
+        <div class="absolute top-4 right-4 w-20 h-20 border-[3px] border-accent rounded-full grid place-items-center text-center text-[0.55rem] font-semibold tracking-[0.08em] uppercase leading-snug text-accent rotate-12 bg-paper/60 z-10">
           Printed<br />fresh<br />not stocked
         </div>
-        <div class="relative w-full max-w-md aspect-[4/5] bg-cream border-[3px] border-ink shadow-[12px_12px_0_0_var(--color-secondary)] flex items-center justify-center p-6 md:p-8 overflow-hidden">
+        <div class="relative w-full max-w-md aspect-[4/5] mb-2 bg-cream border-[3px] border-ink shadow-[6px_6px_0_0_var(--color-secondary)] sm:shadow-[12px_12px_0_0_var(--color-secondary)] flex items-center justify-center p-6 md:p-8 overflow-hidden">
           {heroImg ? (
             <img
               src={heroImg}
@@ -122,14 +122,11 @@ const cats: { href: string; label: string; icon: string; blurb: string }[] = [
           <h2 class="mt-2 font-display text-3xl md:text-4xl text-ink">Find your fit</h2>
         </div>
       </div>
-      <div class="grid gap-0 sm:grid-cols-3 border-[3px] border-ink">
-        {cats.map((c, i) => (
+      <div class="grid gap-4 sm:gap-5 sm:grid-cols-3">
+        {cats.map((c) => (
           <a
             href={c.href}
-            class:list={[
-              "group block p-8 bg-paper hover:bg-paper-2 transition-colors",
-              i < 2 && "border-b-[3px] sm:border-b-0 sm:border-r-[3px] border-ink",
-            ]}
+            class="group block p-6 sm:p-8 bg-paper hover:bg-paper-2 transition-colors border-[3px] border-ink min-w-0"
           >
             <span class="inline-flex h-12 w-12 items-center justify-center border-[3px] border-ink bg-accent text-accent-ink group-hover:bg-secondary transition-colors">
               <Icon name={c.icon} class="w-6 h-6" />

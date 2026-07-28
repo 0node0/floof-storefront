@@ -16,32 +16,32 @@ const perks: { icon: string; text: string; href?: string }[] = [
   description="Review your Floof cart and checkout securely with Stripe."
   noIndex={true}
 >
-  <section class="mx-auto max-w-5xl px-5 md:px-6 py-10 md:py-12">
-    <div class="mb-8 border-b-[3px] border-ink pb-6">
+  <section class="mx-auto max-w-5xl px-4 sm:px-5 md:px-6 py-8 sm:py-10 md:py-12 overflow-x-clip">
+    <div class="mb-6 sm:mb-8 border-b-[3px] border-ink pb-5 sm:pb-6 min-w-0">
       <p class="eyebrow">Almost there</p>
-      <h1 class="mt-1 font-display text-3xl tracking-tight text-ink">Your cart</h1>
+      <h1 class="mt-1 font-display text-2xl sm:text-3xl tracking-tight text-ink">Your cart</h1>
       <p class="mt-2 text-sm text-ink-2 normal-case tracking-normal font-normal">
         Free US shipping on orders $75+. Secure payment via Stripe — we never store your card.
       </p>
     </div>
 
-    <div class="grid gap-8 lg:grid-cols-5">
-      <div class="lg:col-span-3">
+    <div class="grid gap-6 sm:gap-8 lg:grid-cols-5 min-w-0">
+      <div class="lg:col-span-3 min-w-0">
         <CartSummary client:load />
       </div>
-      <aside class="lg:col-span-2 space-y-4">
-        <div class="border-[3px] border-ink bg-paper-2 p-6 sticky top-24">
+      <aside class="lg:col-span-2 space-y-4 min-w-0">
+        <div class="border-[3px] border-ink bg-paper-2 p-4 sm:p-6 lg:sticky lg:top-24">
           <h2 class="font-display text-ink">Order perks</h2>
           <ul class="mt-4 space-y-3 text-sm text-ink-2 normal-case tracking-normal font-normal">
             {perks.map((p) => (
-              <li class="flex gap-3 items-start">
+              <li class="flex gap-3 items-start min-w-0">
                 <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center border-[2px] border-ink bg-accent text-accent-ink">
                   <Icon name={p.icon} class="w-4 h-4" />
                 </span>
                 {p.href ? (
-                  <a href={p.href} class="underline hover:text-accent pt-1">{p.text}</a>
+                  <a href={p.href} class="underline hover:text-accent pt-1 min-w-0 break-words">{p.text}</a>
                 ) : (
-                  <span class="pt-1">{p.text}</span>
+                  <span class="pt-1 min-w-0 break-words">{p.text}</span>
                 )}
               </li>
             ))}

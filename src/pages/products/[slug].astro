@@ -61,9 +61,9 @@ const catLabel = categoryLabels[product.category] || product.category;
       </ol>
     </nav>
 
-    <div class="grid gap-0 lg:grid-cols-2 border-[3px] border-ink">
-      <div class="border-b-[3px] lg:border-b-0 lg:border-r-[3px] border-ink">
-        <div class="aspect-square bg-cream p-8 md:p-12 flex items-center justify-center overflow-hidden">
+    <div class="grid gap-4 lg:gap-6 lg:grid-cols-2 min-w-0">
+      <div class="border-[3px] border-ink min-w-0">
+        <div class="aspect-square bg-cream p-6 sm:p-8 md:p-12 flex items-center justify-center overflow-hidden">
           {image && image !== "/favicon.svg" ? (
             <img
               src={image}
@@ -85,7 +85,7 @@ const catLabel = categoryLabels[product.category] || product.category;
         </p>
       </div>
 
-      <div class="flex flex-col p-6 md:p-10 bg-paper">
+      <div class="flex flex-col p-5 sm:p-6 md:p-10 bg-paper border-[3px] border-ink min-w-0">
         {product.isWip && (
           <span class="inline-flex w-fit px-3 py-1 text-xs font-mono font-semibold uppercase tracking-wider bg-accent text-accent-ink border-[3px] border-ink mb-3">
             Design preview
@@ -154,14 +154,9 @@ const catLabel = categoryLabels[product.category] || product.category;
         </div>
         <a href="/store" class="text-[0.72rem] font-semibold tracking-[0.12em] uppercase text-accent underline underline-offset-4 shrink-0">Shop all</a>
       </div>
-      <div class="grid gap-0 sm:grid-cols-2 lg:grid-cols-4 border-[3px] border-ink">
+      <div class="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {related.map((p, i) => (
-          <div class:list={[
-            "border-ink border-b-[3px] sm:border-b-0",
-            i < related.length - 1 && "sm:border-r-[3px]",
-          ]}>
-            <ProductCard product={p} index={i} />
-          </div>
+          <ProductCard product={p} index={i} />
         ))}
       </div>
     </section>

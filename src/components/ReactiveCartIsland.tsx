@@ -139,8 +139,8 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
           <p className="text-sm font-medium text-ink-2 mb-2 uppercase tracking-wide">
             Color: <span className="text-ink font-semibold">{selColor}</span>
           </p>
-          <div className="flex gap-0 flex-wrap border-[3px] border-ink" role="listbox" aria-label="Color">
-            {colors.map((c, i) => {
+          <div className="flex flex-wrap gap-2" role="listbox" aria-label="Color">
+            {colors.map((c) => {
               const swatch = colorMap[c] || "#888"
               const selected = selColor === c
               return (
@@ -151,9 +151,7 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
                   aria-selected={selected}
                   title={c}
                   onClick={() => setSelColor(c)}
-                  className={`flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors ${
-                    i > 0 ? "border-l-[3px] border-ink" : ""
-                  } ${
+                  className={`flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors border-[3px] border-ink max-w-full ${
                     selected
                       ? "bg-ink text-paper"
                       : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper"
@@ -163,7 +161,7 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
                     className="w-4 h-4 border border-ink/40 shrink-0"
                     style={{ background: swatch }}
                   />
-                  {c}
+                  <span className="truncate">{c}</span>
                 </button>
               )
             })}
@@ -179,8 +177,8 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
             </p>
             <SizeGuide category={product.category} />
           </div>
-          <div className="flex gap-0 flex-wrap border-[3px] border-ink" role="listbox" aria-label="Size">
-            {sizes.map((s, i) => {
+          <div className="flex flex-wrap gap-2" role="listbox" aria-label="Size">
+            {sizes.map((s) => {
               const avail = availableSizes.has(s)
               const selected = selSize === s
               return (
@@ -191,9 +189,7 @@ export default function ReactiveCartIsland({ product, variants = [] }: Props) {
                   aria-selected={selected}
                   disabled={!avail}
                   onClick={() => avail && setSelSize(s)}
-                  className={`min-w-12 h-12 px-3 text-sm font-medium transition-colors ${
-                    i > 0 ? "border-l-[3px] border-ink" : ""
-                  } ${
+                  className={`min-w-12 h-12 px-3 text-sm font-medium transition-colors border-[3px] border-ink ${
                     !avail
                       ? "bg-paper-2 text-muted line-through cursor-not-allowed"
                       : selected

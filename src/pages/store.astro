@@ -63,8 +63,8 @@ const countLabel =
   {all.length > 0 && (
     <section class="mx-auto max-w-7xl px-5 md:px-6 py-10 md:py-12">
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b-[3px] border-ink pb-6">
-        <div class="flex flex-wrap gap-0 border-[3px] border-ink" role="tablist" aria-label="Category">
-          {categories.map((c, i) => {
+        <div class="flex flex-wrap gap-2" role="tablist" aria-label="Category">
+          {categories.map((c) => {
             const href =
               c.id === "all"
                 ? `/store?sort=${sortParam}`
@@ -76,8 +76,7 @@ const countLabel =
                 role="tab"
                 aria-selected={active}
                 class:list={[
-                  "px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] uppercase transition-colors whitespace-nowrap",
-                  i > 0 && "border-l-[3px] border-ink",
+                  "px-3 sm:px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] uppercase transition-colors whitespace-nowrap border-[3px] border-ink",
                   active
                     ? "bg-ink text-paper"
                     : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper",
@@ -110,17 +109,9 @@ const countLabel =
           <a href="/store" class="mt-4 inline-block text-accent underline">View all products</a>
         </div>
       ) : (
-        <div class="mt-8 grid gap-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 border-[3px] border-ink">
+        <div class="mt-8 grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((p, i) => (
-            <div class:list={[
-              "border-ink",
-              "border-b-[3px] sm:border-b-[3px]",
-              (i % 2 !== 1) && "sm:border-r-[3px]",
-              (i % 3 !== 2) && "lg:border-r-[3px]",
-              (i % 4 !== 3) && "xl:border-r-[3px]",
-            ]}>
-              <ProductCard product={p} priority={i < 4} index={i} />
-            </div>
+            <ProductCard product={p} priority={i < 4} index={i} />
           ))}
         </div>
       )}
