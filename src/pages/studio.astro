@@ -1,0 +1,329 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+export const prerender = true;
+
+const backendUrl =
+  import.meta.env.PUBLIC_MEDUSA_URL ||
+  import.meta.env.PUBLIC_MEDUSA_BACKEND_URL ||
+  "https://floof-backend-production-6742.up.railway.app";
+---
+<Layout
+  title="Studio"
+  description="Upload a design PNG — create Printful product + mockups + Floof listing."
+  noIndex={true}
+>
+  <section class="page-band">
+    <div class="mx-auto max-w-2xl px-5 md:px-6 py-12 md:py-14">
+      <p class="eyebrow">Internal · design pipeline</p>
+      <h1 class="mt-2 font-display text-3xl md:text-4xl text-ink">Studio</h1>
+      <p class="mt-3 text-ink-2 text-sm normal-case tracking-normal font-normal max-w-lg">
+        Drop a PNG. We create a Printful product with product + lifestyle mockups and publish it on the Floof store.
+      </p>
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-2xl px-5 md:px-6 py-10 space-y-6" id="studio-root" data-backend={backendUrl}>
+    <!-- Auth gate -->
+    <div id="studio-auth" class="border-[3px] border-ink bg-paper-2 p-6 space-y-4">
+      <p class="text-sm text-ink-2 normal-case tracking-normal font-normal">
+        Enter the <code class="text-accent">FLOOF_ADMIN_KEY</code> from Railway. Stored only in this browser tab.
+      </p>
+      <label class="block">
+        <span class="eyebrow">Admin key</span>
+        <input
+          id="studio-key"
+          type="password"
+          autocomplete="off"
+          class="mt-2 w-full border-[3px] border-ink bg-paper px-4 py-3 text-sm text-ink focus:outline-none focus:border-accent"
+          placeholder="paste key"
+        />
+      </label>
+      <button type="button" id="studio-unlock" class="btn">Unlock studio</button>
+      <p id="studio-auth-err" class="text-sm text-accent hidden"></p>
+    </div>
+
+    <!-- Form -->
+    <form id="studio-form" class="hidden space-y-5">
+      <div class="border-[3px] border-ink border-dashed bg-paper-2 p-8 text-center" id="drop-zone">
+        <p class="font-display text-lg text-ink">Design PNG</p>
+        <p class="mt-2 text-sm text-ink-2 normal-case tracking-normal font-normal">
+          Drag &amp; drop or choose a file · transparent PNG recommended · max 15MB
+        </p>
+        <input id="file-input" type="file" accept="image/png,image/jpeg,image/webp" class="mt-4 text-sm text-ink-2" />
+        <p id="file-name" class="mt-3 text-xs text-secondary uppercase tracking-wider hidden"></p>
+        <img id="file-preview" alt="" class="mx-auto mt-4 max-h-48 hidden border-[3px] border-ink bg-cream p-2" />
+      </div>
+
+      <label class="block">
+        <span class="eyebrow">Product name</span>
+        <input
+          id="field-name"
+          required
+          class="mt-2 w-full border-[3px] border-ink bg-paper px-4 py-3 text-sm text-ink focus:outline-none focus:border-accent"
+          placeholder="Humidity Club"
+        />
+      </label>
+
+      <label class="block">
+        <span class="eyebrow">Description (optional)</span>
+        <textarea
+          id="field-desc"
+          rows="3"
+          class="mt-2 w-full border-[3px] border-ink bg-paper px-4 py-3 text-sm text-ink normal-case tracking-normal font-normal focus:outline-none focus:border-accent"
+          placeholder="Printed fresh when you order…"
+        ></textarea>
+      </label>
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <label class="block">
+          <span class="eyebrow">Garment</span>
+          <select id="field-garment" class="mt-2 w-full border-[3px] border-ink bg-paper px-4 py-3 text-sm text-ink">
+            <option value="tee">Tee (Bella+Canvas 3001)</option>
+            <option value="hoodie">Hoodie (Gildan 18500)</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="eyebrow">Retail price</span>
+          <input
+            id="field-price"
+            class="mt-2 w-full border-[3px] border-ink bg-paper px-4 py-3 text-sm text-ink"
+            placeholder="28.00"
+          />
+        </label>
+      </div>
+
+      <label class="block">
+        <span class="eyebrow">Colors (comma-separated)</span>
+        <input
+          id="field-colors"
+          class="mt-2 w-full border-[3px] border-ink bg-paper px-4 py-3 text-sm text-ink"
+          value="Black, White"
+        />
+      </label>
+
+      <label class="block">
+        <span class="eyebrow">Sizes (comma-separated)</span>
+        <input
+          id="field-sizes"
+          class="mt-2 w-full border-[3px] border-ink bg-paper px-4 py-3 text-sm text-ink"
+          value="S, M, L, XL, 2XL"
+        />
+      </label>
+
+      <label class="flex items-center gap-3 text-sm text-ink-2 normal-case tracking-normal font-normal cursor-pointer">
+        <input id="field-mockups" type="checkbox" checked class="w-4 h-4 accent-[var(--color-accent)]" />
+        Generate product + lifestyle mockups (slower, ~30–90s)
+      </label>
+
+      <button type="submit" id="studio-submit" class="btn btn--lg w-full">
+        Create product
+      </button>
+      <p class="text-xs text-muted normal-case tracking-normal font-normal">
+        Backend: <span id="studio-backend-label" class="text-secondary"></span>
+      </p>
+    </form>
+
+    <!-- Progress / result -->
+    <div id="studio-status" class="hidden border-[3px] border-ink p-6 space-y-3">
+      <p id="studio-status-title" class="font-display text-lg text-ink">Working…</p>
+      <pre id="studio-logs" class="text-xs text-ink-2 whitespace-pre-wrap break-words max-h-64 overflow-auto normal-case tracking-normal font-normal"></pre>
+      <div id="studio-result" class="hidden space-y-3 pt-2 border-t-[3px] border-ink">
+        <p class="text-sm text-ink-2 normal-case tracking-normal font-normal">
+          Storefront:
+          <a id="studio-store-link" href="#" class="text-accent underline break-all" target="_blank" rel="noopener"></a>
+        </p>
+        <div id="studio-mockup-grid" class="grid grid-cols-2 gap-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline define:vars={{ backendUrl }}>
+    const root = document.getElementById("studio-root");
+    const authBox = document.getElementById("studio-auth");
+    const form = document.getElementById("studio-form");
+    const keyInput = document.getElementById("studio-key");
+    const unlockBtn = document.getElementById("studio-unlock");
+    const authErr = document.getElementById("studio-auth-err");
+    const fileInput = document.getElementById("file-input");
+    const fileName = document.getElementById("file-name");
+    const filePreview = document.getElementById("file-preview");
+    const dropZone = document.getElementById("drop-zone");
+    const statusBox = document.getElementById("studio-status");
+    const statusTitle = document.getElementById("studio-status-title");
+    const logsEl = document.getElementById("studio-logs");
+    const resultBox = document.getElementById("studio-result");
+    const storeLink = document.getElementById("studio-store-link");
+    const mockupGrid = document.getElementById("studio-mockup-grid");
+    const backendLabel = document.getElementById("studio-backend-label");
+    const submitBtn = document.getElementById("studio-submit");
+
+    const backend = (root && root.dataset.backend) || backendUrl;
+    if (backendLabel) backendLabel.textContent = backend;
+
+    let designBase64 = "";
+    let designFilename = "design.png";
+
+    function getKey() {
+      return sessionStorage.getItem("floof_studio_key") || "";
+    }
+
+    function showForm() {
+      authBox.classList.add("hidden");
+      form.classList.remove("hidden");
+    }
+
+    // Restore session
+    if (getKey()) showForm();
+
+    unlockBtn.addEventListener("click", async () => {
+      const key = keyInput.value.trim();
+      if (!key) {
+        authErr.textContent = "Paste the admin key.";
+        authErr.classList.remove("hidden");
+        return;
+      }
+      authErr.classList.add("hidden");
+      try {
+        const res = await fetch(backend.replace(/\/$/, "") + "/floof/design-products", {
+          method: "GET",
+          headers: { "x-floof-admin-key": key },
+        });
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}));
+          throw new Error(j.error || `HTTP ${res.status}`);
+        }
+        sessionStorage.setItem("floof_studio_key", key);
+        showForm();
+      } catch (e) {
+        authErr.textContent = e.message || "Unlock failed";
+        authErr.classList.remove("hidden");
+      }
+    });
+
+    function loadFile(file) {
+      if (!file) return;
+      designFilename = file.name || "design.png";
+      fileName.textContent = designFilename;
+      fileName.classList.remove("hidden");
+      const reader = new FileReader();
+      reader.onload = () => {
+        designBase64 = String(reader.result || "");
+        filePreview.src = designBase64;
+        filePreview.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    fileInput.addEventListener("change", () => loadFile(fileInput.files && fileInput.files[0]));
+
+    ;["dragenter", "dragover"].forEach((ev) => {
+      dropZone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        dropZone.classList.add("bg-paper-3");
+      });
+    });
+    ;["dragleave", "drop"].forEach((ev) => {
+      dropZone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("bg-paper-3");
+      });
+    });
+    dropZone.addEventListener("drop", (e) => {
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) loadFile(f);
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const key = getKey();
+      if (!key) {
+        alert("Unlock studio first");
+        return;
+      }
+      const name = document.getElementById("field-name").value.trim();
+      if (!name) return;
+      if (!designBase64) {
+        alert("Choose a design file");
+        return;
+      }
+
+      const colors = document
+        .getElementById("field-colors")
+        .value.split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const sizes = document
+        .getElementById("field-sizes")
+        .value.split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const garment = document.getElementById("field-garment").value;
+      const retailPrice = document.getElementById("field-price").value.trim() || undefined;
+      const description = document.getElementById("field-desc").value.trim() || undefined;
+      const generateMockups = document.getElementById("field-mockups").checked;
+
+      statusBox.classList.remove("hidden");
+      resultBox.classList.add("hidden");
+      mockupGrid.innerHTML = "";
+      statusTitle.textContent = "Creating product… (mockups can take up to 90s)";
+      logsEl.textContent = "Sending design to backend…\n";
+      submitBtn.disabled = true;
+      submitBtn.classList.add("is-disabled");
+
+      try {
+        const res = await fetch(backend.replace(/\/$/, "") + "/floof/design-products", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-floof-admin-key": key,
+          },
+          body: JSON.stringify({
+            name,
+            designBase64,
+            filename: designFilename,
+            garment,
+            colors,
+            sizes,
+            retailPrice,
+            description,
+            generateMockups,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
+        logsEl.textContent = (data.logs || []).join("\n") || JSON.stringify(data, null, 2);
+        statusTitle.textContent = "Done";
+        resultBox.classList.remove("hidden");
+        if (data.storeUrl) {
+          storeLink.href = data.storeUrl;
+          storeLink.textContent = data.storeUrl;
+        } else if (data.medusa && data.medusa.handle) {
+          storeLink.href = "/products/" + data.medusa.handle;
+          storeLink.textContent = "/products/" + data.medusa.handle;
+        }
+        (data.mockups || []).slice(0, 8).forEach((m) => {
+          const fig = document.createElement("figure");
+          fig.className = "border-[3px] border-ink bg-cream p-1";
+          const img = document.createElement("img");
+          img.src = m.url;
+          img.alt = m.kind || "mockup";
+          img.className = "w-full h-auto";
+          const cap = document.createElement("figcaption");
+          cap.className = "text-[10px] uppercase tracking-wider text-paper bg-ink px-1 py-0.5";
+          cap.textContent = m.kind + (m.title ? " · " + m.title : "");
+          fig.appendChild(img);
+          fig.appendChild(cap);
+          mockupGrid.appendChild(fig);
+        });
+      } catch (err) {
+        statusTitle.textContent = "Failed";
+        logsEl.textContent = String(err.message || err);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("is-disabled");
+      }
+    });
+  </script>
+</Layout>

@@ -9,6 +9,7 @@ const links = [
   { href: "/about", label: "About" },
   { href: "/shipping-returns", label: "Ship" },
 ];
+// Studio is intentionally not in main nav (internal tool at /studio)
 
 function isActive(href: string) {
   if (href === "/store") return pathname === "/store" || pathname.startsWith("/products");
