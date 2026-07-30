@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import ReactiveCartIsland from "@/components/ReactiveCartIsland";
+import ProductGallery from "@/components/ProductGallery";
 import ProductCard from "@/components/ProductCard.astro";
 import ProductJsonLd from "@/components/ProductJsonLd.astro";
 import TrustBar from "@/components/TrustBar.astro";
@@ -44,6 +45,12 @@ try {
 if (!product) return Astro.redirect("/404");
 const ogImage = image.startsWith("http") ? image : image;
 const catLabel = categoryLabels[product.category] || product.category;
+const galleryImages =
+  product.images?.length > 0
+    ? product.images
+    : product.image
+      ? [product.image]
+      : [];
 ---
 <Layout title={product.name} description={product.description || `Shop ${product.name} from Floof.`} image={ogImage}>
   <ProductJsonLd product={product} />
@@ -62,28 +69,12 @@ const catLabel = categoryLabels[product.category] || product.category;
     </nav>
 
     <div class="grid gap-4 lg:gap-6 lg:grid-cols-2 min-w-0">
-      <div class="border-[3px] border-ink min-w-0">
-        <div class="aspect-square bg-cream p-6 sm:p-8 md:p-12 flex items-center justify-center overflow-hidden">
-          {image && image !== "/favicon.svg" ? (
-            <img
-              src={image}
-              alt={`${product.name} product photo`}
-              class="w-full h-full object-contain"
-              loading="eager"
-              width="600"
-              height="600"
-              data-product-fly-source
-            />
-          ) : (
-            <span class="font-display text-4xl md:text-5xl text-paper leading-tight text-center">
-              {product.phrase}
-            </span>
-          )}
-        </div>
-        <p class="text-center text-xs font-mono text-muted py-3 border-t-[3px] border-ink bg-paper-2">
-          Colors shown as digital mockups · final print may vary slightly
-        </p>
-      </div>
+      <ProductGallery
+        client:load
+        images={galleryImages}
+        alt={`${product.name} product photo`}
+        phrase={product.phrase}
+      />
 
       <div class="flex flex-col p-5 sm:p-6 md:p-10 bg-paper border-[3px] border-ink min-w-0">
         {product.isWip && (

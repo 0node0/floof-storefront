@@ -10,7 +10,10 @@ export interface FloofProduct {
   category: string
   colors: string[]
   sizes: string[]
+  /** Primary image (first gallery shot) */
   image?: string
+  /** Full gallery — lifestyle mockups + product shots */
+  images: string[]
   isWip?: boolean
 }
 
@@ -66,6 +69,13 @@ export function mapProduct(p: MedusaProduct): FloofProduct {
   })
 
   const amount = variants[0]?.prices?.[0]?.amount || 0
+  const images = (p.images || [])
+    .map((img) => img.url)
+    .filter(Boolean)
+  // Prefer explicit thumbnail as lead if not already first
+  const thumb = (p as any).thumbnail as string | undefined
+  if (thumb && !images.includes(thumb)) images.unshift(thumb)
+
   return {
     id: p.id,
     slug: p.handle,
@@ -76,7 +86,8 @@ export function mapProduct(p: MedusaProduct): FloofProduct {
     category: (p.metadata?.category as string) || "tees",
     colors,
     sizes,
-    image: p.images?.[0]?.url || "",
+    image: images[0] || thumb || "",
+    images,
     isWip: p.title.includes("[WIP]"),
   }
 }

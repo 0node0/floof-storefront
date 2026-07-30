@@ -28,6 +28,7 @@ export interface MedusaProduct {
   handle: string
   title: string
   description: string
+  thumbnail?: string
   images?: MedusaProductImage[]
   variants?: MedusaVariant[]
   metadata?: Record<string, any>
@@ -199,7 +200,7 @@ export async function addShippingMethod(
 }
 
 const PRODUCT_FIELDS =
-  "id,handle,title,description,metadata,*images,*variants,*variants.prices,*variants.options,*variants.options.option"
+  "id,handle,title,description,thumbnail,metadata,*images,*variants,*variants.prices,*variants.options,*variants.options.option"
 
 export async function listProducts(): Promise<{
   products: MedusaProduct[]
