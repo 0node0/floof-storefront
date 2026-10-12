@@ -31,7 +31,14 @@ export interface MedusaProduct {
   thumbnail?: string
   images?: MedusaProductImage[]
   variants?: MedusaVariant[]
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
+}
+
+export interface MedusaCollection {
+  id: string
+  handle: string
+  title: string
+  metadata?: Record<string, unknown>
 }
 export interface MedusaLineItem {
   id: string
@@ -202,13 +209,72 @@ export async function addShippingMethod(
 const PRODUCT_FIELDS =
   "id,handle,title,description,thumbnail,metadata,*images,*variants,*variants.prices,*variants.options,*variants.options.option"
 
-export async function listProducts(): Promise<{
-  products: MedusaProduct[]
+export interface ListProductsOptions {
+  collectionId?: string
+}
+
+export async function listProducts(
+  options: ListProductsOptions = {}
+): Promise<{ products: MedusaProduct[]; count: number }> {
+  const limit = 100
+  const all: MedusaProduct[] = []
+  let offset = 0
+  let total = 0
+
+  do {
+    const params = new URLSearchParams({
+      limit: String(limit),
+      offset: String(offset),
+      fields: PRODUCT_FIELDS,
+    })
+    if (options.collectionId) {
+      params.set("collection_id", options.collectionId)
+    }
+
+    const page = await medusaFetch<{ products: MedusaProduct[]; count: number }>(
+      `/store/products?${params.toString()}`
+    )
+    const batch = page.products ?? []
+    all.push(...batch)
+    total = page.count ?? all.length
+    offset += limit
+    if (batch.length === 0) break
+  } while (all.length < total)
+
+  return { products: all, count: total }
+}
+
+export async function listCollections(): Promise<{
+  collections: MedusaCollection[]
   count: number
 }> {
-  return medusaFetch(
-    `/store/products?limit=100&fields=${PRODUCT_FIELDS}`
+  const limit = 100
+  const all: MedusaCollection[] = []
+  let offset = 0
+  let total = 0
+
+  do {
+    const page = await medusaFetch<{
+      collections: MedusaCollection[]
+      count: number
+    }>(`/store/collections?limit=${limit}&offset=${offset}`)
+    const batch = page.collections ?? []
+    all.push(...batch)
+    total = page.count ?? all.length
+    offset += limit
+    if (batch.length === 0) break
+  } while (all.length < total)
+
+  return { collections: all, count: total }
+}
+
+export async function getCollectionByHandle(
+  handle: string
+): Promise<MedusaCollection | null> {
+  const result = await medusaFetch<{ collections: MedusaCollection[] }>(
+    `/store/collections?handle=${encodeURIComponent(handle)}&limit=1`
   )
+  return result.collections?.[0] ?? null
 }
 
 export async function getProduct(

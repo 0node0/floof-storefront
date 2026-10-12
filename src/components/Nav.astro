@@ -1,19 +1,32 @@
 ---
 import CartBadge from "@/components/CartBadge";
+import { withUtm } from "@/lib/urls";
 
 const pathname = Astro.url.pathname;
+const utmQuery = Astro.locals.utmQuery ?? "";
 const links = [
   { href: "/store", label: "Shop" },
+  { href: "/styles", label: "Styles" },
   { href: "/store?cat=tees", label: "Tees" },
   { href: "/store?cat=hoodies", label: "Hoodies" },
   { href: "/about", label: "About" },
   { href: "/shipping-returns", label: "Ship" },
-];
+].map((l) => ({ ...l, href: withUtm(l.href, utmQuery) }));
 // Studio is intentionally not in main nav (internal tool at /studio)
 
+function pathOnly(href: string) {
+  return href.split("?")[0] ?? href;
+}
+
 function isActive(href: string) {
-  if (href === "/store") return pathname === "/store" || pathname.startsWith("/products");
-  return pathname === href || pathname.startsWith(href + "/");
+  const path = pathOnly(href);
+  if (path === "/store") {
+    return pathname === "/store" || pathname.startsWith("/products");
+  }
+  if (path === "/styles") {
+    return pathname === "/styles" || pathname.startsWith("/s/");
+  }
+  return pathname === path || pathname.startsWith(path + "/");
 }
 ---
 {/* Hallmark · nav: N7 brutal slab · risograph */}

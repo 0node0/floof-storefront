@@ -1,6 +1,7 @@
 ---
 import type { FloofProduct } from "@/lib/product"
 import { colorMap, categoryLabels } from "@/lib/product"
+import { withUtm } from "@/lib/urls"
 
 interface Props {
   product: FloofProduct
@@ -10,9 +11,10 @@ interface Props {
 const { product, priority = false, index } = Astro.props
 const catLabel = categoryLabels[product.category] || product.category
 const idx = typeof index === "number" ? String(index + 1).padStart(2, "0") : null
+const productHref = withUtm(`/products/${product.slug}`, Astro.locals.utmQuery ?? "")
 ---
 <a
-  href={`/products/${product.slug}`}
+  href={productHref}
   class="card-surface group block overflow-hidden"
 >
   <div class="relative aspect-square overflow-hidden bg-cream p-5 sm:p-6 flex items-center justify-center border-b-[3px] border-ink">

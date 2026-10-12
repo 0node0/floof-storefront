@@ -1,0 +1,114 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ProductCard from "@/components/ProductCard.astro";
+import TrustBar from "@/components/TrustBar.astro";
+import { getCollectionByHandle, listProducts } from "@/lib/medusa";
+import { mapProduct, type FloofProduct } from "@/lib/product";
+import { parseStyleCollection } from "@/lib/style";
+import { withUtm } from "@/lib/urls";
+import { site } from "@/lib/site";
+
+export const prerender = false;
+
+const { style } = Astro.params;
+const utmQuery = Astro.locals.utmQuery ?? "";
+
+if (!style) {
+  return Astro.redirect("/404");
+}
+
+let collection = null;
+try {
+  collection = await getCollectionByHandle(style);
+} catch {
+  collection = null;
+}
+
+if (!collection) {
+  return Astro.redirect("/404");
+}
+
+const landing = parseStyleCollection(collection);
+
+let products: FloofProduct[] = [];
+try {
+  const { products: raw } = await listProducts({ collectionId: collection.id });
+  products = raw.map(mapProduct);
+} catch {}
+
+const ogImage = products[0]?.image || `${site.url}/favicon.svg`;
+
+const styleVars = [
+  landing.accentColor ? `--color-accent: ${landing.accentColor}` : null,
+  landing.secondaryColor ? `--color-secondary: ${landing.secondaryColor}` : null,
+]
+  .filter(Boolean)
+  .join("; ");
+
+const countLabel =
+  products.length === 1 ? "1 piece" : `${products.length} pieces`;
+---
+<Layout
+  title={landing.title}
+  seoTitle={landing.seoTitle}
+  description={landing.seoDescription ?? landing.description}
+  image={ogImage}
+>
+  <section
+    class="page-band border-b-[3px] border-ink"
+    style={styleVars || undefined}
+  >
+    <div class="mx-auto max-w-7xl px-5 md:px-6 py-12 md:py-16">
+      <p class="eyebrow">
+        <a href={withUtm("/styles", utmQuery)} class="hover:text-accent">Styles</a>
+        <span class="text-ink-2"> · {landing.handle}</span>
+      </p>
+      <h1 class="mt-2 font-display text-4xl md:text-5xl text-ink">
+        {landing.title}
+      </h1>
+      <p class="mt-3 text-accent text-sm md:text-base font-semibold tracking-[0.08em] uppercase">
+        {landing.tagline}
+      </p>
+      <p class="mt-4 text-ink-2 text-sm md:text-base max-w-2xl normal-case tracking-normal font-normal leading-relaxed">
+        {landing.heroCopy}
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href={withUtm("/store", utmQuery)} class="btn btn--outline">
+          Full shop
+        </a>
+        <a href={withUtm("/styles", utmQuery)} class="btn btn--outline">
+          All styles
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <TrustBar compact />
+
+  {products.length === 0 ? (
+    <div class="mx-auto max-w-2xl px-6 py-20 text-center">
+      <p class="font-display text-2xl text-ink">Pieces coming soon</p>
+      <p class="mt-3 text-ink-2 normal-case tracking-normal font-normal">
+        This style is warming up on the press — check back shortly.
+      </p>
+      <a href={withUtm("/store", utmQuery)} class="mt-6 inline-block text-accent underline">
+        Browse the full shop
+      </a>
+    </div>
+  ) : (
+    <section class="mx-auto max-w-7xl px-5 md:px-6 py-10 md:py-12">
+      <div class="flex flex-wrap items-end justify-between gap-4 border-b-[3px] border-ink pb-6">
+        <div>
+          <p class="eyebrow">Collection</p>
+          <h2 class="mt-1 font-display text-2xl md:text-3xl text-ink">In this style</h2>
+        </div>
+        <p class="text-sm font-mono text-muted">{countLabel}</p>
+      </div>
+      <div class="mt-8 grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {products.map((p, i) => (
+          <ProductCard product={p} priority={i < 4} index={i} />
+        ))}
+      </div>
+    </section>
+  )}
+</Layout>

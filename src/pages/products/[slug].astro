@@ -8,10 +8,12 @@ import TrustBar from "@/components/TrustBar.astro";
 import { listProducts, getProduct } from "@/lib/medusa";
 import type { MedusaVariant } from "@/lib/medusa";
 import { mapProduct, categoryLabels, type FloofProduct } from "@/lib/product";
+import { withUtm } from "@/lib/urls";
 
 export const prerender = false;
 
 const { slug } = Astro.params;
+const utmQuery = Astro.locals.utmQuery ?? "";
 
 let product: FloofProduct | null = null;
 let variants: MedusaVariant[] = [];
@@ -43,7 +45,10 @@ try {
 }
 
 if (!product) return Astro.redirect("/404");
-const ogImage = image.startsWith("http") ? image : image;
+const ogImage = image;
+const metaDescription =
+  product.description?.trim() ||
+  `Shop ${product.name} from Floof — soft blanks, sharp wit, printed when you order.`;
 const catLabel = categoryLabels[product.category] || product.category;
 const galleryImages =
   product.images?.length > 0
@@ -52,17 +57,22 @@ const galleryImages =
       ? [product.image]
       : [];
 ---
-<Layout title={product.name} description={product.description || `Shop ${product.name} from Floof.`} image={ogImage}>
+<Layout
+  title={product.name}
+  description={metaDescription}
+  image={ogImage}
+  ogType="product"
+>
   <ProductJsonLd product={product} />
 
   <div class="mx-auto max-w-7xl px-5 md:px-6 py-8 md:py-12">
     <nav class="mb-8 text-xs font-medium tracking-[0.1em] uppercase text-muted" aria-label="Breadcrumb">
       <ol class="flex flex-wrap items-center gap-1">
-        <li><a href="/" class="hover:text-accent">Home</a></li>
+        <li><a href={withUtm("/", utmQuery)} class="hover:text-accent">Home</a></li>
         <li aria-hidden="true" class="mx-1 text-ink/20">/</li>
-        <li><a href="/store" class="hover:text-accent">Shop</a></li>
+        <li><a href={withUtm("/store", utmQuery)} class="hover:text-accent">Shop</a></li>
         <li aria-hidden="true" class="mx-1 text-ink/20">/</li>
-        <li><a href={`/store?cat=${product.category}`} class="hover:text-accent">{catLabel}</a></li>
+        <li><a href={withUtm(`/store?cat=${product.category}`, utmQuery)} class="hover:text-accent">{catLabel}</a></li>
         <li aria-hidden="true" class="mx-1 text-ink/20">/</li>
         <li class="text-ink truncate max-w-[12rem] sm:max-w-none normal-case tracking-normal">{product.name}</li>
       </ol>
@@ -143,7 +153,7 @@ const galleryImages =
           <p class="eyebrow">More from the press</p>
           <h2 class="mt-1 font-display text-2xl md:text-3xl text-ink">Related pieces</h2>
         </div>
-        <a href="/store" class="text-[0.72rem] font-semibold tracking-[0.12em] uppercase text-accent underline underline-offset-4 shrink-0">Shop all</a>
+        <a href={withUtm("/store", utmQuery)} class="text-[0.72rem] font-semibold tracking-[0.12em] uppercase text-accent underline underline-offset-4 shrink-0">Shop all</a>
       </div>
       <div class="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {related.map((p, i) => (

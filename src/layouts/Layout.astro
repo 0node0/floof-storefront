@@ -11,6 +11,9 @@ interface Props {
   description?: string
   image?: string
   noIndex?: boolean
+  /** When set, used as the full document & OG title (no site suffix). */
+  seoTitle?: string
+  ogType?: "website" | "product"
 }
 
 const {
@@ -18,8 +21,11 @@ const {
   description = site.description,
   image = `${site.url}/favicon.svg`,
   noIndex = false,
+  seoTitle,
+  ogType = "website",
 } = Astro.props;
-const pageTitle = title ? `${title} | ${site.name}` : `${site.name} — ${site.tagline}`;
+const pageTitle =
+  seoTitle ?? (title ? `${title} | ${site.name}` : `${site.name} — ${site.tagline}`);
 const canonicalUrl = new URL(Astro.url.pathname, site.url).href;
 const ogImage = image.startsWith("http") ? image : new URL(image, site.url).href;
 ---
@@ -40,10 +46,11 @@ const ogImage = image.startsWith("http") ? image : new URL(image, site.url).href
   <title>{pageTitle}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalUrl} />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
   {noIndex && <meta name="robots" content="noindex,nofollow" />}
   <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={description} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={ogType} />
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:site_name" content={site.name} />
   <meta property="og:image" content={ogImage} />

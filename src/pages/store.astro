@@ -4,9 +4,11 @@ import ProductCard from "@/components/ProductCard.astro";
 import TrustBar from "@/components/TrustBar.astro";
 import { listProducts } from "@/lib/medusa";
 import { mapProduct, categoryLabels, type FloofProduct } from "@/lib/product";
+import { withUtm } from "@/lib/urls";
 
 export const prerender = false;
 
+const utmQuery = Astro.locals.utmQuery ?? "";
 const catParam = Astro.url.searchParams.get("cat") || "all";
 const sortParam = Astro.url.searchParams.get("sort") || "featured";
 
@@ -65,10 +67,12 @@ const countLabel =
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b-[3px] border-ink pb-6">
         <div class="flex flex-wrap gap-2" role="tablist" aria-label="Category">
           {categories.map((c) => {
-            const href =
+            const href = withUtm(
               c.id === "all"
                 ? `/store?sort=${sortParam}`
-                : `/store?cat=${c.id}&sort=${sortParam}`;
+                : `/store?cat=${c.id}&sort=${sortParam}`,
+              utmQuery
+            );
             const active = catParam === c.id;
             return (
               <a
