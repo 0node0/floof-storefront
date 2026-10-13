@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import CollectionHero from "@/components/collection/CollectionHero.astro";
 import ProductCard from "@/components/ProductCard.astro";
 import TrustBar from "@/components/TrustBar.astro";
 import {
@@ -11,6 +12,11 @@ import {
   collectionHeroCopy,
   filterByProductType,
 } from "@/lib/collections";
+import {
+  buildGoogleFontsHref,
+  resolveCollectionTheme,
+  themeStyleAttribute,
+} from "@/lib/collectionThemes";
 import {
   categoryLabels,
   mapProduct,
@@ -27,6 +33,8 @@ const { collection } = await getCollectionByHandle(handle).catch(() => ({
   collection: undefined,
 }));
 if (!collection) return Astro.redirect("/404");
+
+const theme = resolveCollectionTheme(collection);
 
 const typeParam = Astro.url.searchParams.get("type") || "all";
 const sortParam = Astro.url.searchParams.get("sort") || "featured";
@@ -54,96 +62,105 @@ function queryHref(type: string, sort: string) {
   return q ? `${basePath}?${q}` : basePath;
 }
 ---
-<Layout title={hero.seoTitle} description={hero.seoDescription}>
-  <section class="page-band">
-    <div class="mx-auto max-w-7xl px-5 md:px-6 py-12 md:py-16">
-      <p class="eyebrow">Collection · {collection.handle}</p>
-      <h1 class="mt-2 font-display text-4xl md:text-5xl text-ink">
-        {hero.title}
-      </h1>
-      <p class="mt-3 text-ink-2 text-sm md:text-base max-w-xl normal-case tracking-normal font-normal">
-        {hero.tagline}
-      </p>
-    </div>
-  </section>
+<Layout
+  title={hero.seoTitle}
+  description={hero.seoDescription}
+  googleFontsHref={buildGoogleFontsHref(theme)}
+  themeColor={theme.themeColor}
+>
+  <div
+    class="collection-theme"
+    data-collection-theme={theme.id}
+    style={themeStyleAttribute(theme)}
+  >
+    <CollectionHero
+      variant={theme.heroVariant}
+      hero={{ title: hero.title, tagline: hero.tagline, handle: collection.handle }}
+    />
 
-  <TrustBar compact />
+    <TrustBar compact />
 
-  {products.length === 0 && (
-    <div class="mx-auto max-w-2xl px-6 py-20 text-center">
-      <p class="font-display text-2xl text-ink">Coming soon</p>
-      <p class="mt-3 text-ink-2 normal-case tracking-normal font-normal">
-        Pieces for this collection are on the press. Browse the full shop meanwhile.
-      </p>
-      <a href="/store" class="mt-6 inline-block btn btn--outline">All products</a>
-    </div>
-  )}
-
-  {products.length > 0 && (
-    <section class="mx-auto max-w-7xl px-5 md:px-6 py-10 md:py-12">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b-[3px] border-ink pb-6">
-        <div class="flex flex-wrap gap-2" role="tablist" aria-label="Product type">
-          <a
-            href={queryHref("all", sortParam)}
-            role="tab"
-            aria-selected={typeParam === "all"}
-            class:list={[
-              "px-3 sm:px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] uppercase transition-colors whitespace-nowrap border-[3px] border-ink",
-              typeParam === "all"
-                ? "bg-ink text-paper"
-                : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper",
-            ]}
-          >
-            All types
-          </a>
-          {typeOptions.map((type) => {
-            const active = typeParam === type;
-            const label = categoryLabels[type] || type;
-            return (
-              <a
-                href={queryHref(type, sortParam)}
-                role="tab"
-                aria-selected={active}
-                class:list={[
-                  "px-3 sm:px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] uppercase transition-colors whitespace-nowrap border-[3px] border-ink",
-                  active
-                    ? "bg-ink text-paper"
-                    : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper",
-                ]}
-              >
-                {label}
-              </a>
-            );
-          })}
-        </div>
-        <div class="flex items-center gap-3">
-          <p class="text-sm font-mono text-muted">{countLabel}</p>
-          <label class="sr-only" for="sort">Sort</label>
-          <select
-            id="sort"
-            class="border-[3px] border-ink bg-paper px-4 py-2 text-sm text-ink focus:border-accent focus:outline-none"
-            onchange={`const type='${typeParam}'; const v=this.value; const p=new URLSearchParams(); if(type!=='all')p.set('type',type); if(v!=='featured')p.set('sort',v); const q=p.toString(); location.href='${basePath}'+(q?'?'+q:'')`}
-          >
-            <option value="featured" selected={sortParam === "featured"}>Featured</option>
-            <option value="price-asc" selected={sortParam === "price-asc"}>Price: Low to high</option>
-            <option value="price-desc" selected={sortParam === "price-desc"}>Price: High to low</option>
-            <option value="name" selected={sortParam === "name"}>Name A–Z</option>
-          </select>
-        </div>
+    {products.length === 0 && (
+      <div class="mx-auto max-w-2xl px-6 py-20 text-center">
+        <p class="font-display text-2xl text-ink">Coming soon</p>
+        <p class="mt-3 text-ink-2 normal-case tracking-normal font-normal">
+          Pieces for this collection are on the press. Browse the full shop meanwhile.
+        </p>
+        <a href="/store" class="mt-6 inline-block btn btn--outline">All products</a>
       </div>
+    )}
 
-      {filtered.length === 0 ? (
-        <div class="py-20 text-center">
-          <p class="text-lg font-display text-ink">No {categoryLabels[typeParam] || "items"} here yet</p>
-          <a href={basePath} class="mt-4 inline-block text-accent underline">View all in {hero.title}</a>
+    {products.length > 0 && (
+      <section class="mx-auto max-w-7xl px-5 md:px-6 py-10 md:py-12">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b-[3px] border-ink pb-6">
+          <div class="flex flex-wrap gap-2" role="tablist" aria-label="Product type">
+            <a
+              href={queryHref("all", sortParam)}
+              role="tab"
+              aria-selected={typeParam === "all"}
+              class:list={[
+                "px-3 sm:px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] uppercase transition-colors whitespace-nowrap border-[3px] border-ink",
+                typeParam === "all"
+                  ? "bg-ink text-paper"
+                  : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper",
+              ]}
+            >
+              All types
+            </a>
+            {typeOptions.map((type) => {
+              const active = typeParam === type;
+              const label = categoryLabels[type] || type;
+              return (
+                <a
+                  href={queryHref(type, sortParam)}
+                  role="tab"
+                  aria-selected={active}
+                  class:list={[
+                    "px-3 sm:px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] uppercase transition-colors whitespace-nowrap border-[3px] border-ink",
+                    active
+                      ? "bg-ink text-paper"
+                      : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper",
+                  ]}
+                >
+                  {label}
+                </a>
+              );
+            })}
+          </div>
+          <div class="flex items-center gap-3">
+            <p class="text-sm font-mono text-muted">{countLabel}</p>
+            <label class="sr-only" for="sort">Sort</label>
+            <select
+              id="sort"
+              class="border-[3px] border-ink bg-paper px-4 py-2 text-sm text-ink focus:border-accent focus:outline-none"
+              onchange={`const type='${typeParam}'; const v=this.value; const p=new URLSearchParams(); if(type!=='all')p.set('type',type); if(v!=='featured')p.set('sort',v); const q=p.toString(); location.href='${basePath}'+(q?'?'+q:'')`}
+            >
+              <option value="featured" selected={sortParam === "featured"}>Featured</option>
+              <option value="price-asc" selected={sortParam === "price-asc"}>Price: Low to high</option>
+              <option value="price-desc" selected={sortParam === "price-desc"}>Price: High to low</option>
+              <option value="name" selected={sortParam === "name"}>Name A–Z</option>
+            </select>
+          </div>
         </div>
-      ) : (
-        <div class="mt-8 grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filtered.map((p, i) => (
-            <ProductCard product={p} priority={i < 4} index={i} />
-          ))}
-        </div>
-      )}
-    </section>
-  )}
+
+        {filtered.length === 0 ? (
+          <div class="py-20 text-center">
+            <p class="text-lg font-display text-ink">No {categoryLabels[typeParam] || "items"} here yet</p>
+            <a href={basePath} class="mt-4 inline-block text-accent underline">View all in {hero.title}</a>
+          </div>
+        ) : (
+          <div class="mt-8 grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {filtered.map((p, i) => (
+              <ProductCard
+                product={p}
+                priority={i < 4}
+                index={i}
+                variant={theme.cardVariant}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+    )}
+  </div>
 </Layout>

@@ -1,19 +1,22 @@
 ---
 import type { FloofProduct } from "@/lib/product"
 import { colorMap, categoryLabels } from "@/lib/product"
+import type { CardVariant } from "@/lib/collectionThemes"
 
 interface Props {
   product: FloofProduct
   priority?: boolean
   index?: number
+  variant?: CardVariant
 }
-const { product, priority = false, index } = Astro.props
+const { product, priority = false, index, variant = "floof" } = Astro.props
 const catLabel = categoryLabels[product.category] || product.category
 const idx = typeof index === "number" ? String(index + 1).padStart(2, "0") : null
 ---
 <a
   href={`/products/${product.slug}`}
   class="card-surface group block overflow-hidden"
+  data-card-variant={variant}
 >
   <div class="relative aspect-square overflow-hidden bg-cream p-5 sm:p-6 flex items-center justify-center border-b-[3px] border-ink">
     {idx && (

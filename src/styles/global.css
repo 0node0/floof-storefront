@@ -3,6 +3,7 @@
  */
 @import "tailwindcss";
 @import "../../tokens.css";
+@import "./collection-themes.css";
 
 @theme {
   --color-paper: oklch(14% 0.02 280);
