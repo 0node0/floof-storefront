@@ -68,41 +68,41 @@ const DOGS_VARS: Record<string, string> = {
 }
 
 const READS_VARS: Record<string, string> = {
-  "--color-paper": "oklch(95% 0.025 88)",
-  "--color-paper-2": "oklch(92% 0.03 86)",
-  "--color-paper-3": "oklch(86% 0.035 84)",
-  "--color-ink": "oklch(22% 0.06 28)",
-  "--color-ink-2": "oklch(38% 0.05 30)",
-  "--color-muted": "oklch(48% 0.03 35)",
-  "--color-accent": "oklch(40% 0.14 25)",
-  "--color-accent-deep": "oklch(32% 0.12 25)",
-  "--color-accent-soft": "oklch(40% 0.14 25 / 0.12)",
-  "--color-accent-ink": "oklch(96% 0.02 90)",
-  "--color-secondary": "oklch(52% 0.08 145)",
-  "--color-cream": "oklch(98% 0.02 92)",
-  "--color-focus": "oklch(38% 0.14 25)",
-  "--color-surface": "oklch(92% 0.03 86)",
-  "--theme-radius-card": "0.15rem",
-  "--theme-rule": "2px",
+  "--color-paper": "#F2ECDF",
+  "--color-paper-2": "#FAF6EC",
+  "--color-paper-3": "#EFE7D6",
+  "--color-ink": "#2A3040",
+  "--color-ink-2": "#434957",
+  "--color-muted": "#4F5563",
+  "--color-accent": "#2A3040",
+  "--color-accent-deep": "#1e2430",
+  "--color-accent-soft": "rgba(42, 48, 64, 0.12)",
+  "--color-accent-ink": "#FAF6EC",
+  "--color-secondary": "#7A3B32",
+  "--color-cream": "#FAF6EC",
+  "--color-focus": "#7A3B32",
+  "--color-surface": "#EFE7D6",
+  "--theme-radius-card": "0",
+  "--theme-rule": "1px",
 }
 
 const DESK_VARS: Record<string, string> = {
-  "--color-paper": "oklch(18% 0.025 265)",
-  "--color-paper-2": "oklch(22% 0.03 262)",
-  "--color-paper-3": "oklch(28% 0.035 258)",
-  "--color-ink": "oklch(96% 0.01 95)",
-  "--color-ink-2": "oklch(78% 0.02 95)",
-  "--color-muted": "oklch(58% 0.02 260)",
-  "--color-accent": "oklch(78% 0.14 165)",
-  "--color-accent-deep": "oklch(62% 0.12 165)",
-  "--color-accent-soft": "oklch(78% 0.14 165 / 0.18)",
-  "--color-accent-ink": "oklch(16% 0.03 265)",
-  "--color-secondary": "oklch(68% 0.1 290)",
-  "--color-cream": "oklch(94% 0.02 95)",
-  "--color-focus": "oklch(78% 0.14 165)",
-  "--color-surface": "oklch(22% 0.03 262)",
-  "--theme-radius-card": "0.5rem",
-  "--theme-rule": "2px",
+  "--color-paper": "#EEF0EC",
+  "--color-paper-2": "#FFFFFF",
+  "--color-paper-3": "#E9ECE6",
+  "--color-ink": "#263232",
+  "--color-ink-2": "#3F4B4B",
+  "--color-muted": "#4A5656",
+  "--color-accent": "#263232",
+  "--color-accent-deep": "#1a2222",
+  "--color-accent-soft": "rgba(38, 50, 50, 0.12)",
+  "--color-accent-ink": "#F6F7F4",
+  "--color-secondary": "#55705B",
+  "--color-cream": "#F6F7F4",
+  "--color-focus": "#55705B",
+  "--color-surface": "#E1E5DF",
+  "--theme-radius-card": "0.875rem",
+  "--theme-rule": "1px",
 }
 
 const THEMES: Record<CollectionThemeId, CollectionTheme> = {
@@ -148,7 +148,7 @@ const THEMES: Record<CollectionThemeId, CollectionTheme> = {
     fonts: {
       display: {
         family: '"Fraunces", Georgia, serif',
-        googleParam: "Fraunces:opsz,wght@9..144,500;600;700",
+        googleParam: "Fraunces:opsz,wght@9..144,400;500;600",
       },
       body: {
         family: '"Source Serif 4", Georgia, serif',
@@ -162,7 +162,7 @@ const THEMES: Record<CollectionThemeId, CollectionTheme> = {
     cssVars: READS_VARS,
     heroVariant: "reads",
     cardVariant: "reads",
-    themeColor: "#f3ebe0",
+    themeColor: "#F2ECDF",
     hero: {
       imageBase: "/collections/reads/hero",
       imageAlt: "Reader with a stack of books and a Floof tee",
@@ -188,7 +188,7 @@ const THEMES: Record<CollectionThemeId, CollectionTheme> = {
     cssVars: DESK_VARS,
     heroVariant: "desk",
     cardVariant: "desk",
-    themeColor: "#1c2230",
+    themeColor: "#EEF0EC",
     hero: {
       imageBase: "/collections/desk/hero",
       imageAlt: "Work-from-home desk with coffee and a muted video call",
@@ -233,10 +233,17 @@ export function buildGoogleFontsHref(theme: CollectionTheme): string {
   ])
   const hand = THEME_HAND_FONT[theme.id]
   if (hand) families.add(hand)
-  if (theme.fonts.display.googleParam !== FLOOF_THEME_FONTS.display.googleParam) {
+  const skipGoogleDisplayBody = theme.id === "reads"
+  if (
+    !skipGoogleDisplayBody &&
+    theme.fonts.display.googleParam !== FLOOF_THEME_FONTS.display.googleParam
+  ) {
     families.add(theme.fonts.display.googleParam)
   }
-  if (theme.fonts.body.googleParam !== FLOOF_THEME_FONTS.body.googleParam) {
+  if (
+    !skipGoogleDisplayBody &&
+    theme.fonts.body.googleParam !== FLOOF_THEME_FONTS.body.googleParam
+  ) {
     families.add(theme.fonts.body.googleParam)
   }
   if (

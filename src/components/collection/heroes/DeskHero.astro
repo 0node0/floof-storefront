@@ -67,11 +67,35 @@ const shopAll = productCount > 0 ? shopAllLabel(productCount) : "Shop all"
         </span>
       </div>
       <div class="collection-hero--desk__side">
+        <div class="collection-hero--desk__tile collection-hero--desk__tile--s collection-hero--desk__tile--art">
+          <img
+            src={`${base}/art-desk-low-battery.png`}
+            alt="Low Battery High Standards artwork"
+            width="200"
+            height="150"
+          />
+          <span class="collection-hero--desk__who">
+            <span class="collection-hero--desk__mic" aria-hidden="true"></span>
+            Low Battery
+          </span>
+        </div>
         <div class="collection-hero--desk__tile collection-hero--desk__tile--s collection-hero--desk__tile--gray">
           <b aria-hidden="true">You</b>
           <span class="collection-hero--desk__who">
             <span class="collection-hero--desk__mic" aria-hidden="true"></span>
             Camera off
+          </span>
+        </div>
+        <div class="collection-hero--desk__tile collection-hero--desk__tile--s collection-hero--desk__tile--art">
+          <img
+            src={`${base}/art-desk-camera-off-club.png`}
+            alt="Camera Off Club artwork"
+            width="200"
+            height="150"
+          />
+          <span class="collection-hero--desk__who">
+            <span class="collection-hero--desk__mic" aria-hidden="true"></span>
+            Members only
           </span>
         </div>
       </div>
@@ -85,10 +109,12 @@ const shopAll = productCount > 0 ? shopAllLabel(productCount) : "Shop all"
         <img class="tp" src={`${base}/tape.svg`} alt="" aria-hidden="true" />
         <img class="bg" src={`${base}/sticky-note.svg`} alt="" aria-hidden="true" />
         <p>Running on 4%.<br />Do not schedule anything before coffee.</p>
+        <span class="collection-hero--desk__peel" aria-hidden="true"></span>
       </div>
       <div class="collection-hero--desk__sticky collection-hero--desk__sticky--b">
         <img class="bg" src={`${base}/sticky-note.svg`} alt="" aria-hidden="true" />
         <p>This meeting could have been an email.</p>
+        <span class="collection-hero--desk__peel" aria-hidden="true"></span>
       </div>
     </div>
   </div>

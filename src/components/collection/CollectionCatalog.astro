@@ -55,6 +55,11 @@ function isBreedActive(chip: DogBreedChip) {
 
 const isThemed = variant !== "floof"
 const filterClass = isThemed ? `collection-filters collection-filters--${variant}` : ""
+
+const readsIdxTypes = ["mugs", "stickers", "tees"] as const
+function readsTypeCount(type: string) {
+  return products.filter((p) => p.category === type).length
+}
 const chipClass = (active: boolean) =>
   isThemed
     ? ["collection-filter-chip", active ? "is-active" : ""]
@@ -121,6 +126,32 @@ const chipClass = (active: boolean) =>
           <img src="/collections/reads/scribble-arrow.svg" alt="" width="48" height="32" />
           start with the sock one
         </span>
+        <div class="collection-catalog__idx" role="tablist" aria-label="Product type">
+          <a
+            href={queryHref("all", sortParam)}
+            role="tab"
+            aria-selected={typeParam === "all"}
+            class:list={["collection-catalog__idx-link", typeParam === "all" && "is-active"]}
+          >
+            All {products.length}
+          </a>
+          {readsIdxTypes.map((type) => {
+            const count = readsTypeCount(type)
+            if (count === 0) return null
+            const label = type === "mugs" ? "Mugs" : type === "stickers" ? "Stickers" : "Tees"
+            const active = typeParam === type
+            return (
+              <a
+                href={queryHref(type, sortParam)}
+                role="tab"
+                aria-selected={active}
+                class:list={["collection-catalog__idx-link", active && "is-active"]}
+              >
+                {label} {count}
+              </a>
+            )
+          })}
+        </div>
       </div>
     )}
 
@@ -176,6 +207,7 @@ const chipClass = (active: boolean) =>
       class:list={[
         "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-6",
         variant === "floof" ? "border-b-[3px] border-ink" : "collection-catalog__toolbar",
+        variant === "reads" && "collection-catalog__toolbar--reads",
         variant !== "floof" && variant !== "dogs" && variant !== "reads" && variant !== "desk" ? "" : "",
       ]}
     >
