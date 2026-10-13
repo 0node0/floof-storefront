@@ -256,7 +256,13 @@ const chipClass = (active: boolean) =>
         ]}
       >
         {filtered.map((p, i) => (
-          <ProductCard product={p} priority={i < 4} index={i} variant={variant} />
+          <ProductCard
+            product={p}
+            priority={i < 4}
+            index={i}
+            variant={variant}
+            linkFrom={isThemed ? variant : undefined}
+          />
         ))}
       </div>
     )}

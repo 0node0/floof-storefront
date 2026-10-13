@@ -9,8 +9,14 @@ interface Props {
   priority?: boolean
   index?: number
   variant?: CardVariant
+  /** When set, product links include ?from= for themed PDP continuity */
+  linkFrom?: CardVariant
 }
-const { product, priority = false, index, variant = "floof" } = Astro.props
+const { product, priority = false, index, variant = "floof", linkFrom } = Astro.props
+const href =
+  linkFrom && linkFrom !== "floof"
+    ? `/products/${product.slug}?from=${linkFrom}`
+    : `/products/${product.slug}`
 const catLabel = categoryLabels[product.category] || product.category
 const idx = typeof index === "number" ? String(index + 1).padStart(2, "0") : null
 const isThemed = variant !== "floof"
@@ -20,7 +26,7 @@ const formatLabel =
   isSticker ? "3 in sticker" : product.category === "mugs" ? "11 oz mug" : catLabel
 ---
 <a
-  href={`/products/${product.slug}`}
+  href={href}
   class:list={[
     "group block overflow-hidden",
     isThemed ? `collection-product-card collection-product-card--${variant}` : "card-surface",

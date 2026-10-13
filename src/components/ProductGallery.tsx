@@ -4,20 +4,37 @@ type Props = {
   images: string[]
   alt: string
   phrase?: string
+  variant?: "default" | "bare"
 }
 
 /**
  * PDP image gallery — main shot + selectable thumbs (lifestyle mockups).
  */
-export default function ProductGallery({ images, alt, phrase }: Props) {
+export default function ProductGallery({
+  images,
+  alt,
+  phrase,
+  variant = "default",
+}: Props) {
   const shots = images.filter(Boolean)
   const [active, setActive] = useState(0)
   const current = shots[active] || shots[0]
+  const bare = variant === "bare"
+  const shellClass = bare ? "product-pdp-gallery product-pdp-gallery--bare min-w-0" : "border-[3px] border-ink min-w-0"
+  const mainClass = bare
+    ? "product-pdp-gallery__main aspect-square flex items-center justify-center overflow-hidden"
+    : "aspect-square bg-cream p-4 sm:p-6 md:p-8 flex items-center justify-center overflow-hidden"
+  const thumbRailClass = bare
+    ? "product-pdp-gallery__thumbs p-2 sm:p-3"
+    : "border-t-[3px] border-ink bg-paper-2 p-2 sm:p-3"
+  const footnoteClass = bare
+    ? "product-pdp-gallery__note text-center text-xs font-mono py-2"
+    : "text-center text-xs font-mono text-muted py-3 border-t-[3px] border-ink bg-paper-2"
 
   if (!current) {
     return (
-      <div className="border-[3px] border-ink min-w-0">
-        <div className="aspect-square bg-cream p-6 sm:p-8 md:p-12 flex items-center justify-center">
+      <div className={shellClass}>
+        <div className={mainClass}>
           <span className="font-display text-4xl md:text-5xl text-paper leading-tight text-center">
             {phrase || alt}
           </span>
@@ -27,8 +44,8 @@ export default function ProductGallery({ images, alt, phrase }: Props) {
   }
 
   return (
-    <div className="border-[3px] border-ink min-w-0">
-      <div className="aspect-square bg-cream p-4 sm:p-6 md:p-8 flex items-center justify-center overflow-hidden">
+    <div className={shellClass}>
+      <div className={mainClass}>
         <img
           key={current}
           src={current}
@@ -42,7 +59,7 @@ export default function ProductGallery({ images, alt, phrase }: Props) {
       </div>
 
       {shots.length > 1 && (
-        <div className="border-t-[3px] border-ink bg-paper-2 p-2 sm:p-3">
+        <div className={thumbRailClass}>
           <div
             className="flex gap-2 overflow-x-auto pb-1"
             role="listbox"
@@ -79,7 +96,7 @@ export default function ProductGallery({ images, alt, phrase }: Props) {
         </div>
       )}
 
-      <p className="text-center text-xs font-mono text-muted py-3 border-t-[3px] border-ink bg-paper-2">
+      <p className={footnoteClass}>
         Colors shown as digital mockups · final print may vary slightly
       </p>
     </div>

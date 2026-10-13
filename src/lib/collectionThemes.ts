@@ -200,6 +200,25 @@ function isThemeId(value: unknown): value is CollectionThemeId {
   return value === "floof" || value === "dogs" || value === "reads" || value === "desk"
 }
 
+/** Map collection URL handles to themed landing IDs (pets → dogs). */
+export function themeIdFromCollectionHandle(
+  handle: string | undefined | null
+): CollectionThemeId | null {
+  if (!handle) return null
+  const mapped = HANDLE_THEME[handle.trim().toLowerCase()]
+  return mapped ?? null
+}
+
+export function parseProductFromThemeParam(
+  param: string | null | undefined
+): CollectionThemeId | null {
+  if (!param) return null
+  const raw = param.trim().toLowerCase()
+  if (raw === "pets") return "dogs"
+  if (isThemeId(raw) && raw !== "floof") return raw
+  return null
+}
+
 export function getCollectionTheme(id: CollectionThemeId): CollectionTheme {
   return THEMES[id]
 }
