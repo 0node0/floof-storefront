@@ -1,0 +1,34 @@
+/**
+ * Collection landing themes — scoped under `.collection-theme` so nav/footer stay Floof default.
+ * Niche visuals hook via data-collection-theme, data-hero-variant, data-card-variant.
+ */
+
+.collection-theme {
+  font-family: var(--font-body, var(--font-sans));
+  color: var(--color-ink);
+  background: var(--color-paper);
+  min-height: 100%;
+}
+
+.collection-theme h1,
+.collection-theme h2,
+.collection-theme h3,
+.collection-theme .font-display {
+  font-family: var(--font-display);
+}
+
+.collection-theme .eyebrow,
+.collection-theme .font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Future: per-theme overrides (dogs / reads / desk) */
+.collection-theme[data-collection-theme="dogs"] {
+  /* tokens via theme.cssVars when designs land */
+}
+
+.collection-theme[data-collection-theme="reads"] {
+}
+
+.collection-theme[data-collection-theme="desk"] {
+}
