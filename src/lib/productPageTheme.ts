@@ -85,20 +85,27 @@ export function productPageThemeBundle(themeId: CollectionThemeId) {
   return getCollectionTheme(themeId)
 }
 
+function relatedShelfLimit(themeId: CollectionThemeId): number {
+  // Reads collection grid is 3 columns on desktop — avoid a lone orphan card.
+  if (themeId === "reads") return 3
+  return 4
+}
+
 export function relatedProductsForShelf(
   all: FloofProduct[],
   product: FloofProduct,
   themeId: CollectionThemeId,
   collectionHandle: string | null
 ): FloofProduct[] {
+  const limit = relatedShelfLimit(themeId)
   const others = all.filter((p) => p.slug !== product.slug)
   if (themeId !== "floof" && collectionHandle) {
     const sameCollection = others.filter(
       (p) => p.collectionHandle === collectionHandle
     )
-    if (sameCollection.length >= 2) return sameCollection.slice(0, 4)
+    if (sameCollection.length >= 2) return sameCollection.slice(0, limit)
   }
   const sameCategory = others.filter((p) => p.category === product.category)
-  if (sameCategory.length >= 2) return sameCategory.slice(0, 4)
-  return others.slice(0, 4)
+  if (sameCategory.length >= 2) return sameCategory.slice(0, limit)
+  return others.slice(0, limit)
 }
