@@ -19,9 +19,9 @@ const { variant, hero, assets, productCount = 0 } = Astro.props
   variant === "dogs" ? (
     <DogsHero hero={hero} assets={assets} productCount={productCount} />
   ) : variant === "reads" ? (
-    <ReadsHero hero={hero} assets={assets} />
+    <ReadsHero hero={hero} assets={assets} productCount={productCount} />
   ) : variant === "desk" ? (
-    <DeskHero hero={hero} assets={assets} />
+    <DeskHero hero={hero} assets={assets} productCount={productCount} />
   ) : (
     <FloofHero hero={hero} />
   )
