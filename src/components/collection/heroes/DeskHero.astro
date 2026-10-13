@@ -1,16 +1,19 @@
 ---
 import CollectionHeroImage from "../CollectionHeroImage.astro"
 import DeskMuteCoffee from "../DeskMuteCoffee"
+import { shopAllLabel } from "@/lib/pieceCount"
 import type { ThemeAwareHeroCopy } from "@/lib/themeHeroCopy"
 import type { ThemeHeroAssets } from "@/lib/collectionThemes"
 
 interface Props {
   hero: ThemeAwareHeroCopy
   assets: ThemeHeroAssets
+  productCount?: number
 }
 
-const { hero, assets } = Astro.props
+const { hero, assets, productCount = 0 } = Astro.props
 const base = "/collections/desk"
+const shopAll = productCount > 0 ? shopAllLabel(productCount) : "Shop all"
 ---
 <section
   class="collection-hero collection-hero--desk"
@@ -36,10 +39,10 @@ const base = "/collections/desk"
       <p class="collection-hero--desk__lede">{hero.tagline}</p>
       <div class="collection-hero--desk__btns">
         <a class="collection-hero--desk__btn" href="#collection-grid">Join the club</a>
-        <a class="collection-hero--desk__btn collection-hero--desk__btn--alt" href="#collection-grid">Shop all 4</a>
+        <a class="collection-hero--desk__btn collection-hero--desk__btn--alt" href="#collection-grid">{shopAll}</a>
       </div>
       <div class="collection-hero--desk__todo">
-        <img src={`${base}/notepad.svg`} alt="" width="200" height="120" aria-hidden="true" />
+        <img class="collection-hero--desk__todo-pad" src={`${base}/notepad.svg`} alt="" aria-hidden="true" />
         <ol aria-label="To-do list">
           <li><s>coffee</s></li>
           <li><s>unmute (eventually)</s></li>

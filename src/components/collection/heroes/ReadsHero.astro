@@ -1,21 +1,36 @@
 ---
 import CollectionHeroImage from "../CollectionHeroImage.astro"
+import { pieceCountLabel } from "@/lib/pieceCount"
 import type { ThemeAwareHeroCopy } from "@/lib/themeHeroCopy"
 import type { ThemeHeroAssets } from "@/lib/collectionThemes"
 
 interface Props {
   hero: ThemeAwareHeroCopy
   assets: ThemeHeroAssets
+  productCount?: number
 }
 
-const { hero, assets } = Astro.props
+const { hero, assets, productCount = 0 } = Astro.props
 const base = "/collections/reads"
+const piecesLine =
+  productCount > 0
+    ? `${pieceCountLabel(productCount)}, printed to order`
+    : "Printed to order"
 ---
 <section
   class="collection-hero collection-hero--reads"
   data-hero-variant="reads"
   aria-labelledby="collection-hero-title"
 >
+  <svg class="collection-hero--reads__filters" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="reads-bleed">
+        <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" result="n" />
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" result="d" />
+        <feGaussianBlur in="d" stdDeviation=".35" />
+      </filter>
+    </defs>
+  </svg>
   <div class="collection-hero--reads__inner">
     <div class="collection-hero--reads__page">
       <span class="collection-hero--reads__fold" aria-hidden="true"></span>
@@ -23,14 +38,9 @@ const base = "/collections/reads"
         <span>The reading room</span>
         <span>Vol. 01</span>
       </div>
-      <img
-        class="collection-hero--reads__margin"
-        src={`${base}/marginalia-bracket.svg`}
-        alt=""
-        width="48"
-        height="120"
-        aria-hidden="true"
-      />
+      <div class="collection-hero--reads__margin" aria-hidden="true">
+        <img src={`${base}/marginalia-bracket.svg`} alt="" width="22" height="150" />
+      </div>
       <p class="collection-handwriting collection-hero--reads__mnote" aria-hidden="true">
         guilty, every single page
       </p>
@@ -50,7 +60,7 @@ const base = "/collections/reads"
       <p class="collection-hero--reads__lede">{hero.tagline}</p>
       <div class="collection-hero--reads__btns">
         <a class="collection-hero--reads__btn" href="#collection-grid">Browse the shelf</a>
-        <a class="collection-hero--reads__lnk" href="#collection-grid">Six pieces, printed to order</a>
+        <a class="collection-hero--reads__lnk" href="#collection-grid">{piecesLine}</a>
       </div>
       <img
         class="collection-hero--reads__ring"
@@ -64,7 +74,7 @@ const base = "/collections/reads"
 
     <figure class="collection-hero--reads__plate">
       <div class="collection-hero--reads__stamp" aria-hidden="true">
-        <img src={`${base}/due-stamp.svg`} alt="" width="120" height="120" />
+        <img src={`${base}/due-stamp.svg`} alt="" />
         <div>
           <b>DUE BACK</b>
           <strong>OCT 27</strong>
@@ -80,19 +90,19 @@ const base = "/collections/reads"
           class="collection-hero--reads__photo"
         />
       </div>
-      <figcaption>
+      <figcaption class="collection-hero--reads__caption">
         <span>Plate I</span>
         Bookmark: Whatever Was Nearest Mug, $23.99
       </figcaption>
       <div class="collection-hero--reads__pocket" aria-hidden="true">
         <div class="collection-hero--reads__pocket-card">
-          <img src={`${base}/library-card.svg`} alt="" width="200" height="120" />
+          <img src={`${base}/library-card.svg`} alt="" />
           <div class="collection-hero--reads__pocket-lines">
             <span class="t">Date due</span>
             SEP 02<br />SEP 30<br />OCT 27 <span class="s">renewed</span><br />NOV 24
           </div>
         </div>
-        <img class="collection-hero--reads__pocket-sleeve" src={`${base}/card-pocket.svg`} alt="" width="220" height="80" />
+        <img class="collection-hero--reads__pocket-sleeve" src={`${base}/card-pocket.svg`} alt="" />
       </div>
     </figure>
   </div>
