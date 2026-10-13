@@ -15,6 +15,8 @@ export interface FloofProduct {
   /** Full gallery — lifestyle mockups + product shots */
   images: string[]
   isWip?: boolean
+  collectionHandle?: string
+  collectionTitle?: string
 }
 
 /** Map common garment color names → CSS swatches */
@@ -89,14 +91,36 @@ export function mapProduct(p: MedusaProduct): FloofProduct {
     image: images[0] || thumb || "",
     images,
     isWip: p.title.includes("[WIP]"),
+    collectionHandle: p.collection?.handle,
+    collectionTitle: p.collection?.title,
   }
 }
 
 export const categoryLabels: Record<string, string> = {
   tees: "T-Shirts",
   hoodies: "Hoodies",
+  mugs: "Mugs",
+  stickers: "Stickers",
   hats: "Hats",
   accessories: "Accessories",
+}
+
+export const productTypeOrder = ["tees", "hoodies", "mugs", "stickers", "hats", "accessories"]
+
+export function sortFloofProducts(
+  products: FloofProduct[],
+  sort: string
+): FloofProduct[] {
+  if (sort === "price-asc") {
+    return [...products].sort((a, b) => a.price - b.price)
+  }
+  if (sort === "price-desc") {
+    return [...products].sort((a, b) => b.price - a.price)
+  }
+  if (sort === "name") {
+    return [...products].sort((a, b) => a.name.localeCompare(b.name))
+  }
+  return products
 }
 
 export const sizeGuide = {

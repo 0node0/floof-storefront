@@ -2,42 +2,90 @@
 import Layout from "@/layouts/Layout.astro";
 import ProductCard from "@/components/ProductCard.astro";
 import TrustBar from "@/components/TrustBar.astro";
-import { listProducts } from "@/lib/medusa";
-import { mapProduct, categoryLabels, type FloofProduct } from "@/lib/product";
+import { collectionPath } from "@/lib/collections";
+import { listCollections, listProducts } from "@/lib/medusa";
+import {
+  categoryLabels,
+  mapProduct,
+  productTypeOrder,
+  sortFloofProducts,
+  type FloofProduct,
+} from "@/lib/product";
 
 export const prerender = false;
 
+const collectionParam = Astro.url.searchParams.get("collection") || "all";
 const catParam = Astro.url.searchParams.get("cat") || "all";
 const sortParam = Astro.url.searchParams.get("sort") || "featured";
 
 let all: FloofProduct[] = [];
+let medusaCollections: { handle: string; title: string }[] = [];
 try {
   const { products } = await listProducts();
   all = products.map(mapProduct);
 } catch {}
+try {
+  const { collections } = await listCollections();
+  medusaCollections = collections
+    .slice()
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((c) => ({ handle: c.handle, title: c.title }));
+} catch {}
 
-const categories = [
-  { id: "all", label: "All" },
-  ...Object.entries(categoryLabels).map(([id, label]) => ({ id, label })),
-].filter((c) => c.id === "all" || all.some((p) => p.category === c.id));
+const productTypes = productTypeOrder.filter((id) =>
+  all.some((p) => p.category === id)
+);
 
-let filtered =
-  catParam === "all" ? all : all.filter((p) => p.category === catParam);
+const collectionFilters = [
+  { id: "all", label: "All collections" },
+  ...medusaCollections.map((c) => ({ id: c.handle, label: c.title })),
+].filter(
+  (c) =>
+    c.id === "all" ||
+    all.some((p) => p.collectionHandle === c.id)
+);
 
-if (sortParam === "price-asc") {
-  filtered = [...filtered].sort((a, b) => a.price - b.price);
-} else if (sortParam === "price-desc") {
-  filtered = [...filtered].sort((a, b) => b.price - a.price);
-} else if (sortParam === "name") {
-  filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
+function storeHref(opts: {
+  collection?: string;
+  cat?: string;
+  sort?: string;
+}): string {
+  const params = new URLSearchParams();
+  const col = opts.collection ?? collectionParam;
+  const cat = opts.cat ?? catParam;
+  const sort = opts.sort ?? sortParam;
+  if (col !== "all") params.set("collection", col);
+  if (cat !== "all") params.set("cat", cat);
+  if (sort !== "featured") params.set("sort", sort);
+  const q = params.toString();
+  return q ? `/store?${q}` : "/store";
 }
+
+let filtered = all;
+if (collectionParam !== "all") {
+  filtered = filtered.filter((p) => p.collectionHandle === collectionParam);
+}
+if (catParam !== "all") {
+  filtered = filtered.filter((p) => p.category === catParam);
+}
+filtered = sortFloofProducts(filtered, sortParam);
+
+const activeCollection = medusaCollections.find(
+  (c) => c.handle === collectionParam
+);
+const pageTitle =
+  activeCollection && collectionParam !== "all"
+    ? activeCollection.title
+    : catParam !== "all"
+      ? categoryLabels[catParam] || "Shop"
+      : "Shop";
 
 const countLabel =
   filtered.length === 1 ? "1 piece" : `${filtered.length} pieces`;
 ---
 <Layout
-  title={catParam !== "all" ? categoryLabels[catParam] || "Shop" : "Shop"}
-  description="Browse Floof tees, hoodies, and more — witty SW Florida apparel, printed fresh when you order."
+  title={pageTitle}
+  description="Browse Floof tees, hoodies, mugs, stickers, and more — witty SW Florida goods, printed fresh when you order."
 >
   <section class="page-band">
     <div class="mx-auto max-w-7xl px-5 md:px-6 py-12 md:py-16">
@@ -62,51 +110,103 @@ const countLabel =
 
   {all.length > 0 && (
     <section class="mx-auto max-w-7xl px-5 md:px-6 py-10 md:py-12">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b-[3px] border-ink pb-6">
-        <div class="flex flex-wrap gap-2" role="tablist" aria-label="Category">
-          {categories.map((c) => {
-            const href =
-              c.id === "all"
-                ? `/store?sort=${sortParam}`
-                : `/store?cat=${c.id}&sort=${sortParam}`;
-            const active = catParam === c.id;
-            return (
+      <div class="flex flex-col gap-6 border-b-[3px] border-ink pb-6">
+        <div>
+          <p class="text-[0.65rem] font-semibold tracking-[0.14em] uppercase text-muted mb-2">
+            Category
+          </p>
+          <div class="flex flex-wrap gap-2" role="tablist" aria-label="Collection">
+            {collectionFilters.map((c) => {
+              const href = storeHref({ collection: c.id });
+              const active = collectionParam === c.id;
+              return (
+                <a
+                  href={href}
+                  role="tab"
+                  aria-selected={active}
+                  class:list={[
+                    "px-3 sm:px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] uppercase transition-colors whitespace-nowrap border-[3px] border-ink",
+                    active
+                      ? "bg-ink text-paper"
+                      : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper",
+                  ]}
+                >
+                  {c.label}
+                </a>
+              );
+            })}
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p class="text-[0.65rem] font-semibold tracking-[0.14em] uppercase text-muted mb-2">
+              Product type
+            </p>
+            <div class="flex flex-wrap gap-2" role="tablist" aria-label="Product type">
               <a
-                href={href}
+                href={storeHref({ cat: "all" })}
                 role="tab"
-                aria-selected={active}
+                aria-selected={catParam === "all"}
                 class:list={[
                   "px-3 sm:px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] uppercase transition-colors whitespace-nowrap border-[3px] border-ink",
-                  active
+                  catParam === "all"
                     ? "bg-ink text-paper"
                     : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper",
                 ]}
               >
-                {c.label}
+                All types
               </a>
-            );
-          })}
-        </div>
-        <div class="flex items-center gap-3">
-          <p class="text-sm font-mono text-muted">{countLabel}</p>
-          <label class="sr-only" for="sort">Sort</label>
-          <select
-            id="sort"
-            class="border-[3px] border-ink bg-paper px-4 py-2 text-sm text-ink focus:border-accent focus:outline-none"
-            onchange={`const cat='${catParam}'; const v=this.value; location.href='/store'+(cat!=='all'?'?cat='+cat+'&sort='+v:'?sort='+v)`}
-          >
-            <option value="featured" selected={sortParam === "featured"}>Featured</option>
-            <option value="price-asc" selected={sortParam === "price-asc"}>Price: Low to high</option>
-            <option value="price-desc" selected={sortParam === "price-desc"}>Price: High to low</option>
-            <option value="name" selected={sortParam === "name"}>Name A–Z</option>
-          </select>
+              {productTypes.map((id) => {
+                const href = storeHref({ cat: id });
+                const active = catParam === id;
+                return (
+                  <a
+                    href={href}
+                    role="tab"
+                    aria-selected={active}
+                    class:list={[
+                      "px-3 sm:px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] uppercase transition-colors whitespace-nowrap border-[3px] border-ink",
+                      active
+                        ? "bg-ink text-paper"
+                        : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper",
+                    ]}
+                  >
+                    {categoryLabels[id] || id}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <p class="text-sm font-mono text-muted">{countLabel}</p>
+            <label class="sr-only" for="sort">Sort</label>
+            <select
+              id="sort"
+              class="border-[3px] border-ink bg-paper px-4 py-2 text-sm text-ink focus:border-accent focus:outline-none"
+              onchange={`location.href='${storeHref({ sort: "__SORT__" })}'.replace('__SORT__',this.value)`}
+            >
+              <option value="featured" selected={sortParam === "featured"}>Featured</option>
+              <option value="price-asc" selected={sortParam === "price-asc"}>Price: Low to high</option>
+              <option value="price-desc" selected={sortParam === "price-desc"}>Price: High to low</option>
+              <option value="name" selected={sortParam === "name"}>Name A–Z</option>
+            </select>
+          </div>
         </div>
       </div>
 
       {filtered.length === 0 ? (
         <div class="py-20 text-center">
-          <p class="text-lg font-display text-ink">Nothing in this category yet</p>
+          <p class="text-lg font-display text-ink">Nothing matches these filters yet</p>
           <a href="/store" class="mt-4 inline-block text-accent underline">View all products</a>
+          {collectionParam !== "all" && (
+            <a
+              href={collectionPath(collectionParam)}
+              class="mt-2 block text-accent underline"
+            >
+              Browse {activeCollection?.title || collectionParam} collection
+            </a>
+          )}
         </div>
       ) : (
         <div class="mt-8 grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

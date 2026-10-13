@@ -45,6 +45,11 @@ try {
 if (!product) return Astro.redirect("/404");
 const ogImage = image.startsWith("http") ? image : image;
 const catLabel = categoryLabels[product.category] || product.category;
+const collectionHref = product.collectionHandle
+  ? `/${product.collectionHandle}`
+  : `/store?cat=${product.category}`;
+const collectionCrumbLabel =
+  product.collectionTitle || catLabel;
 const galleryImages =
   product.images?.length > 0
     ? product.images
@@ -62,7 +67,7 @@ const galleryImages =
         <li aria-hidden="true" class="mx-1 text-ink/20">/</li>
         <li><a href="/store" class="hover:text-accent">Shop</a></li>
         <li aria-hidden="true" class="mx-1 text-ink/20">/</li>
-        <li><a href={`/store?cat=${product.category}`} class="hover:text-accent">{catLabel}</a></li>
+        <li><a href={collectionHref} class="hover:text-accent">{collectionCrumbLabel}</a></li>
         <li aria-hidden="true" class="mx-1 text-ink/20">/</li>
         <li class="text-ink truncate max-w-[12rem] sm:max-w-none normal-case tracking-normal">{product.name}</li>
       </ol>

@@ -1,18 +1,30 @@
 ---
 import CartBadge from "@/components/CartBadge";
 
+interface CollectionLink {
+  href: string;
+  label: string;
+  handle: string;
+}
+
+interface Props {
+  collections?: CollectionLink[];
+}
+
+const { collections = [] } = Astro.props;
 const pathname = Astro.url.pathname;
+
 const links = [
   { href: "/store", label: "Shop" },
-  { href: "/store?cat=tees", label: "Tees" },
-  { href: "/store?cat=hoodies", label: "Hoodies" },
+  ...collections.map((c) => ({ href: c.href, label: c.label })),
   { href: "/about", label: "About" },
   { href: "/shipping-returns", label: "Ship" },
 ];
-// Studio is intentionally not in main nav (internal tool at /studio)
 
 function isActive(href: string) {
-  if (href === "/store") return pathname === "/store" || pathname.startsWith("/products");
+  if (href === "/store") {
+    return pathname === "/store" || pathname.startsWith("/products");
+  }
   return pathname === href || pathname.startsWith(href + "/");
 }
 ---
