@@ -1,0 +1,92 @@
+---
+import CollectionHeroImage from "../CollectionHeroImage.astro"
+import DeskMuteCoffee from "../DeskMuteCoffee"
+import type { ThemeAwareHeroCopy } from "@/lib/themeHeroCopy"
+import type { ThemeHeroAssets } from "@/lib/collectionThemes"
+
+interface Props {
+  hero: ThemeAwareHeroCopy
+  assets: ThemeHeroAssets
+}
+
+const { hero, assets } = Astro.props
+const base = "/collections/desk"
+---
+<section
+  class="collection-hero collection-hero--desk"
+  data-hero-variant="desk"
+  aria-labelledby="collection-hero-title"
+>
+  <div class="collection-hero--desk__inner">
+    <div class="collection-hero--desk__copy">
+      <DeskMuteCoffee client:visible />
+      <h1 id="collection-hero-title" class="collection-hero--desk__title">
+        {hero.titleAccent ? (
+          <>
+            {hero.title}<br />
+            <span>
+              {hero.titleAccent}
+              <img src={`${base}/scribble-underline.svg`} alt="" width="260" height="18" aria-hidden="true" />
+            </span>
+          </>
+        ) : (
+          hero.title
+        )}
+      </h1>
+      <p class="collection-hero--desk__lede">{hero.tagline}</p>
+      <div class="collection-hero--desk__btns">
+        <a class="collection-hero--desk__btn" href="#collection-grid">Join the club</a>
+        <a class="collection-hero--desk__btn collection-hero--desk__btn--alt" href="#collection-grid">Shop all 4</a>
+      </div>
+      <div class="collection-hero--desk__todo">
+        <img src={`${base}/notepad.svg`} alt="" width="200" height="120" aria-hidden="true" />
+        <ol aria-label="To-do list">
+          <li><s>coffee</s></li>
+          <li><s>unmute (eventually)</s></li>
+          <li>more coffee</li>
+          <li>pretend Wi-Fi dropped</li>
+          <li><s>camera off</s> always</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="collection-hero--desk__call">
+      <div class="collection-hero--desk__tile collection-hero--desk__tile--main">
+        <CollectionHeroImage
+          basePath={assets.imageBase}
+          alt={assets.imageAlt}
+          priority
+          class="collection-hero--desk__tile-img"
+        />
+        <span class="collection-hero--desk__who">
+          <span class="collection-hero--desk__mic" aria-hidden="true"></span>
+          Camera Off Club Mug, $23.99
+        </span>
+      </div>
+      <div class="collection-hero--desk__side">
+        <div class="collection-hero--desk__tile collection-hero--desk__tile--s collection-hero--desk__tile--gray">
+          <b aria-hidden="true">You</b>
+          <span class="collection-hero--desk__who">
+            <span class="collection-hero--desk__mic" aria-hidden="true"></span>
+            Camera off
+          </span>
+        </div>
+      </div>
+      <div class="collection-hero--desk__dock" aria-hidden="true">
+        <span>Unmute</span>
+        <span class="ss">Start video</span>
+        <span class="ss">Share screen</span>
+        <span class="end">Leave</span>
+      </div>
+      <div class="collection-hero--desk__sticky collection-hero--desk__sticky--a">
+        <img class="tp" src={`${base}/tape.svg`} alt="" aria-hidden="true" />
+        <img class="bg" src={`${base}/sticky-note.svg`} alt="" aria-hidden="true" />
+        <p>Running on 4%.<br />Do not schedule anything before coffee.</p>
+      </div>
+      <div class="collection-hero--desk__sticky collection-hero--desk__sticky--b">
+        <img class="bg" src={`${base}/sticky-note.svg`} alt="" aria-hidden="true" />
+        <p>This meeting could have been an email.</p>
+      </div>
+    </div>
+  </div>
+</section>

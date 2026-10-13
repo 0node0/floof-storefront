@@ -1,0 +1,33 @@
+---
+interface Props {
+  basePath: string
+  alt: string
+  class?: string
+  priority?: boolean
+  fallbackSrc?: string
+}
+
+const { basePath, alt, class: className, priority = false, fallbackSrc } = Astro.props
+const widths = [640, 960, 1280, 1920]
+---
+<picture class:list={className}>
+  <source
+    type="image/avif"
+    srcset={widths.map((w) => `${basePath}-${w}.avif ${w}w`).join(", ")}
+    sizes="(min-width: 1024px) 50vw, 100vw"
+  />
+  <source
+    type="image/webp"
+    srcset={widths.map((w) => `${basePath}-${w}.webp ${w}w`).join(", ")}
+    sizes="(min-width: 1024px) 50vw, 100vw"
+  />
+  <img
+    src={fallbackSrc ?? `${basePath}-1280.webp`}
+    alt={alt}
+    width="1280"
+    height="960"
+    loading={priority ? "eager" : "lazy"}
+    decoding="async"
+    class="h-full w-full object-cover"
+  />
+</picture>

@@ -1,0 +1,120 @@
+---
+import CollectionHeroImage from "../CollectionHeroImage.astro"
+import type { ThemeAwareHeroCopy } from "@/lib/themeHeroCopy"
+import type { ThemeHeroAssets } from "@/lib/collectionThemes"
+
+interface Props {
+  hero: ThemeAwareHeroCopy
+  assets: ThemeHeroAssets
+  productCount?: number
+}
+
+const { hero, assets, productCount = 16 } = Astro.props
+const assetBase = "/collections/dogs"
+---
+<section
+  class="collection-hero collection-hero--dogs"
+  data-hero-variant="dogs"
+  aria-labelledby="collection-hero-title"
+>
+  <div class="collection-hero--dogs__inner">
+    <div class="collection-hero--dogs__copy">
+      <p class="collection-hero--dogs__eyebrow">
+        <img src={`${assetBase}/tennis-ball.svg`} alt="" width="22" height="22" aria-hidden="true" />
+        {hero.eyebrow ?? "The dog shelf"}
+      </p>
+      <h1 id="collection-hero-title" class="collection-hero--dogs__title">
+        {hero.titleAccent ? (
+          <>
+            {hero.title}{" "}
+            <em>
+              {hero.titleAccent}
+              <img
+                src={`${assetBase}/scribble-underline.svg`}
+                alt=""
+                width="320"
+                height="22"
+                aria-hidden="true"
+              />
+            </em>
+          </>
+        ) : (
+          hero.title
+        )}
+      </h1>
+      <p class="collection-hero--dogs__lede">{hero.tagline}</p>
+      <div class="collection-hero--dogs__btns">
+        <a class="collection-hero--dogs__btn" href="#breed-filters">Shop by breed</a>
+        <a class="collection-hero--dogs__btn collection-hero--dogs__btn--alt" href="#collection-grid">
+          See all {productCount || 16}
+        </a>
+      </div>
+      <div class="collection-hero--dogs__wagzone">
+        <img
+          class="collection-hero--dogs__doxie-art"
+          src={`${assetBase}/dachshund-wag.svg`}
+          alt=""
+          width="120"
+          height="80"
+          aria-hidden="true"
+        />
+        <span class="collection-handwriting">One Dog Long, wagging since the last walk.</span>
+      </div>
+    </div>
+
+    <figure class="collection-hero--dogs__photo">
+      <div class="collection-hero--dogs__polaroid">
+        <img class="collection-hero--dogs__tape" src={`${assetBase}/tape.svg`} alt="" aria-hidden="true" />
+        <img
+          class="collection-hero--dogs__tape collection-hero--dogs__tape--r"
+          src={`${assetBase}/tape.svg`}
+          alt=""
+          aria-hidden="true"
+        />
+        <CollectionHeroImage
+          basePath={assets.imageBase}
+          alt={assets.imageAlt}
+          priority
+          class="collection-hero--dogs__polaroid-img"
+        />
+        <figcaption class="collection-handwriting collection-hero--dogs__polaroid-cap">
+          Morning shift, kitchen counter.
+        </figcaption>
+      </div>
+      <img
+        class="collection-hero--dogs__arrow"
+        src={`${assetBase}/scribble-arrow.svg`}
+        alt=""
+        width="110"
+        height="48"
+        aria-hidden="true"
+      />
+      <div class="collection-hero--dogs__note" role="note">
+        <img
+          class="collection-hero--dogs__note-ball"
+          src={`${assetBase}/tennis-ball.svg`}
+          alt=""
+          width="58"
+          height="58"
+          aria-hidden="true"
+        />
+        <p class="collection-handwriting">
+          <b>Good boy.</b><br />
+          Waited by the mug all morning.<br />
+          Will Work For Ball Mug, $23.99
+        </p>
+      </div>
+    </figure>
+    <img
+      class="collection-hero--dogs__trail"
+      src={`${assetBase}/paw-trail.svg`}
+      alt=""
+      width="420"
+      height="120"
+      aria-hidden="true"
+    />
+  </div>
+</section>
+<div class="collection-hero--dogs__parkband">
+  <img class="collection-hero--dogs__chew" src={`${assetBase}/chewed-edge.svg`} alt="" aria-hidden="true" />
+</div>

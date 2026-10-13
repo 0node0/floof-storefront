@@ -10,18 +10,22 @@ export interface ThemeFonts {
   mono?: { family: string; googleParam: string }
 }
 
+export interface ThemeHeroAssets {
+  imageBase: string
+  imageAlt: string
+}
+
 export interface CollectionTheme {
   id: CollectionThemeId
   label: string
   fonts: ThemeFonts
-  /** Scoped overrides on `.collection-theme` (empty until niche designs land). */
   cssVars: Record<string, string>
   heroVariant: HeroVariant
   cardVariant: CardVariant
   themeColor: string
+  hero: ThemeHeroAssets
 }
 
-/** Default Floof chrome fonts (nav/footer + collection fallback). */
 export const FLOOF_THEME_FONTS: ThemeFonts = {
   display: {
     family: '"Archivo Black", "Arial Black", Impact, system-ui, sans-serif',
@@ -44,29 +48,152 @@ const HANDLE_THEME: Record<string, CollectionThemeId> = {
   desk: "desk",
 }
 
-function createTheme(
-  id: CollectionThemeId,
-  label: string,
-  heroVariant: HeroVariant,
-  cardVariant: CardVariant
-): CollectionTheme {
-  return {
-    id,
-    label,
-    fonts: FLOOF_THEME_FONTS,
-    cssVars: {},
-    heroVariant,
-    cardVariant,
-    themeColor: "#1a1524",
-  }
+const DOGS_VARS: Record<string, string> = {
+  "--color-paper": "oklch(97% 0.02 92)",
+  "--color-paper-2": "oklch(94% 0.03 88)",
+  "--color-paper-3": "oklch(88% 0.04 85)",
+  "--color-ink": "oklch(28% 0.05 55)",
+  "--color-ink-2": "oklch(42% 0.04 55)",
+  "--color-muted": "oklch(52% 0.03 60)",
+  "--color-accent": "oklch(58% 0.17 42)",
+  "--color-accent-deep": "oklch(46% 0.15 40)",
+  "--color-accent-soft": "oklch(58% 0.17 42 / 0.16)",
+  "--color-accent-ink": "oklch(98% 0.01 95)",
+  "--color-secondary": "oklch(72% 0.12 85)",
+  "--color-cream": "oklch(99% 0.015 95)",
+  "--color-focus": "oklch(42% 0.14 42)",
+  "--color-surface": "oklch(94% 0.03 88)",
+  "--theme-radius-card": "0.35rem",
+  "--theme-rule": "2px",
+}
+
+const READS_VARS: Record<string, string> = {
+  "--color-paper": "oklch(95% 0.025 88)",
+  "--color-paper-2": "oklch(92% 0.03 86)",
+  "--color-paper-3": "oklch(86% 0.035 84)",
+  "--color-ink": "oklch(22% 0.06 28)",
+  "--color-ink-2": "oklch(38% 0.05 30)",
+  "--color-muted": "oklch(48% 0.03 35)",
+  "--color-accent": "oklch(40% 0.14 25)",
+  "--color-accent-deep": "oklch(32% 0.12 25)",
+  "--color-accent-soft": "oklch(40% 0.14 25 / 0.12)",
+  "--color-accent-ink": "oklch(96% 0.02 90)",
+  "--color-secondary": "oklch(52% 0.08 145)",
+  "--color-cream": "oklch(98% 0.02 92)",
+  "--color-focus": "oklch(38% 0.14 25)",
+  "--color-surface": "oklch(92% 0.03 86)",
+  "--theme-radius-card": "0.15rem",
+  "--theme-rule": "2px",
+}
+
+const DESK_VARS: Record<string, string> = {
+  "--color-paper": "oklch(18% 0.025 265)",
+  "--color-paper-2": "oklch(22% 0.03 262)",
+  "--color-paper-3": "oklch(28% 0.035 258)",
+  "--color-ink": "oklch(96% 0.01 95)",
+  "--color-ink-2": "oklch(78% 0.02 95)",
+  "--color-muted": "oklch(58% 0.02 260)",
+  "--color-accent": "oklch(78% 0.14 165)",
+  "--color-accent-deep": "oklch(62% 0.12 165)",
+  "--color-accent-soft": "oklch(78% 0.14 165 / 0.18)",
+  "--color-accent-ink": "oklch(16% 0.03 265)",
+  "--color-secondary": "oklch(68% 0.1 290)",
+  "--color-cream": "oklch(94% 0.02 95)",
+  "--color-focus": "oklch(78% 0.14 165)",
+  "--color-surface": "oklch(22% 0.03 262)",
+  "--theme-radius-card": "0.5rem",
+  "--theme-rule": "2px",
 }
 
 const THEMES: Record<CollectionThemeId, CollectionTheme> = {
-  floof: createTheme("floof", "Floof", "floof", "floof"),
-  // Visual tokens/fonts TBD — variant slots wired for upcoming designs.
-  dogs: createTheme("dogs", "Dogs", "dogs", "dogs"),
-  reads: createTheme("reads", "Reads", "reads", "reads"),
-  desk: createTheme("desk", "Desk", "desk", "desk"),
+  floof: {
+    id: "floof",
+    label: "Floof",
+    fonts: FLOOF_THEME_FONTS,
+    cssVars: {},
+    heroVariant: "floof",
+    cardVariant: "floof",
+    themeColor: "#1a1524",
+    hero: { imageBase: "", imageAlt: "" },
+  },
+  dogs: {
+    id: "dogs",
+    label: "Dogs",
+    fonts: {
+      display: {
+        family: '"Fredoka", system-ui, sans-serif',
+        googleParam: "Fredoka:wght@500;600",
+      },
+      body: {
+        family: '"Nunito", system-ui, sans-serif',
+        googleParam: "Nunito:wght@400;600;700;800",
+      },
+      mono: {
+        family: '"IBM Plex Mono", ui-monospace, monospace',
+        googleParam: "IBM+Plex+Mono:wght@500;600",
+      },
+    },
+    cssVars: DOGS_VARS,
+    heroVariant: "dogs",
+    cardVariant: "dogs",
+    themeColor: "#F3EADB",
+    hero: {
+      imageBase: "/collections/dogs/hero",
+      imageAlt: "Dog person lounging with a mug and a very good dog",
+    },
+  },
+  reads: {
+    id: "reads",
+    label: "Reads",
+    fonts: {
+      display: {
+        family: '"Fraunces", Georgia, serif',
+        googleParam: "Fraunces:opsz,wght@9..144,500;600;700",
+      },
+      body: {
+        family: '"Source Serif 4", Georgia, serif',
+        googleParam: "Source+Serif+4:opsz,wght@8..60,400;600",
+      },
+      mono: {
+        family: '"IBM Plex Mono", ui-monospace, monospace',
+        googleParam: "IBM+Plex+Mono:wght@500",
+      },
+    },
+    cssVars: READS_VARS,
+    heroVariant: "reads",
+    cardVariant: "reads",
+    themeColor: "#f3ebe0",
+    hero: {
+      imageBase: "/collections/reads/hero",
+      imageAlt: "Reader with a stack of books and a Floof tee",
+    },
+  },
+  desk: {
+    id: "desk",
+    label: "Desk",
+    fonts: {
+      display: {
+        family: '"Space Grotesk", system-ui, sans-serif',
+        googleParam: "Space+Grotesk:wght@500;700",
+      },
+      body: {
+        family: '"Inter", system-ui, sans-serif',
+        googleParam: "Inter:wght@400;500;600",
+      },
+      mono: {
+        family: '"JetBrains Mono", ui-monospace, monospace',
+        googleParam: "JetBrains+Mono:wght@400;500;600",
+      },
+    },
+    cssVars: DESK_VARS,
+    heroVariant: "desk",
+    cardVariant: "desk",
+    themeColor: "#1c2230",
+    hero: {
+      imageBase: "/collections/desk/hero",
+      imageAlt: "Work-from-home desk with coffee and a muted video call",
+    },
+  },
 }
 
 function isThemeId(value: unknown): value is CollectionThemeId {
@@ -77,10 +204,6 @@ export function getCollectionTheme(id: CollectionThemeId): CollectionTheme {
   return THEMES[id]
 }
 
-/**
- * Resolve theme from collection metadata (`theme: dogs|reads|desk`) or handle map.
- * Unknown handles use the Floof default.
- */
 export function resolveCollectionTheme(
   collection: MedusaCollection
 ): CollectionTheme {
@@ -97,12 +220,19 @@ export function resolveCollectionTheme(
   return THEMES.floof
 }
 
-/** Nav chrome fonts + theme body/display (deduped). */
+const THEME_HAND_FONT: Partial<Record<CollectionThemeId, string>> = {
+  dogs: "Gochi+Hand",
+  reads: "Caveat:wght@500;600;700",
+  desk: "Kalam:wght@400;700",
+}
+
 export function buildGoogleFontsHref(theme: CollectionTheme): string {
   const families = new Set<string>([
     FLOOF_THEME_FONTS.display.googleParam,
     FLOOF_THEME_FONTS.body.googleParam,
   ])
+  const hand = THEME_HAND_FONT[theme.id]
+  if (hand) families.add(hand)
   if (theme.fonts.display.googleParam !== FLOOF_THEME_FONTS.display.googleParam) {
     families.add(theme.fonts.display.googleParam)
   }
@@ -121,12 +251,19 @@ export function buildGoogleFontsHref(theme: CollectionTheme): string {
   return `https://fonts.googleapis.com/css2?${familyQuery}&display=swap`
 }
 
+const HAND_FONT_FAMILY: Partial<Record<CollectionThemeId, string>> = {
+  dogs: '"Gochi Hand", "Segoe Print", cursive',
+  reads: '"Caveat", "Segoe Print", cursive',
+  desk: '"Kalam", "Segoe Print", cursive',
+}
+
 export function themeStyleAttribute(theme: CollectionTheme): string {
   const vars: Record<string, string> = {
     "--font-display": theme.fonts.display.family,
     "--font-body": theme.fonts.body.family,
     "--font-sans": theme.fonts.body.family,
     "--font-mono": theme.fonts.mono?.family ?? theme.fonts.body.family,
+    "--font-hand": HAND_FONT_FAMILY[theme.id] ?? '"Caveat", cursive',
     ...theme.cssVars,
   }
   return Object.entries(vars)
