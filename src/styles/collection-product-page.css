@@ -264,6 +264,11 @@
   min-height: 18rem;
 }
 
+/* Keep mockup footnote above the call-window name bar */
+.product-pdp-call__tile .product-pdp-gallery--bare {
+  padding-bottom: 3rem;
+}
+
 .product-pdp-call__who {
   position: absolute;
   left: 0.5rem;
@@ -395,6 +400,16 @@
   text-underline-offset: 3px;
 }
 
+.product-pdp-theme[data-collection-theme="dogs"] .collection-product-card--dogs h3 {
+  text-transform: none;
+  word-break: normal;
+  overflow-wrap: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
 @media (max-width: 760px) {
   .product-pdp-call__sticky {
     right: 0;
@@ -402,6 +417,10 @@
     width: 7.5rem;
     height: 7.5rem;
     font-size: 0.8rem;
+  }
+
+  .product-pdp-call__tile .product-pdp-gallery--bare {
+    padding-bottom: 3.25rem;
   }
 
   .product-pdp-plate__pocket {
