@@ -9,6 +9,7 @@
     "preview": "node ./dist/server/entry.mjs",
     "deploy": "echo 'Deploy via Railway: git push origin main'",
     "typecheck": "tsc --noEmit",
+    "optimize:collection-heroes": "node scripts/optimize-collection-heroes.mjs",
     "astro": "astro",
     "start": "node ./dist/server/entry.mjs"
   },

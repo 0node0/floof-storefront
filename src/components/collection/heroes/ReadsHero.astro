@@ -1,0 +1,63 @@
+---
+import CollectionHeroImage from "../CollectionHeroImage.astro"
+import type { CollectionHeroCopy } from "@/lib/collectionHero"
+import type { ThemeHeroAssets } from "@/lib/collectionThemes"
+
+interface Props {
+  hero: CollectionHeroCopy
+  assets: ThemeHeroAssets
+}
+
+const { hero, assets } = Astro.props
+---
+<section
+  class="collection-hero collection-hero--reads"
+  data-hero-variant="reads"
+  aria-labelledby="collection-hero-title"
+>
+  <div class="collection-hero--reads__marginalia collection-hero--reads__marginalia--left collection-handwriting" aria-hidden="true">
+    dog-eared, not dog-eared yet
+  </div>
+  <div class="collection-hero--reads__marginalia collection-hero--reads__marginalia--right collection-handwriting" aria-hidden="true">
+    read the footnote
+  </div>
+
+  <div class="mx-auto max-w-7xl px-5 md:px-6 py-10 md:py-14">
+    <div class="grid gap-10 lg:grid-cols-12 lg:gap-8 items-stretch">
+      <div class="lg:col-span-5 flex flex-col justify-center">
+        <div class="collection-hero--reads__pocket" aria-hidden="true">
+          <div class="collection-hero--reads__pocket-card">
+            <p class="collection-hero--reads__pocket-title">Date due</p>
+            <p class="collection-hero--reads__pocket-date collection-handwriting">whenever</p>
+          </div>
+        </div>
+        <p class="eyebrow mt-6">Library card · {hero.handle}</p>
+        <h1
+          id="collection-hero-title"
+          class="mt-2 font-display text-4xl md:text-[2.75rem] text-ink leading-tight normal-case"
+        >
+          {hero.title}
+        </h1>
+        <p class="mt-4 text-ink-2 text-base md:text-lg max-w-md leading-relaxed">
+          {hero.tagline}
+        </p>
+        <div class="collection-hero--reads__stamp" aria-hidden="true">
+          <span>READS</span>
+          <span class="collection-hero--reads__stamp-sub">floof stacks</span>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 relative">
+        <figure class="collection-hero--reads__page">
+          <div class="collection-hero--reads__page-fold" aria-hidden="true" />
+          <CollectionHeroImage
+            basePath={assets.imageBase}
+            alt={assets.imageAlt}
+            priority
+            class="collection-hero--reads__photo"
+          />
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>

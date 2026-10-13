@@ -12,15 +12,28 @@ interface Props {
 const { product, priority = false, index, variant = "floof" } = Astro.props
 const catLabel = categoryLabels[product.category] || product.category
 const idx = typeof index === "number" ? String(index + 1).padStart(2, "0") : null
+const isThemed = variant !== "floof"
 ---
 <a
   href={`/products/${product.slug}`}
-  class="card-surface group block overflow-hidden"
+  class:list={[
+    "group block overflow-hidden",
+    isThemed ? `collection-product-card collection-product-card--${variant}` : "card-surface",
+  ]}
   data-card-variant={variant}
 >
-  <div class="relative aspect-square overflow-hidden bg-cream p-5 sm:p-6 flex items-center justify-center border-b-[3px] border-ink">
+  {variant === "reads" && (
+    <span class="collection-product-card__page-corner" aria-hidden="true" />
+  )}
+  <div class:list={[
+    "relative aspect-square overflow-hidden flex items-center justify-center",
+    isThemed ? "collection-product-card__media" : "bg-cream p-5 sm:p-6 border-b-[3px] border-ink",
+  ]}>
     {idx && (
-      <span class="absolute top-0 left-0 z-10 px-2 py-1 text-[0.65rem] font-semibold tracking-[0.1em] bg-paper text-accent border-r-[3px] border-b-[3px] border-ink">
+      <span class:list={[
+        "absolute top-0 left-0 z-10 px-2 py-1 text-[0.65rem] font-semibold tracking-[0.1em]",
+        isThemed ? "collection-product-card__index" : "bg-paper text-accent border-r-[3px] border-b-[3px] border-ink",
+      ]}>
         {idx}
       </span>
     )}
@@ -44,7 +57,7 @@ const idx = typeof index === "number" ? String(index + 1).padStart(2, "0") : nul
       </span>
     )}
   </div>
-  <div class="p-4 md:p-5">
+  <div class:list={[isThemed ? "collection-product-card__body p-4 md:p-5" : "p-4 md:p-5"]}>
     <p class="eyebrow">{catLabel}</p>
     <h3 class="mt-1.5 font-display text-lg text-ink group-hover:text-accent transition-colors line-clamp-2">
       {product.name}

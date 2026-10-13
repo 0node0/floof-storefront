@@ -1,0 +1,27 @@
+---
+import type { CollectionHeroCopy } from "../CollectionHero.astro"
+
+interface Props {
+  hero: CollectionHeroCopy
+}
+
+const { hero } = Astro.props
+---
+<section
+  class="collection-hero page-band"
+  data-hero-variant="floof"
+  aria-labelledby="collection-hero-title"
+>
+  <div class="mx-auto max-w-7xl px-5 md:px-6 py-12 md:py-16">
+    <p class="eyebrow">Collection · {hero.handle}</p>
+    <h1
+      id="collection-hero-title"
+      class="mt-2 font-display text-4xl md:text-5xl text-ink"
+    >
+      {hero.title}
+    </h1>
+    <p class="mt-3 text-ink-2 text-sm md:text-base max-w-xl normal-case tracking-normal font-normal">
+      {hero.tagline}
+    </p>
+  </div>
+</section>
