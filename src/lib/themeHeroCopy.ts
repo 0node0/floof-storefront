@@ -37,7 +37,7 @@ const THEME_DEFAULTS: Partial<
     title: "Camera off.",
     titleAccent: "Coffee on.",
     tagline:
-      "WFH mugs and stickers for back-to-back calls, suspicious calendar invites, and the sacred ritual of going off-camera.",
+      "Mugs and stickers for the nine-to-five, done from the couch. Quietly funny, safe for the background of any meeting.",
   },
 }
 
