@@ -1,63 +1,102 @@
 ---
 import CollectionHeroImage from "../CollectionHeroImage.astro"
-import type { CollectionHeroCopy } from "@/lib/collectionHero"
+import type { ThemeAwareHeroCopy } from "@/lib/themeHeroCopy"
 import type { ThemeHeroAssets } from "@/lib/collectionThemes"
 
 interface Props {
-  hero: CollectionHeroCopy
+  hero: ThemeAwareHeroCopy
   assets: ThemeHeroAssets
 }
 
 const { hero, assets } = Astro.props
+const base = "/collections/reads"
 ---
 <section
   class="collection-hero collection-hero--reads"
   data-hero-variant="reads"
   aria-labelledby="collection-hero-title"
 >
-  <div class="collection-hero--reads__marginalia collection-hero--reads__marginalia--left collection-handwriting" aria-hidden="true">
-    dog-eared, not dog-eared yet
-  </div>
-  <div class="collection-hero--reads__marginalia collection-hero--reads__marginalia--right collection-handwriting" aria-hidden="true">
-    read the footnote
-  </div>
+  <div class="collection-hero--reads__inner">
+    <div class="collection-hero--reads__page">
+      <span class="collection-hero--reads__fold" aria-hidden="true"></span>
+      <div class="collection-hero--reads__kick">
+        <span>The reading room</span>
+        <span>Vol. 01</span>
+      </div>
+      <img
+        class="collection-hero--reads__margin"
+        src={`${base}/marginalia-bracket.svg`}
+        alt=""
+        width="48"
+        height="120"
+        aria-hidden="true"
+      />
+      <p class="collection-handwriting collection-hero--reads__mnote" aria-hidden="true">
+        guilty, every single page
+      </p>
+      <h1 id="collection-hero-title" class="collection-hero--reads__title">
+        {hero.titleAccent ? (
+          <>
+            {hero.title}{" "}
+            <em>
+              {hero.titleAccent}
+              <img src={`${base}/scribble-underline.svg`} alt="" width="280" height="20" aria-hidden="true" />
+            </em>
+          </>
+        ) : (
+          hero.title
+        )}
+      </h1>
+      <p class="collection-hero--reads__lede">{hero.tagline}</p>
+      <div class="collection-hero--reads__btns">
+        <a class="collection-hero--reads__btn" href="#collection-grid">Browse the shelf</a>
+        <a class="collection-hero--reads__lnk" href="#collection-grid">Six pieces, printed to order</a>
+      </div>
+      <img
+        class="collection-hero--reads__ring"
+        src={`${base}/coffee-ring.svg`}
+        alt=""
+        width="160"
+        height="160"
+        aria-hidden="true"
+      />
+    </div>
 
-  <div class="mx-auto max-w-7xl px-5 md:px-6 py-10 md:py-14">
-    <div class="grid gap-10 lg:grid-cols-12 lg:gap-8 items-stretch">
-      <div class="lg:col-span-5 flex flex-col justify-center">
-        <div class="collection-hero--reads__pocket" aria-hidden="true">
-          <div class="collection-hero--reads__pocket-card">
-            <p class="collection-hero--reads__pocket-title">Date due</p>
-            <p class="collection-hero--reads__pocket-date collection-handwriting">whenever</p>
+    <figure class="collection-hero--reads__plate">
+      <div class="collection-hero--reads__stamp" aria-hidden="true">
+        <img src={`${base}/due-stamp.svg`} alt="" width="120" height="120" />
+        <div>
+          <b>DUE BACK</b>
+          <strong>OCT 27</strong>
+        </div>
+      </div>
+      <div class="collection-hero--reads__img-wrap">
+        <span class="collection-hero--reads__corner collection-hero--reads__corner--tl" aria-hidden="true"></span>
+        <span class="collection-hero--reads__corner collection-hero--reads__corner--br" aria-hidden="true"></span>
+        <CollectionHeroImage
+          basePath={assets.imageBase}
+          alt={assets.imageAlt}
+          priority
+          class="collection-hero--reads__photo"
+        />
+      </div>
+      <figcaption>
+        <span>Plate I</span>
+        Bookmark: Whatever Was Nearest Mug, $23.99
+      </figcaption>
+      <div class="collection-hero--reads__pocket" aria-hidden="true">
+        <div class="collection-hero--reads__pocket-card">
+          <img src={`${base}/library-card.svg`} alt="" width="200" height="120" />
+          <div class="collection-hero--reads__pocket-lines">
+            <span class="t">Date due</span>
+            SEP 02<br />SEP 30<br />OCT 27 <span class="s">renewed</span><br />NOV 24
           </div>
         </div>
-        <p class="eyebrow mt-6">Library card · {hero.handle}</p>
-        <h1
-          id="collection-hero-title"
-          class="mt-2 font-display text-4xl md:text-[2.75rem] text-ink leading-tight normal-case"
-        >
-          {hero.title}
-        </h1>
-        <p class="mt-4 text-ink-2 text-base md:text-lg max-w-md leading-relaxed">
-          {hero.tagline}
-        </p>
-        <div class="collection-hero--reads__stamp" aria-hidden="true">
-          <span>READS</span>
-          <span class="collection-hero--reads__stamp-sub">floof stacks</span>
-        </div>
+        <img class="collection-hero--reads__pocket-sleeve" src={`${base}/card-pocket.svg`} alt="" width="220" height="80" />
       </div>
-
-      <div class="lg:col-span-7 relative">
-        <figure class="collection-hero--reads__page">
-          <div class="collection-hero--reads__page-fold" aria-hidden="true" />
-          <CollectionHeroImage
-            basePath={assets.imageBase}
-            alt={assets.imageAlt}
-            priority
-            class="collection-hero--reads__photo"
-          />
-        </figure>
-      </div>
-    </div>
+    </figure>
   </div>
 </section>
+<div class="collection-hero--reads__rule">
+  <img src={`${base}/fleuron.svg`} alt="" width="48" height="24" aria-hidden="true" />
+</div>

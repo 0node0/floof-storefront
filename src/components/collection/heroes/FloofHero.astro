@@ -1,8 +1,8 @@
 ---
-import type { CollectionHeroCopy } from "../CollectionHero.astro"
+import type { ThemeAwareHeroCopy } from "@/lib/themeHeroCopy"
 
 interface Props {
-  hero: CollectionHeroCopy
+  hero: ThemeAwareHeroCopy
 }
 
 const { hero } = Astro.props

@@ -121,12 +121,12 @@ const THEMES: Record<CollectionThemeId, CollectionTheme> = {
     label: "Dogs",
     fonts: {
       display: {
-        family: '"Bricolage Grotesque", "Arial Black", system-ui, sans-serif',
-        googleParam: "Bricolage+Grotesque:opsz,wght@12..96,700;800",
+        family: '"Fredoka", system-ui, sans-serif',
+        googleParam: "Fredoka:wght@500;600",
       },
       body: {
         family: '"Nunito", system-ui, sans-serif',
-        googleParam: "Nunito:wght@400;600;700",
+        googleParam: "Nunito:wght@400;600;700;800",
       },
       mono: {
         family: '"IBM Plex Mono", ui-monospace, monospace',
@@ -136,7 +136,7 @@ const THEMES: Record<CollectionThemeId, CollectionTheme> = {
     cssVars: DOGS_VARS,
     heroVariant: "dogs",
     cardVariant: "dogs",
-    themeColor: "#f5efe4",
+    themeColor: "#F3EADB",
     hero: {
       imageBase: "/collections/dogs/hero",
       imageAlt: "Dog person lounging with a mug and a very good dog",
@@ -147,8 +147,8 @@ const THEMES: Record<CollectionThemeId, CollectionTheme> = {
     label: "Reads",
     fonts: {
       display: {
-        family: '"Libre Baskerville", Georgia, serif',
-        googleParam: "Libre+Baskerville:wght@400;700",
+        family: '"Fraunces", Georgia, serif',
+        googleParam: "Fraunces:opsz,wght@9..144,500;600;700",
       },
       body: {
         family: '"Source Serif 4", Georgia, serif',
@@ -177,12 +177,12 @@ const THEMES: Record<CollectionThemeId, CollectionTheme> = {
         googleParam: "Space+Grotesk:wght@500;700",
       },
       body: {
-        family: '"IBM Plex Sans", system-ui, sans-serif',
-        googleParam: "IBM+Plex+Sans:wght@400;500;600",
+        family: '"Inter", system-ui, sans-serif',
+        googleParam: "Inter:wght@400;500;600",
       },
       mono: {
-        family: '"IBM Plex Mono", ui-monospace, monospace',
-        googleParam: "IBM+Plex+Mono:wght@400;500;600",
+        family: '"JetBrains Mono", ui-monospace, monospace',
+        googleParam: "JetBrains+Mono:wght@400;500;600",
       },
     },
     cssVars: DESK_VARS,
@@ -220,14 +220,19 @@ export function resolveCollectionTheme(
   return THEMES.floof
 }
 
+const THEME_HAND_FONT: Partial<Record<CollectionThemeId, string>> = {
+  dogs: "Gochi+Hand",
+  reads: "Caveat:wght@500;600;700",
+  desk: "Kalam:wght@400;700",
+}
+
 export function buildGoogleFontsHref(theme: CollectionTheme): string {
   const families = new Set<string>([
     FLOOF_THEME_FONTS.display.googleParam,
     FLOOF_THEME_FONTS.body.googleParam,
   ])
-  if (theme.id !== "floof") {
-    families.add("Caveat:wght@500;600;700")
-  }
+  const hand = THEME_HAND_FONT[theme.id]
+  if (hand) families.add(hand)
   if (theme.fonts.display.googleParam !== FLOOF_THEME_FONTS.display.googleParam) {
     families.add(theme.fonts.display.googleParam)
   }
@@ -246,12 +251,19 @@ export function buildGoogleFontsHref(theme: CollectionTheme): string {
   return `https://fonts.googleapis.com/css2?${familyQuery}&display=swap`
 }
 
+const HAND_FONT_FAMILY: Partial<Record<CollectionThemeId, string>> = {
+  dogs: '"Gochi Hand", "Segoe Print", cursive',
+  reads: '"Caveat", "Segoe Print", cursive',
+  desk: '"Kalam", "Segoe Print", cursive',
+}
+
 export function themeStyleAttribute(theme: CollectionTheme): string {
   const vars: Record<string, string> = {
     "--font-display": theme.fonts.display.family,
     "--font-body": theme.fonts.body.family,
     "--font-sans": theme.fonts.body.family,
     "--font-mono": theme.fonts.mono?.family ?? theme.fonts.body.family,
+    "--font-hand": HAND_FONT_FAMILY[theme.id] ?? '"Caveat", cursive',
     ...theme.cssVars,
   }
   return Object.entries(vars)

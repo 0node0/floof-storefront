@@ -22,8 +22,8 @@
 }
 
 .collection-handwriting {
-  font-family: "Caveat", "Segoe Print", "Bradley Hand", cursive;
-  font-weight: 600;
+  font-family: var(--font-hand, "Caveat", "Segoe Print", cursive);
+  font-weight: 400;
   letter-spacing: 0.02em;
 }
 

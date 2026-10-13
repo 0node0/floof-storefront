@@ -1,6 +1,11 @@
 ---
 import ProductCard from "@/components/ProductCard.astro"
 import type { CardVariant } from "@/lib/collectionThemes"
+import {
+  DOG_BREED_CHIPS,
+  breedChipSlug,
+  type DogBreedChip,
+} from "@/lib/dogBreeds"
 import { categoryLabels, type FloofProduct } from "@/lib/product"
 
 interface Props {
@@ -9,6 +14,7 @@ interface Props {
   filtered: FloofProduct[]
   typeParam: string
   sortParam: string
+  breedParam?: string
   typeOptions: string[]
   basePath: string
   collectionTitle: string
@@ -21,35 +27,40 @@ const {
   filtered,
   typeParam,
   sortParam,
+  breedParam = "all",
   typeOptions,
   basePath,
   collectionTitle,
   countLabel,
 } = Astro.props
 
-function queryHref(type: string, sort: string) {
+function queryHref(type: string, sort: string, breed: string = breedParam) {
   const params = new URLSearchParams()
   if (type !== "all") params.set("type", type)
   if (sort !== "featured") params.set("sort", sort)
+  if (breed && breed !== "all") params.set("breed", breed)
   const q = params.toString()
   return q ? `${basePath}?${q}` : basePath
 }
 
+function breedHref(chip: DogBreedChip) {
+  const slug = breedChipSlug(chip)
+  return queryHref(typeParam, sortParam, slug)
+}
+
+function isBreedActive(chip: DogBreedChip) {
+  if (chip === "All breeds") return !breedParam || breedParam === "all"
+  return decodeURIComponent(breedParam).toLowerCase() === chip.toLowerCase()
+}
+
 const isThemed = variant !== "floof"
-const filterClass = isThemed
-  ? `collection-filters collection-filters--${variant}`
-  : ""
+const filterClass = isThemed ? `collection-filters collection-filters--${variant}` : ""
 const chipClass = (active: boolean) =>
   isThemed
-    ? [
-        "collection-filter-chip",
-        active ? "is-active" : "",
-      ]
+    ? ["collection-filter-chip", active ? "is-active" : ""]
     : [
         "px-3 sm:px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] uppercase transition-colors whitespace-nowrap border-[3px] border-ink",
-        active
-          ? "bg-ink text-paper"
-          : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper",
+        active ? "bg-ink text-paper" : "bg-paper text-ink-2 hover:bg-secondary hover:text-paper",
       ]
 ---
 
@@ -64,62 +75,133 @@ const chipClass = (active: boolean) =>
 )}
 
 {products.length > 0 && (
-  <section class="collection-catalog mx-auto max-w-7xl px-5 md:px-6 py-10 md:py-12">
-    <div
-      class:list={[
-        "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-6",
-        isThemed ? "collection-catalog__toolbar" : "border-b-[3px] border-ink",
-      ]}
-    >
-      <div class:list={["flex flex-wrap gap-2", filterClass]} role="tablist" aria-label="Product type">
-        <a
-          href={queryHref("all", sortParam)}
-          role="tab"
-          aria-selected={typeParam === "all"}
-          class:list={chipClass(typeParam === "all")}
-        >
-          {variant === "dogs" ? (
-            <span class="collection-filter-chip__tag">
-              <span class="collection-filter-chip__hole" aria-hidden="true" />
-              All types
-            </span>
-          ) : (
-            "All types"
-          )}
-        </a>
-        {typeOptions.map((type) => {
-          const active = typeParam === type
-          const label = categoryLabels[type] || type
-          return (
+  <section id="collection-grid" class="collection-catalog mx-auto max-w-7xl px-5 md:px-10 py-10 md:py-16">
+    {variant === "dogs" && (
+      <div class="collection-catalog__bar collection-catalog__bar--dogs">
+        <div>
+          <h2 class="collection-catalog__heading">Find your breed</h2>
+          <span class="collection-catalog__aside collection-handwriting">
+            <img src="/collections/dogs/scribble-arrow.svg" alt="" width="60" height="40" aria-hidden="true" />
+            yes, yours is the best one
+          </span>
+          <p class="collection-catalog__sub">
+            Eight breeds, one insider joke each. {products.length} pieces, printed when you order.
+          </p>
+        </div>
+        <div class="collection-catalog__types" role="tablist" aria-label="Product type">
+          <a
+            href={queryHref("all", sortParam)}
+            role="tab"
+            aria-selected={typeParam === "all"}
+            class:list={["collection-catalog__type", typeParam === "all" && "is-active"]}
+          >
+            All
+          </a>
+          {typeOptions.map((type) => (
             <a
               href={queryHref(type, sortParam)}
               role="tab"
-              aria-selected={active}
-              class:list={chipClass(active)}
+              aria-selected={typeParam === type}
+              class:list={["collection-catalog__type", typeParam === type && "is-active"]}
             >
-              {variant === "dogs" ? (
-                <span class="collection-filter-chip__tag">
-                  <span class="collection-filter-chip__hole" aria-hidden="true" />
-                  {label}
-                </span>
-              ) : variant === "reads" ? (
-                <span class="collection-filter-chip__bookmark">{label}</span>
-              ) : variant === "desk" ? (
-                <span class="collection-filter-chip__sticky">{label}</span>
-              ) : (
-                label
-              )}
+              {categoryLabels[type] || type}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {variant === "reads" && (
+      <div class="collection-catalog__bar collection-catalog__bar--reads">
+        <div>
+          <h2 class="collection-catalog__heading">The <em>shelf</em></h2>
+          <p class="collection-catalog__sub">Three ideas, each on a mug and a sticker. Printed to order.</p>
+        </div>
+        <span class="collection-catalog__mnote collection-handwriting" aria-hidden="true">
+          <img src="/collections/reads/scribble-arrow.svg" alt="" width="48" height="32" />
+          start with the sock one
+        </span>
+      </div>
+    )}
+
+    {variant === "desk" && (
+      <div class="collection-catalog__bar collection-catalog__bar--desk">
+        <div>
+          <small class="collection-catalog__agenda">
+            <img src="/collections/desk/scribble-circle.svg" alt="" width="20" height="20" aria-hidden="true" />
+            Agenda · {products.length} items
+          </small>
+          <h2 class="collection-catalog__heading">
+            On today's call <span class="collection-handwriting">(no slides, promise)</span>
+          </h2>
+        </div>
+        <div class="collection-catalog__types collection-catalog__types--desk" role="tablist">
+          <a
+            href={queryHref("all", sortParam)}
+            class:list={["collection-catalog__type", typeParam === "all" && "is-active"]}
+          >
+            All
+          </a>
+          {typeOptions.map((type) => (
+            <a
+              href={queryHref(type, sortParam)}
+              class:list={["collection-catalog__type", typeParam === type && "is-active"]}
+            >
+              {categoryLabels[type] || type}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {variant === "dogs" && (
+      <div id="breed-filters" class="collection-catalog__chips" role="tablist" aria-label="Breed">
+        {DOG_BREED_CHIPS.map((chip) => {
+          const active = isBreedActive(chip)
+          return (
+            <a
+              href={breedHref(chip)}
+              role="tab"
+              aria-selected={active}
+              class:list={["collection-catalog__breed-chip", active && "is-active"]}
+            >
+              {chip}
             </a>
           )
         })}
       </div>
-      <div class="flex items-center gap-3">
+    )}
+
+    <div
+      class:list={[
+        "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-6",
+        variant === "floof" ? "border-b-[3px] border-ink" : "collection-catalog__toolbar",
+        variant !== "floof" && variant !== "dogs" && variant !== "reads" && variant !== "desk" ? "" : "",
+      ]}
+    >
+      {variant === "floof" && (
+        <div class:list={["flex flex-wrap gap-2", filterClass]} role="tablist" aria-label="Product type">
+          <a href={queryHref("all", sortParam)} role="tab" aria-selected={typeParam === "all"} class:list={chipClass(typeParam === "all")}>
+            All types
+          </a>
+          {typeOptions.map((type) => {
+            const active = typeParam === type
+            return (
+              <a href={queryHref(type, sortParam)} role="tab" aria-selected={active} class:list={chipClass(active)}>
+                {categoryLabels[type] || type}
+              </a>
+            )
+          })}
+        </div>
+      )}
+
+      <div class="flex items-center gap-3 ml-auto w-full sm:w-auto justify-end">
         <p class="text-sm font-mono text-muted">{countLabel}</p>
         <label class="sr-only" for="sort">Sort</label>
         <select
           id="sort"
           class="collection-catalog__sort border-[3px] border-ink bg-paper px-4 py-2 text-sm text-ink focus:border-accent focus:outline-none"
-          onchange={`const type='${typeParam}'; const v=this.value; const p=new URLSearchParams(); if(type!=='all')p.set('type',type); if(v!=='featured')p.set('sort',v); const q=p.toString(); location.href='${basePath}'+(q?'?'+q:'')`}
+          onchange={`const type='${typeParam}'; const breed='${breedParam}'; const v=this.value; const p=new URLSearchParams(); if(type!=='all')p.set('type',type); if(v!=='featured')p.set('sort',v); if(breed&&breed!=='all')p.set('breed',breed); const q=p.toString(); location.href='${basePath}'+(q?'?'+q:'')`}
         >
           <option value="featured" selected={sortParam === "featured"}>Featured</option>
           <option value="price-asc" selected={sortParam === "price-asc"}>Price: Low to high</option>
@@ -137,17 +219,12 @@ const chipClass = (active: boolean) =>
     ) : (
       <div
         class:list={[
-          "mt-8 grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-          isThemed ? `collection-product-grid collection-product-grid--${variant}` : "",
+          "mt-4 grid gap-4 sm:gap-7 grid-cols-2 lg:grid-cols-4",
+          isThemed ? `collection-product-grid collection-product-grid--${variant}` : "sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5",
         ]}
       >
         {filtered.map((p, i) => (
-          <ProductCard
-            product={p}
-            priority={i < 4}
-            index={i}
-            variant={variant}
-          />
+          <ProductCard product={p} priority={i < 4} index={i} variant={variant} />
         ))}
       </div>
     )}

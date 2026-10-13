@@ -2,6 +2,9 @@
 import Layout from "@/layouts/Layout.astro";
 import CollectionHero from "@/components/collection/CollectionHero.astro";
 import CollectionCatalog from "@/components/collection/CollectionCatalog.astro";
+import CollectionHabitatBand from "@/components/collection/CollectionHabitatBand.astro";
+import CollectionReadsQuote from "@/components/collection/CollectionReadsQuote.astro";
+import CollectionDeskWeek from "@/components/collection/CollectionDeskWeek.astro";
 import TrustBar from "@/components/TrustBar.astro";
 import {
   getCollectionByHandle,
@@ -9,14 +12,15 @@ import {
 } from "@/lib/medusa";
 import {
   availableProductTypes,
-  collectionHeroCopy,
   filterByProductType,
 } from "@/lib/collections";
+import { filterByBreed } from "@/lib/dogBreeds";
 import {
   buildGoogleFontsHref,
   resolveCollectionTheme,
   themeStyleAttribute,
 } from "@/lib/collectionThemes";
+import { themeAwareHeroCopy } from "@/lib/themeHeroCopy";
 import {
   mapProduct,
   sortFloofProducts,
@@ -37,6 +41,7 @@ const theme = resolveCollectionTheme(collection);
 
 const typeParam = Astro.url.searchParams.get("type") || "all";
 const sortParam = Astro.url.searchParams.get("sort") || "featured";
+const breedParam = Astro.url.searchParams.get("breed") || "all";
 
 let products: FloofProduct[] = [];
 try {
@@ -44,9 +49,12 @@ try {
   products = raw.map(mapProduct);
 } catch {}
 
-const hero = collectionHeroCopy(collection);
+const hero = themeAwareHeroCopy(collection, theme.id);
 const typeOptions = availableProductTypes(products);
 let filtered = filterByProductType(products, typeParam);
+if (theme.id === "dogs") {
+  filtered = filterByBreed(filtered, breedParam);
+}
 filtered = sortFloofProducts(filtered, sortParam);
 
 const countLabel =
@@ -68,8 +76,9 @@ const showTrustBar = theme.id === "floof";
   >
     <CollectionHero
       variant={theme.heroVariant}
-      hero={{ title: hero.title, tagline: hero.tagline, handle: collection.handle }}
+      hero={hero}
       assets={theme.hero}
+      productCount={products.length}
     />
 
     {showTrustBar && <TrustBar compact />}
@@ -80,10 +89,15 @@ const showTrustBar = theme.id === "floof";
       filtered={filtered}
       typeParam={typeParam}
       sortParam={sortParam}
+      breedParam={breedParam}
       typeOptions={typeOptions}
       basePath={basePath}
       collectionTitle={hero.title}
       countLabel={countLabel}
     />
+
+    {theme.id === "dogs" && <CollectionHabitatBand theme={theme.id} />}
+    {theme.id === "reads" && <CollectionReadsQuote />}
+    {theme.id === "desk" && <CollectionDeskWeek />}
   </div>
 </Layout>

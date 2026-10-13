@@ -1,24 +1,23 @@
 ---
-import type { CollectionHeroCopy } from "@/lib/collectionHero"
+import type { ThemeAwareHeroCopy } from "@/lib/themeHeroCopy"
 import type { HeroVariant, ThemeHeroAssets } from "@/lib/collectionThemes"
 import FloofHero from "./heroes/FloofHero.astro"
 import DogsHero from "./heroes/DogsHero.astro"
 import ReadsHero from "./heroes/ReadsHero.astro"
 import DeskHero from "./heroes/DeskHero.astro"
 
-export type { CollectionHeroCopy }
-
 interface Props {
   variant: HeroVariant
-  hero: CollectionHeroCopy
+  hero: ThemeAwareHeroCopy
   assets: ThemeHeroAssets
+  productCount?: number
 }
 
-const { variant, hero, assets } = Astro.props
+const { variant, hero, assets, productCount = 0 } = Astro.props
 ---
 {
   variant === "dogs" ? (
-    <DogsHero hero={hero} assets={assets} />
+    <DogsHero hero={hero} assets={assets} productCount={productCount} />
   ) : variant === "reads" ? (
     <ReadsHero hero={hero} assets={assets} />
   ) : variant === "desk" ? (

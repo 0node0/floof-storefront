@@ -1,0 +1,39 @@
+---
+import type { CollectionThemeId } from "@/lib/collectionThemes"
+
+interface Props {
+  theme: CollectionThemeId
+}
+
+const { theme } = Astro.props
+---
+{theme === "dogs" && (
+  <section class="collection-habitat collection-habitat--dogs" aria-label="Why Floof for dog people">
+    <div class="collection-habitat--dogs__in">
+      <div class="collection-habitat--dogs__item">
+        <img src="/collections/dogs/couch.svg" alt="" width="110" height="80" aria-hidden="true" />
+        <div>
+          <b>Made when you order</b>
+          <span>Fresh from the press, not a warehouse shelf.</span>
+          <span class="collection-handwriting">couch-tested</span>
+        </div>
+      </div>
+      <div class="collection-habitat--dogs__item">
+        <img src="/collections/dogs/tennis-ball.svg" alt="" width="110" height="80" aria-hidden="true" />
+        <div>
+          <b>Dishwasher safe mugs</b>
+          <span>Glossy ceramic that survives real kitchens.</span>
+          <span class="collection-handwriting">park-approved</span>
+        </div>
+      </div>
+      <div class="collection-habitat--dogs__item">
+        <img src="/collections/dogs/bone.svg" alt="" width="110" height="80" aria-hidden="true" />
+        <div>
+          <b>30-day returns</b>
+          <span>If the joke lands wrong, we make it right.</span>
+          <span class="collection-handwriting">no chewing required</span>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
