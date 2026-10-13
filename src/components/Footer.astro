@@ -1,9 +1,20 @@
 ---
+interface CollectionLink {
+  href: string;
+  label: string;
+  handle: string;
+}
+
+interface Props {
+  collections?: CollectionLink[];
+}
+
+const { collections = [] } = Astro.props;
 const currentYear = new Date().getFullYear();
+
 const shopLinks = [
   { href: "/store", label: "All Products" },
-  { href: "/store?cat=tees", label: "T-Shirts" },
-  { href: "/store?cat=hoodies", label: "Hoodies" },
+  ...collections.map((c) => ({ href: c.href, label: c.label })),
   { href: "/checkout", label: "Cart & Checkout" },
 ];
 const infoLinks = [

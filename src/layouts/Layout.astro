@@ -3,8 +3,23 @@ import Nav from "@/components/Nav.astro";
 import Footer from "@/components/Footer.astro";
 import AnnouncementBar from "@/components/AnnouncementBar.astro";
 import CartCelebration from "@/components/CartCelebration";
+import { collectionPath } from "@/lib/collections";
+import { listCollections } from "@/lib/medusa";
 import { site } from "@/lib/site";
 import "@/styles/global.css";
+
+let shopCollections: { href: string; label: string; handle: string }[] = [];
+try {
+  const { collections } = await listCollections();
+  shopCollections = collections
+    .slice()
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((c) => ({
+      href: collectionPath(c.handle),
+      label: c.title,
+      handle: c.handle,
+    }));
+} catch {}
 
 interface Props {
   title?: string
@@ -62,11 +77,11 @@ const ogImage = image.startsWith("http") ? image : new URL(image, site.url).href
   </a>
   <div class="mx-auto flex min-h-screen w-full flex-col">
     <AnnouncementBar />
-    <Nav />
+    <Nav collections={shopCollections} />
     <main id="main-content" class="flex-1">
       <slot />
     </main>
-    <Footer />
+    <Footer collections={shopCollections} />
   </div>
   <CartCelebration client:load />
 </body>

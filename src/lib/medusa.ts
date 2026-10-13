@@ -23,6 +23,13 @@ export interface MedusaProductImage {
   id: string
   url: string
 }
+export interface MedusaCollection {
+  id: string
+  handle: string
+  title: string
+  metadata?: Record<string, unknown>
+}
+
 export interface MedusaProduct {
   id: string
   handle: string
@@ -32,6 +39,8 @@ export interface MedusaProduct {
   images?: MedusaProductImage[]
   variants?: MedusaVariant[]
   metadata?: Record<string, any>
+  collection_id?: string
+  collection?: MedusaCollection
 }
 export interface MedusaLineItem {
   id: string
@@ -200,7 +209,9 @@ export async function addShippingMethod(
 }
 
 const PRODUCT_FIELDS =
-  "id,handle,title,description,thumbnail,metadata,*images,*variants,*variants.prices,*variants.options,*variants.options.option"
+  "id,handle,title,description,thumbnail,metadata,collection_id,*collection,*images,*variants,*variants.prices,*variants.options,*variants.options.option"
+
+const COLLECTION_FIELDS = "id,handle,title,metadata"
 
 export async function listProducts(): Promise<{
   products: MedusaProduct[]
@@ -218,5 +229,31 @@ export async function getProduct(
     `/store/products?handle=${encodeURIComponent(handle)}&fields=${PRODUCT_FIELDS}`
   )
   return { product: r.products?.[0] }
+}
+
+export async function listCollections(): Promise<{
+  collections: MedusaCollection[]
+  count: number
+}> {
+  return medusaFetch(
+    `/store/collections?limit=100&fields=${COLLECTION_FIELDS}`
+  )
+}
+
+export async function getCollectionByHandle(
+  handle: string
+): Promise<{ collection: MedusaCollection | undefined }> {
+  const r = await medusaFetch<{ collections: MedusaCollection[] }>(
+    `/store/collections?handle=${encodeURIComponent(handle)}&limit=1&fields=${COLLECTION_FIELDS}`
+  )
+  return { collection: r.collections?.[0] }
+}
+
+export async function listProductsByCollection(
+  collectionId: string
+): Promise<{ products: MedusaProduct[]; count: number }> {
+  return medusaFetch(
+    `/store/products?limit=100&collection_id[]=${encodeURIComponent(collectionId)}&fields=${PRODUCT_FIELDS}`
+  )
 }
 
