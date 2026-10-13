@@ -1,0 +1,74 @@
+---
+import ProductGallery from "@/components/ProductGallery"
+import type { CollectionThemeId } from "@/lib/collectionThemes"
+
+interface Props {
+  themeId: CollectionThemeId
+  images: string[]
+  productName: string
+  phrase: string
+  price: number
+}
+
+const { themeId, images, productName, phrase, price } = Astro.props
+const galleryAlt = `${productName} product photo`
+const caption =
+  themeId === "reads"
+    ? `${productName}, $${price.toFixed(2)}`
+    : phrase || productName
+---
+
+{themeId === "dogs" && (
+  <figure class="product-pdp-media product-pdp-media--dogs">
+    <div class="product-pdp-polaroid">
+      <img
+        class="product-pdp-polaroid__tape"
+        src="/collections/dogs/tape.svg"
+        alt=""
+        width="150"
+        height="40"
+        aria-hidden="true"
+      />
+      <ProductGallery client:load images={images} alt={galleryAlt} phrase={phrase} variant="bare" />
+      <figcaption class="collection-handwriting product-pdp-polaroid__cap">{caption}</figcaption>
+    </div>
+  </figure>
+)}
+
+{themeId === "reads" && (
+  <figure class="product-pdp-media product-pdp-media--reads">
+    <div class="product-pdp-plate">
+      <div class="product-pdp-plate__img-wrap">
+        <span class="product-pdp-plate__corner product-pdp-plate__corner--tl" aria-hidden="true"></span>
+        <span class="product-pdp-plate__corner product-pdp-plate__corner--br" aria-hidden="true"></span>
+        <ProductGallery client:load images={images} alt={galleryAlt} phrase={phrase} variant="bare" />
+      </div>
+      <figcaption class="product-pdp-plate__caption">
+        <span>On the shelf</span>
+        {caption}
+      </figcaption>
+      <div class="product-pdp-plate__pocket" aria-hidden="true">
+        <img src="/collections/reads/library-card.svg" alt="" width="120" height="150" />
+      </div>
+    </div>
+  </figure>
+)}
+
+{themeId === "desk" && (
+  <figure class="product-pdp-media product-pdp-media--desk">
+    <div class="product-pdp-call">
+      <div class="product-pdp-call__tile">
+        <ProductGallery client:load images={images} alt={galleryAlt} phrase={phrase} variant="bare" />
+        <span class="product-pdp-call__who">
+          <span class="product-pdp-call__mic" aria-hidden="true"></span>
+          {productName}, ${price.toFixed(2)}
+        </span>
+      </div>
+      <div class="product-pdp-call__sticky">
+        <img class="bg" src="/collections/desk/sticky-note.svg" alt="" aria-hidden="true" />
+        <p class="collection-handwriting">Adding to cart is the most productive thing you'll do today.</p>
+        <span class="product-pdp-call__peel" aria-hidden="true"></span>
+      </div>
+    </div>
+  </figure>
+)}

@@ -5,6 +5,7 @@
 @import "../../tokens.css";
 @import "./collection-themes.css";
 @import "./collection-themes-handmade.css";
+@import "./collection-product-page.css";
 
 @theme {
   --color-paper: oklch(14% 0.02 280);

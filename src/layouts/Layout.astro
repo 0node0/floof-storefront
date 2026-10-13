@@ -29,6 +29,8 @@ interface Props {
   noIndex?: boolean
   googleFontsHref?: string
   themeColor?: string
+  /** Canonical URL without tracking/query params (defaults to pathname). */
+  canonicalHref?: string
 }
 
 const {
@@ -38,9 +40,10 @@ const {
   noIndex = false,
   googleFontsHref = DEFAULT_GOOGLE_FONTS_HREF,
   themeColor = "#1a1524",
+  canonicalHref,
 } = Astro.props;
 const pageTitle = title ? `${title} | ${site.name}` : `${site.name} — ${site.tagline}`;
-const canonicalUrl = new URL(Astro.url.pathname, site.url).href;
+const canonicalUrl = canonicalHref ?? new URL(Astro.url.pathname, site.url).href;
 const ogImage = image.startsWith("http") ? image : new URL(image, site.url).href;
 ---
 <!doctype html>
