@@ -5,6 +5,8 @@
 @import "../../tokens.css";
 @import "./collection-themes.css";
 @import "./collection-themes-handmade.css";
+@import "./product-cards-desk.css";
+@import "./product-cards-reads.css";
 @import "./collection-product-page.css";
 
 @theme {

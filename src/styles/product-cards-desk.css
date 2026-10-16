@@ -1,0 +1,195 @@
+/* Desk collection + PDP related shelf — floof-cards spec */
+.desk-card {
+  --ink: #263232;
+  --ink-2: #4a5656;
+  --label: #3f5a45;
+  --line: #e1e5df;
+  --ring: #5f8f6c;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+  border: 1px solid #d5dad3;
+  border-radius: 16px;
+  overflow: hidden;
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    box-shadow 0.16s ease-out,
+    transform 0.16s ease-out;
+}
+
+.desk-card__media {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: #e9ece6;
+  overflow: hidden;
+}
+
+.desk-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.desk-card__media--sticker img {
+  object-fit: contain;
+  padding: 12%;
+  box-sizing: border-box;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12));
+}
+
+.desk-card__mic {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 1px 2px rgba(38, 50, 50, 0.12);
+  pointer-events: none;
+}
+
+.desk-card__mic svg {
+  width: 16px;
+  height: 16px;
+}
+
+.desk-card__mic .slash {
+  transition: opacity 0.2s;
+}
+
+.desk-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px 24px 24px;
+}
+
+.desk-card__label {
+  font: 500 11px/16px var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--label);
+  margin-bottom: 8px;
+}
+
+.desk-card__title {
+  margin: 0;
+  font: 600 18px/24px var(--font-display);
+  letter-spacing: -0.01em;
+  text-transform: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.desk-card__desc {
+  margin: 8px 0 0;
+  font: 400 14px/20px var(--font-body);
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.desk-card__rule {
+  height: 1px;
+  background: var(--line);
+  margin-top: 16px;
+}
+
+.desk-card__foot {
+  margin-top: auto;
+  padding-top: 16px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.desk-card__desc + .desk-card__foot {
+  margin-top: 0;
+}
+
+.desk-card__price {
+  font: 700 20px/24px var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.desk-card__cta {
+  font: 500 13px/16px var(--font-body);
+  color: var(--label);
+}
+
+.desk-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 3px var(--ring),
+    0 8px 24px rgba(31, 42, 42, 0.12);
+}
+
+.desk-card:hover .slash {
+  opacity: 0;
+}
+
+.desk-card:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+@media (max-width: 759px) {
+  .desk-card__body {
+    padding: 16px;
+  }
+
+  .desk-card__title {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .desk-card__desc,
+  .desk-card__cta {
+    display: none;
+  }
+
+  .desk-card__price {
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desk-card,
+  .desk-card * {
+    transition: none;
+  }
+
+  .desk-card:hover {
+    transform: none;
+  }
+}
+
+.collection-product-grid--desk {
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 24px !important;
+}
+
+@media (max-width: 1099px) {
+  .collection-product-grid--desk {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 759px) {
+  .collection-product-grid--desk {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+}
