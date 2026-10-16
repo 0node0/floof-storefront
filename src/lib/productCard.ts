@@ -3,8 +3,7 @@ import type { FloofProduct } from "./product"
 const SPEC_SPLIT_RE =
   / (?=11 oz|3"|4"|Bella|Cotton Heritage|A soft, patch)/i
 
-const FLAT_LAY_IMAGE_RE =
-  /flat[-_]?lay|laptop|mockup|lifestyle|room-scene|desk-scene|hero-shot/i
+import { pickStickerCatalogImage } from "./stickerCatalogImage"
 
 const CATEGORY_TYPE_LABEL: Record<string, string> = {
   mugs: "Mug",
@@ -66,36 +65,25 @@ export function readsCardDescription(product: FloofProduct): string {
   return truncateCardDescription(product.description, 66)
 }
 
-function isFlatLayImageUrl(url: string): boolean {
-  return FLAT_LAY_IMAGE_RE.test(url)
+function isStickerProduct(product: FloofProduct): boolean {
+  return product.category === "stickers" || /sticker/i.test(product.name)
 }
 
-/** Reads stickers: prefer clean art / print thumbnail over laptop flat-lays. */
-export function readsCatalogImageUrl(product: FloofProduct): string {
-  const isSticker =
-    product.category === "stickers" || /sticker/i.test(product.name)
-  if (!isSticker) {
+/** Sticker catalog image for desk and reads cards (plain background, centred art). */
+export function stickerCatalogImageUrl(product: FloofProduct): string {
+  if (!isStickerProduct(product)) {
     return product.image ?? product.images[0] ?? ""
   }
 
   if (product.stickerArtUrl) return product.stickerArtUrl
 
-  const candidates = product.images.filter(Boolean)
-  const art = candidates.find((url) => !isFlatLayImageUrl(url))
-  if (art) return art
+  return pickStickerCatalogImage(product.images, product.image)
+}
 
-  const thumb = product.image
-  if (thumb && !isFlatLayImageUrl(thumb)) return thumb
-
-  return candidates[0] ?? thumb ?? ""
+export function readsCatalogImageUrl(product: FloofProduct): string {
+  return stickerCatalogImageUrl(product)
 }
 
 export function deskCatalogImageUrl(product: FloofProduct): string {
-  const isSticker =
-    product.category === "stickers" || /sticker/i.test(product.name)
-  if (!isSticker) return product.image ?? product.images[0] ?? ""
-  if (product.stickerArtUrl) return product.stickerArtUrl
-  const candidates = product.images.filter(Boolean)
-  const art = candidates.find((url) => !isFlatLayImageUrl(url))
-  return art ?? product.image ?? candidates[0] ?? ""
+  return stickerCatalogImageUrl(product)
 }
