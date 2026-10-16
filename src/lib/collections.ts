@@ -26,7 +26,7 @@ export function collectionHeroCopy(collection: MedusaCollection) {
 
   const seoDescription =
     (typeof meta.seo_description === "string" && meta.seo_description.trim()) ||
-    `Shop the ${collection.title} collection at Floof — witty SW Florida goods, printed on demand.`
+    `Shop ${collection.title} at Floof: witty mugs, stickers and tees, designed in SW Florida and printed fresh when you order.`
 
   return {
     title: collection.title,
