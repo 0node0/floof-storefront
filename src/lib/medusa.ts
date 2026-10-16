@@ -18,6 +18,7 @@ export interface MedusaVariant {
   sku: string
   options: MedusaVariantOption[]
   prices: MedusaVariantPrice[]
+  metadata?: Record<string, unknown>
 }
 export interface MedusaProductImage {
   id: string

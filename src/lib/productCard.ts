@@ -4,6 +4,7 @@ const SPEC_SPLIT_RE =
   / (?=11 oz|3"|4"|Bella|Cotton Heritage|A soft, patch)/i
 
 import { pickStickerCatalogImage } from "./stickerCatalogImage"
+import { readsStickerStaticArtUrl } from "./readsStickerArt"
 
 const CATEGORY_TYPE_LABEL: Record<string, string> = {
   mugs: "Mug",
@@ -74,6 +75,9 @@ export function stickerCatalogImageUrl(product: FloofProduct): string {
   if (!isStickerProduct(product)) {
     return product.image ?? product.images[0] ?? ""
   }
+
+  const staticArt = readsStickerStaticArtUrl(product.slug)
+  if (staticArt) return staticArt
 
   if (product.stickerArtUrl) return product.stickerArtUrl
 

@@ -26,6 +26,7 @@ import {
   sortFloofProducts,
   type FloofProduct,
 } from "@/lib/product";
+import { enrichReadsStickerArt } from "@/lib/enrichReadsStickerArt";
 
 export const prerender = false;
 
@@ -47,6 +48,9 @@ let products: FloofProduct[] = [];
 try {
   const { products: raw } = await listProductsByCollection(collection.id);
   products = raw.map(mapProduct);
+  if (collection.handle === "reads") {
+    products = await enrichReadsStickerArt(products, raw);
+  }
 } catch {}
 
 const hero = themeAwareHeroCopy(collection, theme.id);
