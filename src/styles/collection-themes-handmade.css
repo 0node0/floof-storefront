@@ -934,11 +934,6 @@
   padding-right: 2.5rem;
 }
 
-.collection-product-grid--reads {
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 2.125rem 2.125rem !important;
-}
-
 .collection-reads-quote {
   background: #4d5a4a;
   color: #f2ecdf;
@@ -967,17 +962,6 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #d6d0b6;
-}
-
-.collection-product-card--reads .collection-product-card__ear {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 2rem;
-  height: 2rem;
-  background: linear-gradient(225deg, #e8dcc8 50%, #ddd2c4 50%);
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
-  z-index: 2;
 }
 
 /* ── Desk ────────────────────────────────────────── */
@@ -1613,10 +1597,6 @@
     right: 0;
     top: 0.25rem;
     font-size: 1.3125rem;
-  }
-
-  .collection-product-grid--reads {
-    grid-template-columns: 1fr !important;
   }
 
   .collection-hero--reads__stamp {

@@ -1,4 +1,5 @@
 import type { MedusaProduct, MedusaVariant } from "./medusa"
+import { deriveProductFormatSize } from "./productFormat"
 
 export interface FloofProduct {
   id: string
@@ -17,6 +18,10 @@ export interface FloofProduct {
   isWip?: boolean
   collectionHandle?: string
   collectionTitle?: string
+  /** Mug volume or sticker size for card labels (e.g. "11 oz", "4 in") */
+  formatSize?: string
+  /** Transparent sticker art when distinct from lifestyle mockup */
+  stickerArtUrl?: string
 }
 
 /** Map common garment color names → CSS swatches */
@@ -75,8 +80,15 @@ export function mapProduct(p: MedusaProduct): FloofProduct {
     .map((img) => img.url)
     .filter(Boolean)
   // Prefer explicit thumbnail as lead if not already first
-  const thumb = (p as any).thumbnail as string | undefined
+  const thumb = (p as { thumbnail?: string }).thumbnail
   if (thumb && !images.includes(thumb)) images.unshift(thumb)
+
+  const category = (p.metadata?.category as string) || "tees"
+  const formatSize = deriveProductFormatSize(p, category)
+  const stickerArtFromMeta =
+    (p.metadata?.sticker_art_url as string) ||
+    (p.metadata?.stickerArtUrl as string) ||
+    (p.metadata?.print_file_url as string)
 
   return {
     id: p.id,
@@ -85,7 +97,7 @@ export function mapProduct(p: MedusaProduct): FloofProduct {
     phrase: (p.metadata?.phrase as string) || p.title.split(" ").slice(0, 3).join(" "),
     description: p.description || "",
     price: amount / 100,
-    category: (p.metadata?.category as string) || "tees",
+    category,
     colors,
     sizes,
     image: images[0] || thumb || "",
@@ -93,6 +105,8 @@ export function mapProduct(p: MedusaProduct): FloofProduct {
     isWip: p.title.includes("[WIP]"),
     collectionHandle: p.collection?.handle,
     collectionTitle: p.collection?.title,
+    formatSize,
+    stickerArtUrl: stickerArtFromMeta || undefined,
   }
 }
 

@@ -3,6 +3,13 @@ import type { FloofProduct } from "@/lib/product"
 import { colorMap, categoryLabels } from "@/lib/product"
 import type { CardVariant } from "@/lib/collectionThemes"
 import { breedForProduct } from "@/lib/dogBreeds"
+import {
+  deskCardDescription,
+  deskCatalogImageUrl,
+  productTypeSizeLabel,
+  readsCardDescription,
+  readsCatalogImageUrl,
+} from "@/lib/productCard"
 
 interface Props {
   product: FloofProduct
@@ -22,117 +29,157 @@ const idx = typeof index === "number" ? String(index + 1).padStart(2, "0") : nul
 const isThemed = variant !== "floof"
 const isSticker = product.category === "stickers" || /sticker/i.test(product.name)
 const breed = variant === "dogs" ? breedForProduct(product) : null
-const formatLabel =
-  isSticker ? "3 in sticker" : product.category === "mugs" ? "11 oz mug" : catLabel
+const typeSizeLabel = productTypeSizeLabel(product)
+const priceLabel = `$${product.price.toFixed(2)}`
+
 ---
-<a
-  href={href}
-  class:list={[
-    "group block overflow-hidden",
-    isThemed ? `collection-product-card collection-product-card--${variant}` : "card-surface",
-  ]}
-  data-card-variant={variant}
->
-  {variant === "reads" && <span class="collection-product-card__ear" aria-hidden="true"></span>}
-  {variant === "dogs" && breed && (
-    <span class="collection-product-card__collar-tag">
-      <b>{breed}</b>
-    </span>
-  )}
-  <div
-    class:list={[
-      "relative aspect-square overflow-hidden flex items-center justify-center",
-      isThemed ? "collection-product-card__media" : "bg-cream p-5 sm:p-6 border-b-[3px] border-ink",
-      variant === "dogs" && isSticker && "collection-product-card__media--sticker",
-    ]}
-  >
-    {idx && variant === "reads" && (
-      <span class="collection-product-card__call-num">No. {idx}</span>
-    )}
-    {product.isWip && (
-      <span class="absolute top-0 right-0 z-10 px-2 py-1 text-[0.65rem] font-semibold tracking-[0.1em] uppercase bg-accent text-accent-ink border-l-[3px] border-b-[3px] border-ink">
-        Preview
+
+{variant === "desk" ? (
+  <a href={href} class="desk-card group" data-card-variant="desk">
+    <div class:list={["desk-card__media", isSticker && "desk-card__media--sticker"]}>
+      {product.image || product.images[0] ? (
+        <img
+          src={deskCatalogImageUrl(product)}
+          alt={`${product.name} — Floof`}
+          loading={priority ? "eager" : "lazy"}
+          width="400"
+          height="400"
+        />
+      ) : (
+        <span class="font-display text-2xl text-ink/40 p-6 text-center">{product.phrase}</span>
+      )}
+      <span class="desk-card__mic" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none" stroke="#263232" stroke-width="1.6" stroke-linecap="round">
+          <rect x="5.5" y="1.5" width="5" height="8" rx="2.5"></rect>
+          <path d="M3 7.5a5 5 0 0 0 10 0M8 12.5v2"></path>
+          <path class="slash" d="M2 2l12 12" stroke="#B5574A" stroke-width="1.8"></path>
+        </svg>
       </span>
-    )}
-    {variant === "desk" && (
-      <span class="collection-product-card__meeting-name">
-        <span class="collection-product-card__mic" aria-hidden="true"></span>
-        {product.name.replace(/\s+(Mug|Sticker)$/i, "")}
-      </span>
-    )}
-    {product.image ? (
-      <img
-        src={product.image}
-        alt={`${product.name} — Floof`}
-        class:list={[
-          "w-full h-full transition-transform duration-300",
-          isSticker ? "object-contain p-[15%] drop-shadow-sm group-hover:scale-[1.03]" : "object-cover group-hover:scale-[1.04]",
-        ]}
-        loading={priority ? "eager" : "lazy"}
-        width="400"
-        height="400"
-      />
-    ) : (
-      <span class="font-display text-2xl md:text-3xl text-paper leading-tight text-center px-2">
-        {product.phrase}
-      </span>
-    )}
-    {variant === "dogs" && (
-      <img
-        class="collection-product-card__pawstamp"
-        src="/collections/dogs/paw.svg"
-        alt=""
-        width="30"
-        height="30"
-        aria-hidden="true"
-      />
-    )}
-  </div>
-  <div class:list={[isThemed ? "collection-product-card__body" : "p-4 md:p-5"]}>
-    {variant !== "dogs" && variant !== "desk" && <p class="eyebrow">{catLabel}</p>}
-    {variant === "reads" && (
-      <p class="collection-product-card__call-meta">
-        <span>{catLabel}</span>
-      </p>
-    )}
-    {variant === "desk" && (
-      <div class="collection-product-card__desk-meta">
-        <span class="collection-product-card__badge">{formatLabel}</span>
-        <b class="collection-product-card__desk-price">${product.price.toFixed(2)}</b>
+    </div>
+    <div class="desk-card__body">
+      <span class="desk-card__label">{typeSizeLabel}</span>
+      <h3 class="desk-card__title">{product.name}</h3>
+      <p class="desk-card__desc">{deskCardDescription(product)}</p>
+      <div class="desk-card__rule" aria-hidden="true"></div>
+      <div class="desk-card__foot">
+        <span class="desk-card__price">{priceLabel}</span>
+        <span class="desk-card__cta">View details →</span>
       </div>
+    </div>
+  </a>
+) : variant === "reads" ? (
+  <a href={href} class="reads-card group" data-card-variant="reads">
+    <div class:list={["reads-card__media", isSticker && "reads-card__media--sticker"]}>
+      {readsCatalogImageUrl(product) ? (
+        <img
+          src={readsCatalogImageUrl(product)}
+          alt={`${product.name} — Floof`}
+          loading={priority ? "eager" : "lazy"}
+          width="400"
+          height="400"
+        />
+      ) : (
+        <span class="font-display text-2xl text-ink/40 p-6 text-center">{product.phrase}</span>
+      )}
+    </div>
+    <div class="reads-card__body">
+      <div class="reads-card__call">
+        {idx && <span class="reads-card__no">No. {idx}</span>}
+        <span>{typeSizeLabel}</span>
+      </div>
+      <h3 class="reads-card__title">{product.name}</h3>
+      <p class="reads-card__desc">{readsCardDescription(product)}</p>
+      <div class="reads-card__rule" aria-hidden="true"></div>
+      <div class="reads-card__foot">
+        <span class="reads-card__price">{priceLabel}</span>
+        <span class="reads-card__cta">Add to shelf →</span>
+      </div>
+    </div>
+    <span class="reads-card__ear" aria-hidden="true"></span>
+  </a>
+) : (
+  <a
+    href={href}
+    class:list={[
+      "group block overflow-hidden",
+      isThemed ? `collection-product-card collection-product-card--${variant}` : "card-surface",
+    ]}
+    data-card-variant={variant}
+  >
+    {variant === "dogs" && breed && (
+      <span class="collection-product-card__collar-tag">
+        <b>{breed}</b>
+      </span>
     )}
-    <h3 class="mt-1.5 font-display text-lg text-ink group-hover:text-accent transition-colors line-clamp-2">
-      {product.name}
-    </h3>
-    <p class="mt-1 text-sm text-ink-2 line-clamp-2 normal-case tracking-normal font-normal font-sans collection-product-card__desc">
-      {product.description}
-    </p>
-    {variant !== "desk" && (
+    <div
+      class:list={[
+        "relative aspect-square overflow-hidden flex items-center justify-center",
+        isThemed ? "collection-product-card__media" : "bg-cream p-5 sm:p-6 border-b-[3px] border-ink",
+        variant === "dogs" && isSticker && "collection-product-card__media--sticker",
+      ]}
+    >
+      {product.isWip && (
+        <span class="absolute top-0 right-0 z-10 px-2 py-1 text-[0.65rem] font-semibold tracking-[0.1em] uppercase bg-accent text-accent-ink border-l-[3px] border-b-[3px] border-ink">
+          Preview
+        </span>
+      )}
+      {product.image ? (
+        <img
+          src={product.image}
+          alt={`${product.name} — Floof`}
+          class:list={[
+            "w-full h-full transition-transform duration-300",
+            isSticker ? "object-contain p-[15%] drop-shadow-sm group-hover:scale-[1.03]" : "object-cover group-hover:scale-[1.04]",
+          ]}
+          loading={priority ? "eager" : "lazy"}
+          width="400"
+          height="400"
+        />
+      ) : (
+        <span class="font-display text-2xl md:text-3xl text-paper leading-tight text-center px-2">
+          {product.phrase}
+        </span>
+      )}
+      {variant === "dogs" && (
+        <img
+          class="collection-product-card__pawstamp"
+          src="/collections/dogs/paw.svg"
+          alt=""
+          width="30"
+          height="30"
+          aria-hidden="true"
+        />
+      )}
+    </div>
+    <div class:list={[isThemed ? "collection-product-card__body" : "p-4 md:p-5"]}>
+      {!isThemed && <p class="eyebrow">{catLabel}</p>}
+      <h3 class="mt-1.5 font-display text-lg text-ink group-hover:text-accent transition-colors line-clamp-2">
+        {product.name}
+      </h3>
+      <p class="mt-1 text-sm text-ink-2 line-clamp-2 normal-case tracking-normal font-normal font-sans collection-product-card__desc">
+        {product.description}
+      </p>
       <div class="mt-3 flex items-center justify-between gap-2 border-t border-ink/15 pt-3 collection-product-card__footer">
         <div>
-          <span class="text-base font-semibold text-accent tabular-nums font-display">${product.price.toFixed(2)}</span>
+          <span class="text-base font-semibold text-accent tabular-nums font-display">{priceLabel}</span>
           {variant === "dogs" && (
             <span class="block text-[12px] font-extrabold text-ink-2/80 uppercase tracking-wide mt-0.5">
-              {formatLabel}
+              {isSticker ? typeSizeLabel : product.category === "mugs" ? typeSizeLabel : catLabel}
             </span>
           )}
         </div>
-        {variant === "reads" ? (
-          <span class="text-sm text-ink-2">Add to shelf →</span>
-        ) : (
-          product.colors.length > 0 && (
-            <div class="flex gap-1 items-center" aria-label={`${product.colors.length} colors`}>
-              {product.colors.slice(0, 5).map((color) => (
-                <span
-                  class="inline-block w-3.5 h-3.5 border border-ink/40"
-                  style={`background: ${colorMap[color] || "#888"}`}
-                  title={color}
-                />
-              ))}
-            </div>
-          )
+        {product.colors.length > 0 && (
+          <div class="flex gap-1 items-center" aria-label={`${product.colors.length} colors`}>
+            {product.colors.slice(0, 5).map((color) => (
+              <span
+                class="inline-block w-3.5 h-3.5 border border-ink/40"
+                style={`background: ${colorMap[color] || "#888"}`}
+                title={color}
+              />
+            ))}
+          </div>
         )}
       </div>
-    )}
-  </div>
-</a>
+    </div>
+  </a>
+)}
