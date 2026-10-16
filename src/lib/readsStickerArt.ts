@@ -1,3 +1,6 @@
+/** Bump when sticker PNG bytes change so browsers fetch fresh art. */
+const READS_STICKER_ART_CACHE_VERSION = "2"
+
 /** Sticker-only card art (not Medusa lifestyle mockups). */
 export const READS_STICKER_ART_BY_HANDLE: Record<string, string> = {
   "floof-bookmark-whatever-was-nearest-sticker":
@@ -11,5 +14,7 @@ export const READS_STICKER_ART_BY_HANDLE: Record<string, string> = {
 }
 
 export function readsStickerStaticArtUrl(handle: string): string | undefined {
-  return READS_STICKER_ART_BY_HANDLE[handle]
+  const path = READS_STICKER_ART_BY_HANDLE[handle]
+  if (!path) return undefined
+  return `${path}?v=${READS_STICKER_ART_CACHE_VERSION}`
 }
