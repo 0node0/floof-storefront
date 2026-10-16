@@ -160,9 +160,10 @@
   }
 
   .desk-card__title {
-    font-size: 16px;
-    line-height: 22px;
-    -webkit-line-clamp: 3;
+    font-size: 15px;
+    line-height: 20px;
+    -webkit-line-clamp: 4;
+    min-height: 5rem; /* 4 lines — keeps price row aligned in 2-col grid */
   }
 
   .desk-card__desc,
