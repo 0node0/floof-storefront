@@ -1,14 +1,13 @@
 export const site = {
   name: "Floof",
-  tagline: "Ink first. Clothes second.",
+  tagline: "Floof around and find out.",
   description:
-    "Floof is a Southwest Florida clothing brand — witty tees and hoodies printed fresh when you order. Soft blanks, sharp wit, no deadstock.",
+    "Witty mugs, stickers and tees for dog people, readers and desk dwellers. Designed in Southwest Florida, printed fresh when you order. Free US shipping $75+.",
   url: "https://floof.space",
   location: "Southwest Florida",
   email: "hello@floof.space",
   social: {
-    instagram: "https://instagram.com/floof",
-    tiktok: "https://tiktok.com/@floof",
-    x: "https://x.com/floof",
+    instagram: "https://instagram.com/floof.space",
+    x: "https://x.com/floofdotspace",
   },
 }
