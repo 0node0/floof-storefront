@@ -24,7 +24,7 @@ export function pickStickerCatalogImage(
   }
 
   if (filePreviews.length >= 2) {
-    return filePreviews[1]
+    return filePreviews[0]
   }
 
   return nonGeneric[0] ?? ordered[0] ?? thumbnail ?? ""
