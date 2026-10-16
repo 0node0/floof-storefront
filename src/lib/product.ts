@@ -1,4 +1,5 @@
 import type { MedusaProduct, MedusaVariant } from "./medusa"
+import { pickStickerCatalogImage } from "./stickerCatalogImage"
 import { deriveProductFormatSize } from "./productFormat"
 
 export interface FloofProduct {
@@ -90,6 +91,13 @@ export function mapProduct(p: MedusaProduct): FloofProduct {
     (p.metadata?.stickerArtUrl as string) ||
     (p.metadata?.print_file_url as string)
 
+  const isSticker =
+    category === "stickers" || /sticker/i.test(p.title)
+  const derivedStickerArt =
+    isSticker && images.length > 0
+      ? pickStickerCatalogImage(images, thumb || images[0])
+      : undefined
+
   return {
     id: p.id,
     slug: p.handle,
@@ -106,7 +114,7 @@ export function mapProduct(p: MedusaProduct): FloofProduct {
     collectionHandle: p.collection?.handle,
     collectionTitle: p.collection?.title,
     formatSize,
-    stickerArtUrl: stickerArtFromMeta || undefined,
+    stickerArtUrl: stickerArtFromMeta || derivedStickerArt || undefined,
   }
 }
 
