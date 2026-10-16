@@ -1,6 +1,6 @@
 export const site = {
   name: "Floof",
-  tagline: "Ink first. Clothes second.",
+  tagline: "Floof around and find out.",
   description:
     "Witty mugs, stickers and tees for dog people, readers and desk dwellers. Designed in Southwest Florida, printed fresh when you order. Free US shipping $75+.",
   url: "https://floof.space",
