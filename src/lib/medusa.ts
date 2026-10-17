@@ -42,6 +42,7 @@ export interface MedusaProduct {
   metadata?: Record<string, any>
   collection_id?: string
   collection?: MedusaCollection
+  created_at?: string
 }
 export interface MedusaLineItem {
   id: string
@@ -210,7 +211,7 @@ export async function addShippingMethod(
 }
 
 const PRODUCT_FIELDS =
-  "id,handle,title,description,thumbnail,metadata,collection_id,*collection,*images,*variants,*variants.prices,*variants.options,*variants.options.option"
+  "id,handle,title,description,thumbnail,metadata,created_at,collection_id,*collection,*images,*variants,*variants.prices,*variants.options,*variants.options.option"
 
 const COLLECTION_FIELDS = "id,handle,title,metadata"
 
