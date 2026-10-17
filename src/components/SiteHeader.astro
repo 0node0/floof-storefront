@@ -1,0 +1,25 @@
+---
+import CartBadge from "@/components/CartBadge";
+---
+<header class="sticky top-0 z-50 border-b-[3px] border-ink bg-paper">
+  <div class="flex items-stretch justify-between max-w-lg mx-auto w-full">
+    <a
+      href="/"
+      class="flex items-center gap-2 px-4 py-3 font-display text-[1.35rem] tracking-tight leading-none bg-accent text-accent-ink border-r-[3px] border-ink"
+      aria-label="Floof home"
+    >
+      Floof
+    </a>
+    <div class="flex items-center justify-end flex-1">
+      <a
+        href="/checkout"
+        class="flex items-center px-4 py-3 text-[0.72rem] font-semibold tracking-[0.12em] uppercase bg-ink text-paper hover:bg-accent hover:text-accent-ink transition-colors border-l-[3px] border-ink min-h-[3.25rem]"
+      >
+        Cart
+      </a>
+      <div class="px-2 flex items-center border-l-[3px] border-ink min-h-[3.25rem]">
+        <CartBadge client:load />
+      </div>
+    </div>
+  </div>
+</header>

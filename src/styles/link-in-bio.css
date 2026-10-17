@@ -1,0 +1,123 @@
+/* Link-in-bio · mobile-first tap targets · handmade riso accents */
+.link-in-bio-page {
+  background-image:
+    radial-gradient(circle at 12% 8%, oklch(68% 0.28 350 / 0.08), transparent 42%),
+    radial-gradient(circle at 88% 92%, oklch(78% 0.14 210 / 0.1), transparent 38%);
+}
+
+.link-in-bio-hero {
+  padding: 1.75rem 0 1.25rem;
+  text-align: center;
+}
+
+.link-in-bio-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.link-in-bio-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 3.35rem;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  border: 3px solid var(--color-ink);
+  background: var(--color-paper-2);
+  color: var(--color-ink);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.link-in-bio-btn:hover,
+.link-in-bio-btn:focus-visible {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+.link-in-bio-btn:active {
+  transform: translateY(1px);
+}
+
+.link-in-bio-btn--accent {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+.link-in-bio-btn--accent:hover,
+.link-in-bio-btn--accent:focus-visible {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.link-in-bio-btn--outline {
+  background: transparent;
+}
+
+.link-in-bio-featured {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 3px solid var(--color-ink);
+}
+
+.link-in-bio-featured__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+}
+
+.link-in-bio-product {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid var(--color-ink);
+  background: var(--color-paper-2);
+  overflow: hidden;
+  min-height: 100%;
+  transition: background 0.15s ease;
+}
+
+.link-in-bio-product:hover,
+.link-in-bio-product:focus-visible {
+  background: var(--color-paper-3);
+}
+
+.link-in-bio-product__img {
+  aspect-ratio: 1;
+  object-fit: cover;
+  width: 100%;
+  border-bottom: 3px solid var(--color-ink);
+  background: var(--color-cream);
+}
+
+.link-in-bio-product__body {
+  padding: 0.55rem 0.5rem 0.65rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.link-in-bio-product__name {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.25;
+  color: var(--color-ink);
+}
+
+.link-in-bio-product__price {
+  font-size: 0.72rem;
+  color: var(--color-secondary);
+  font-weight: 600;
+}

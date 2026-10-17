@@ -1,0 +1,154 @@
+---
+import LinksLayout from "@/layouts/LinksLayout.astro";
+import { listProducts } from "@/lib/medusa";
+import { mapProduct, type FloofProduct } from "@/lib/product";
+import { collectionPath } from "@/lib/collections";
+import { site } from "@/lib/site";
+import { formatPrice } from "@/lib/formatPrice";
+import {
+  LINK_IN_BIO_SOCIAL,
+  parseLinkInBioSource,
+  pickFeaturedLinkProducts,
+  sortMedusaProductsNewest,
+  withLinkInBioTracking,
+} from "@/lib/linkInBio";
+
+export const prerender = false;
+
+const source = parseLinkInBioSource(Astro.url.searchParams);
+const track = (href: string) => withLinkInBioTracking(href, source);
+
+let newest: FloofProduct[] = [];
+let featured: FloofProduct[] = [];
+try {
+  const { products: raw } = await listProducts();
+  const sorted = sortMedusaProductsNewest(raw);
+  newest = sorted.map(mapProduct).filter((p) => !p.isWip);
+  featured = pickFeaturedLinkProducts(newest, 4);
+} catch {}
+
+const newThisWeek = newest.slice(0, 6);
+const newAnchor = "#new-this-week";
+
+const buttons = [
+  { label: "Shop Dogs", href: track(collectionPath("dogs")) },
+  { label: "Shop Reads", href: track(collectionPath("reads")) },
+  { label: "Shop Desk", href: track(collectionPath("desk")) },
+  { label: "All products", href: track("/store"), accent: true },
+  { label: "New this week", href: newAnchor },
+  { label: "Instagram", href: LINK_IN_BIO_SOCIAL.instagram, external: true },
+  { label: "X", href: LINK_IN_BIO_SOCIAL.x, external: true },
+  {
+    label: "Email us",
+    href: `mailto:${site.email}`,
+    external: true,
+  },
+];
+---
+<LinksLayout
+  title="Links"
+  description="Shop Floof collections — dogs, reads, desk, and fresh drops. SW Florida wit, printed on demand."
+>
+  <section class="link-in-bio-hero" aria-labelledby="links-heading">
+    <p class="eyebrow">Link in bio</p>
+    <h1 id="links-heading" class="mt-2 font-display text-[2.1rem] leading-none text-ink">
+      Floof
+    </h1>
+    <p class="mt-3 text-sm text-ink-2 normal-case tracking-normal font-normal max-w-[20rem] mx-auto">
+      {site.tagline} Soft blanks, sharp wit — printed fresh when you order.
+    </p>
+  </section>
+
+  <nav class="link-in-bio-stack" aria-label="Floof links">
+    {buttons.map((btn) =>
+      btn.external ? (
+        <a
+          href={btn.href}
+          class:list={["link-in-bio-btn", btn.accent && "link-in-bio-btn--accent"]}
+          rel={btn.href.startsWith("http") ? "noopener noreferrer" : undefined}
+          target={btn.href.startsWith("http") ? "_blank" : undefined}
+        >
+          {btn.label}
+        </a>
+      ) : (
+        <a
+          href={btn.href}
+          class:list={["link-in-bio-btn", btn.accent && "link-in-bio-btn--accent"]}
+        >
+          {btn.label}
+        </a>
+      )
+    )}
+  </nav>
+
+  {featured.length > 0 && (
+    <section class="link-in-bio-featured" aria-labelledby="featured-heading">
+      <p class="eyebrow">Fresh off the press</p>
+      <h2 id="featured-heading" class="mt-1 font-display text-xl text-ink">
+        Featured
+      </h2>
+      <div class="link-in-bio-featured__grid">
+        {featured.map((product) => (
+          <a
+            href={track(`/products/${product.slug}`)}
+            class="link-in-bio-product group"
+          >
+            {product.image ? (
+              <img
+                class="link-in-bio-product__img"
+                src={product.image}
+                alt={product.name}
+                loading="lazy"
+                width="320"
+                height="320"
+              />
+            ) : (
+              <div
+                class="link-in-bio-product__img flex items-center justify-center font-display text-lg text-ink/50 p-4 text-center"
+              >
+                {product.phrase}
+              </div>
+            )}
+            <div class="link-in-bio-product__body">
+              <span class="link-in-bio-product__name">{product.name}</span>
+              <span class="link-in-bio-product__price">
+                {formatPrice(Math.round(product.price * 100))}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {newThisWeek.length > 0 && (
+    <section
+      id="new-this-week"
+      class="link-in-bio-featured scroll-mt-24"
+      aria-labelledby="new-heading"
+    >
+      <p class="eyebrow">This week</p>
+      <h2 id="new-heading" class="mt-1 font-display text-xl text-ink">
+        New drops
+      </h2>
+      <ul class="mt-3 space-y-2">
+        {newThisWeek.map((product) => (
+          <li>
+            <a
+              href={track(`/products/${product.slug}`)}
+              class="link-in-bio-btn link-in-bio-btn--outline !min-h-[2.75rem] !text-[0.7rem] flex justify-between gap-2"
+            >
+              <span class="truncate text-left normal-case tracking-normal">{product.name}</span>
+              <span class="shrink-0 text-secondary">
+                {formatPrice(Math.round(product.price * 100))}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a href={track("/store")} class="link-in-bio-btn mt-3">
+        Browse the full shop
+      </a>
+    </section>
+  )}
+</LinksLayout>
