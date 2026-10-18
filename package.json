@@ -9,6 +9,7 @@
     "preview": "node ./dist/server/entry.mjs",
     "deploy": "echo 'Deploy via Railway: git push origin main'",
     "typecheck": "tsc --noEmit",
+    "audit:apparel-og": "tsx scripts/audit-apparel-og.ts",
     "optimize:collection-heroes": "node scripts/optimize-collection-heroes.mjs",
     "astro": "astro",
     "start": "node ./dist/server/entry.mjs"
@@ -33,6 +34,7 @@
     "@types/node": "^26.6.5",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.0"
   },
   "allowScripts": {

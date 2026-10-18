@@ -53,6 +53,16 @@ export function optionValue(v: MedusaVariant, title: string): string | undefined
   return v.options?.find((o) => o.option?.title?.toLowerCase() === title.toLowerCase())?.value
 }
 
+/** Infer catalog category from Medusa handle when metadata.category is missing. */
+export function categoryFromHandle(handle: string): string | undefined {
+  if (handle.endsWith("-hoodie")) return "hoodies"
+  if (handle.endsWith("-tee")) return "tees"
+  if (handle.endsWith("-mug")) return "mugs"
+  if (handle.endsWith("-sticker")) return "stickers"
+  if (handle.endsWith("-hat")) return "hats"
+  return undefined
+}
+
 export function mapProduct(p: MedusaProduct): FloofProduct {
   const variants = p.variants || []
   const colors = [
@@ -85,7 +95,10 @@ export function mapProduct(p: MedusaProduct): FloofProduct {
   const thumb = (p as { thumbnail?: string }).thumbnail
   if (thumb && !images.includes(thumb)) images.unshift(thumb)
 
-  const category = (p.metadata?.category as string) || "tees"
+  const category =
+    (p.metadata?.category as string) ||
+    categoryFromHandle(p.handle) ||
+    "tees"
   const formatSize = deriveProductFormatSize(p, category)
   const stickerArtFromMeta =
     (p.metadata?.sticker_art_url as string) ||

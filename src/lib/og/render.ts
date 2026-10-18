@@ -27,7 +27,12 @@ import {
   productOgMarkup,
 } from "./markup"
 import { paletteForTheme } from "./palette"
-import { resolveApparelOgArt } from "./apparelSource"
+import { resolveApparelOg } from "./apparelSource"
+import { isApparelProduct } from "./apparelProduct"
+import { pickCollectionOgProducts } from "./collectionPicks"
+import { ogProductSourceUrl } from "./productImage"
+import { OG_RENDER_REVISION } from "./revision"
+import { resolveOgProductSourceUrl } from "./resolveSource"
 
 async function collectionThumbDataUrl(p: FloofProduct): Promise<string | null> {
   const sticker = p.category === "stickers" || /sticker/i.test(p.name)
@@ -36,18 +41,14 @@ async function collectionThumbDataUrl(p: FloofProduct): Promise<string | null> {
     const art = await prepareOgProductArt(url, { forceTrim: true })
     return art?.dataUrl ?? (await loadImageDataUrl(url))
   }
-  if (p.category === "tees" || p.category === "hoodies") {
-    const art = await resolveApparelOgArt(p)
-    return art?.dataUrl ?? null
+  if (isApparelProduct(p)) {
+    const resolution = await resolveApparelOg(p)
+    return resolution.art?.dataUrl ?? null
   }
   const url = ogProductSourceUrl(p)
   const art = await prepareOgProductArt(url, { forceTrim: false })
   return art?.dataUrl ?? (await loadImageDataUrl(url))
 }
-import { OG_RENDER_REVISION } from "./revision"
-import { pickCollectionOgProducts } from "./collectionPicks"
-import { ogProductSourceUrl } from "./productImage"
-import { resolveOgProductSourceUrl } from "./resolveSource"
 
 const pngCache = new Map<string, Uint8Array>()
 
@@ -82,25 +83,33 @@ export async function renderProductOg(handle: string): Promise<Uint8Array | null
   const palette = paletteForTheme(themeId)
   const isSticker =
     product.category === "stickers" || /sticker/i.test(product.name)
-  const isApparel =
-    product.category === "tees" || product.category === "hoodies"
+  const isApparel = isApparelProduct(product)
   let prepared: Awaited<ReturnType<typeof prepareOgProductArt>> = null
-  let src = ""
+  let cacheSegment = ""
+  let textForward = false
 
   if (isSticker) {
-    src = await resolveOgProductSourceUrl(product)
+    const src = await resolveOgProductSourceUrl(product)
     prepared = await prepareOgProductArt(src, { forceTrim: true })
+    cacheSegment = `sticker:${src}`
   } else if (isApparel) {
-    prepared = await resolveApparelOgArt(product)
-    src = prepared ? "apparel-trimmed" : ogProductSourceUrl(product)
+    const resolution = await resolveApparelOg(product)
+    if (resolution.mode === "art" && resolution.art) {
+      prepared = resolution.art
+      cacheSegment = `art:${resolution.coverage?.toFixed(3) ?? "ok"}`
+    } else {
+      textForward = true
+      cacheSegment = "text-fallback"
+    }
   } else {
-    src = ogProductSourceUrl(product)
+    const src = ogProductSourceUrl(product)
     prepared = await prepareOgProductArt(src, { forceTrim: false })
+    cacheSegment = src
   }
 
   const imageDataUrl =
     prepared?.dataUrl ??
-    (isApparel ? null : await loadImageDataUrl(src))
+    (isApparel ? null : await loadImageDataUrl(ogProductSourceUrl(product)))
   const priceLabel = formatPrice(Math.round(product.price * 100))
   const typeLabel = productTypeSizeLabel(product)
 
@@ -110,11 +119,12 @@ export async function renderProductOg(handle: string): Promise<Uint8Array | null
       title: product.name,
       priceLabel,
       typeLabel,
-      imageDataUrl,
+      imageDataUrl: textForward ? null : imageDataUrl,
       artWidth: prepared?.width,
       artHeight: prepared?.height,
+      textForward,
     }),
-    `product:${OG_RENDER_REVISION.product}:${handle}:${src}:${themeId}`
+    `product:${OG_RENDER_REVISION.product}:${handle}:${cacheSegment}:${themeId}`
   )
 }
 

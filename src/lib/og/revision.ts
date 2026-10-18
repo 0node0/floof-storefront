@@ -1,6 +1,8 @@
+import { readOgBuildIdFromRuntime } from "./buildId"
+
 /** Keep in sync with render.ts PNG cache key segments. Bump when OG output changes. */
 export const OG_RENDER_REVISION = {
-  product: "v10",
+  product: "v11",
   collection: "v6",
   home: "v2",
   links: "links",
@@ -8,25 +10,18 @@ export const OG_RENDER_REVISION = {
   default: "default",
 } as const
 
-function envBuildId(): string | undefined {
-  const candidates = [
-    import.meta.env.PUBLIC_OG_BUILD_ID,
-    import.meta.env.PUBLIC_VERCEL_GIT_COMMIT_SHA,
-    import.meta.env.VERCEL_GIT_COMMIT_SHA,
-    import.meta.env.CF_PAGES_COMMIT_SHA,
-    import.meta.env.RAILWAY_GIT_COMMIT_SHA,
-  ]
-  for (const value of candidates) {
-    if (value && String(value).length > 0) {
-      return String(value).replace(/[^a-zA-Z0-9]/g, "").slice(0, 12)
-    }
+function viteBuildId(): string | undefined {
+  const fromPublic = import.meta.env.PUBLIC_OG_BUILD_ID
+  if (fromPublic && String(fromPublic).trim().length > 0) {
+    const cleaned = String(fromPublic).replace(/[^a-zA-Z0-9]/g, "").slice(0, 12)
+    if (cleaned.length > 0 && cleaned !== "dev") return cleaned
   }
   return undefined
 }
 
 /** Deploy / build identity for social meta cache busting. */
 export function ogBuildHash(): string {
-  return envBuildId() ?? "dev"
+  return readOgBuildIdFromRuntime() ?? viteBuildId() ?? "dev"
 }
 
 export function ogVersionToken(...parts: Array<string | number | undefined>): string {

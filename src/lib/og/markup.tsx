@@ -65,6 +65,104 @@ export interface ProductOgProps {
   imageDataUrl: string | null
   artWidth?: number
   artHeight?: number
+  /** No isolated print art — typography-only card (apparel mockups). */
+  textForward?: boolean
+}
+
+export function productOgTextForwardMarkup({
+  palette,
+  title,
+  priceLabel,
+  typeLabel,
+}: Omit<ProductOgProps, "imageDataUrl" | "artWidth" | "artHeight">): ReactNode {
+  const innerWidth = OG_WIDTH - OG_SAFE_MARGIN * 2
+
+  return (
+    <div
+      style={{
+        width: OG_WIDTH,
+        height: OG_HEIGHT,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        background: `linear-gradient(145deg, ${palette.background} 0%, ${palette.backgroundWash} 42%, ${palette.background} 100%)`,
+        color: palette.ink,
+        position: "relative",
+        overflow: "hidden",
+        padding: OG_SAFE_MARGIN,
+        fontFamily: MONO,
+        boxSizing: "border-box",
+      }}
+    >
+      {grainOverlay(palette.ink)}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          width: innerWidth,
+        }}
+      >
+        {wordmark(palette)}
+      </div>
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          width: innerWidth,
+          maxWidth: innerWidth,
+        }}
+      >
+        <div
+          style={{
+            display: "inline-flex",
+            alignSelf: "flex-start",
+            padding: "10px 16px",
+            background: palette.accent,
+            color: palette.accentInk,
+            fontSize: 20,
+            fontWeight: 600,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            border: `3px solid ${palette.border}`,
+          }}
+        >
+          {typeLabel}
+        </div>
+        <div
+          style={{
+            marginTop: 28,
+            fontFamily: DISPLAY,
+            fontSize: 72,
+            lineHeight: 0.92,
+            textTransform: "uppercase",
+            maxWidth: innerWidth,
+          }}
+        >
+          {title}
+        </div>
+        <div
+          style={{
+            marginTop: 32,
+            fontSize: 48,
+            fontWeight: 600,
+            color: palette.priceColor ?? palette.accent,
+          }}
+        >
+          {priceLabel}
+        </div>
+        <div
+          style={{
+            marginTop: 40,
+            width: 140,
+            height: 8,
+            background: palette.accent,
+          }}
+        />
+      </div>
+    </div>
+  )
 }
 
 export function productOgMarkup({
@@ -75,7 +173,17 @@ export function productOgMarkup({
   imageDataUrl,
   artWidth,
   artHeight,
+  textForward = false,
 }: ProductOgProps): ReactNode {
+  if (textForward) {
+    return productOgTextForwardMarkup({
+      palette,
+      title,
+      priceLabel,
+      typeLabel,
+    })
+  }
+
   return (
     <div
       style={{
