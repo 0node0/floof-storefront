@@ -2,6 +2,10 @@ import sharp from "sharp"
 import type { FloofProduct } from "@/lib/product"
 import { stickerCatalogImageUrl } from "@/lib/productCard"
 import { readsStickerStaticArtUrl } from "@/lib/readsStickerArt"
+import {
+  pickStickerCatalogImage,
+  PRINTFUL_FILE_PREVIEW_PATTERN,
+} from "@/lib/stickerCatalogImage"
 import { loadImageBuffer } from "./images"
 
 function isStickerProduct(product: FloofProduct): boolean {
@@ -15,7 +19,31 @@ async function imagePixelArea(src: string): Promise<number> {
   return (meta.width ?? 0) * (meta.height ?? 0)
 }
 
-/** Pick the largest raster among sticker art candidates (never prefer a tiny static over Printful). */
+function stickerArtCandidates(product: FloofProduct): string[] {
+  const urls = new Set<string>()
+  const staticArt = readsStickerStaticArtUrl(product.slug)
+  if (staticArt) urls.add(staticArt)
+
+  urls.add(stickerCatalogImageUrl(product))
+
+  if (product.stickerArtUrl) urls.add(product.stickerArtUrl)
+
+  const catalogPick = pickStickerCatalogImage(
+    product.images,
+    product.image
+  )
+  if (catalogPick) urls.add(catalogPick)
+
+  for (const url of product.images) {
+    if (url && PRINTFUL_FILE_PREVIEW_PATTERN.test(url)) {
+      urls.add(url)
+    }
+  }
+
+  return [...urls].filter(Boolean)
+}
+
+/** Largest sticker print-file / static art — never lifestyle mockups from the full gallery. */
 export async function resolveOgProductSourceUrl(
   product: FloofProduct
 ): Promise<string> {
@@ -23,24 +51,20 @@ export async function resolveOgProductSourceUrl(
     return product.image || product.images[0] || ""
   }
 
-  const candidates = new Set<string>()
-  const staticArt = readsStickerStaticArtUrl(product.slug)
-  if (staticArt) candidates.add(staticArt)
-  candidates.add(stickerCatalogImageUrl(product))
-  if (product.stickerArtUrl) candidates.add(product.stickerArtUrl)
-  if (product.image) candidates.add(product.image)
-  for (const url of product.images) {
-    if (url) candidates.add(url)
-  }
-
+  const candidates = stickerArtCandidates(product)
   let bestUrl = stickerCatalogImageUrl(product)
-  let bestArea = 0
+  let bestScore = -1
 
   for (const url of candidates) {
-    if (!url) continue
     const area = await imagePixelArea(url)
-    if (area > bestArea) {
-      bestArea = area
+    let priority = 1
+    if (url.includes("/sticker-art/")) priority = 4
+    else if (url.includes("/static/") && /art\.png/i.test(url)) priority = 3
+    else if (PRINTFUL_FILE_PREVIEW_PATTERN.test(url)) priority = 2
+
+    const score = priority * 1_000_000 + area
+    if (score > bestScore) {
+      bestScore = score
       bestUrl = url
     }
   }
