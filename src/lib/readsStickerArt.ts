@@ -1,5 +1,5 @@
 /** Bump when sticker PNG bytes change so browsers fetch fresh art. */
-const READS_STICKER_ART_CACHE_VERSION = "2"
+const READS_STICKER_ART_CACHE_VERSION = "3"
 
 /** Sticker-only card art (not Medusa lifestyle mockups). */
 export const READS_STICKER_ART_BY_HANDLE: Record<string, string> = {

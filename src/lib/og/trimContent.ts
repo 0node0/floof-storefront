@@ -37,6 +37,50 @@ export async function knockOutNearWhiteMatte(
   return sharp(data, { raw: { width, height, channels } }).png().toBuffer()
 }
 
+/** Shrink opaque alpha inward to soften jagged die-cut halos (1–2px erosion). */
+export async function erodeAlphaEdge(
+  input: Buffer,
+  radius = 2
+): Promise<Buffer> {
+  const { data, info } = await sharp(input)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+
+  const { width, height, channels } = info
+  const alpha = new Uint8Array(width * height)
+  for (let i = 0; i < width * height; i++) {
+    alpha[i] = data[i * channels + 3]
+  }
+
+  const eroded = new Uint8Array(width * height)
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      let minA = 255
+      for (let dy = -radius; dy <= radius; dy++) {
+        for (let dx = -radius; dx <= radius; dx++) {
+          const nx = x + dx
+          const ny = y + dy
+          if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+            minA = 0
+            continue
+          }
+          minA = Math.min(minA, alpha[ny * width + nx])
+        }
+      }
+      eroded[y * width + x] = minA
+    }
+  }
+
+  for (let i = 0; i < width * height; i++) {
+    data[i * channels + 3] = eroded[i]
+  }
+
+  return sharp(data, { raw: { width, height, channels } })
+    .png()
+    .toBuffer()
+}
+
 export async function trimAlphaBounds(input: Buffer): Promise<Buffer> {
   const { data, info } = await sharp(input)
     .ensureAlpha()

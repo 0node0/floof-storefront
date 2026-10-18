@@ -28,6 +28,7 @@ import {
 } from "./markup"
 import { paletteForTheme } from "./palette"
 import { ogProductSourceUrl } from "./productImage"
+import { resolveOgProductSourceUrl } from "./resolveSource"
 
 const pngCache = new Map<string, Uint8Array>()
 
@@ -60,9 +61,11 @@ export async function renderProductOg(handle: string): Promise<Uint8Array | null
   const product = mapProduct(raw)
   const themeId = themeForProduct(product.collectionHandle)
   const palette = paletteForTheme(themeId)
-  const src = ogProductSourceUrl(product)
   const isSticker =
     product.category === "stickers" || /sticker/i.test(product.name)
+  const src = isSticker
+    ? await resolveOgProductSourceUrl(product)
+    : ogProductSourceUrl(product)
   const prepared = await prepareOgProductArt(src, { forceTrim: isSticker })
   const imageDataUrl =
     prepared?.dataUrl ?? (await loadImageDataUrl(src))
@@ -79,7 +82,7 @@ export async function renderProductOg(handle: string): Promise<Uint8Array | null
       artWidth: prepared?.width,
       artHeight: prepared?.height,
     }),
-    `product:v4:${handle}:${src}:${themeId}`
+    `product:v5:${handle}:${src}:${themeId}`
   )
 }
 
@@ -99,9 +102,11 @@ export async function renderCollectionOg(handle: string): Promise<Uint8Array | n
     const picks = mapped.slice(0, 4)
     const loaded = await Promise.all(
       picks.map(async (p) => {
-        const url = ogProductSourceUrl(p)
         const sticker =
           p.category === "stickers" || /sticker/i.test(p.name)
+        const url = sticker
+          ? await resolveOgProductSourceUrl(p)
+          : ogProductSourceUrl(p)
         const art = await prepareOgProductArt(url, { forceTrim: sticker })
         return art?.dataUrl ?? (await loadImageDataUrl(url))
       })
@@ -129,7 +134,7 @@ export async function renderCollectionOg(handle: string): Promise<Uint8Array | n
       tagline: hero.tagline,
       thumbs,
     }),
-    `collection:v3:${handle}:${thumbs.length}`
+    `collection:v5:${handle}:${thumbs.length}`
   )
 }
 

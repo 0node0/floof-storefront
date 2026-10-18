@@ -12,6 +12,8 @@ export interface OgPalette {
   /** Soft shadow under product art on the left panel */
   artShadow: string
   panelAccent?: string
+  /** Price text on dark themes (defaults to accent) */
+  priceColor?: string
 }
 
 export const OG_PALETTES: Record<CollectionThemeId, OgPalette> = {
@@ -44,12 +46,13 @@ export const OG_PALETTES: Record<CollectionThemeId, OgPalette> = {
     backgroundWash: "#1e2430",
     ink: "#faf6ec",
     inkMuted: "#c5c9d4",
-    accent: "#7a3b32",
-    accentInk: "#faf6ec",
+    accent: "#f5c6d6",
+    accentInk: "#2a3040",
     border: "#faf6ec",
     collectionLabel: "Reads",
     artShadow: "rgba(0,0,0,0.45)",
     panelAccent: "#7a3b32",
+    priceColor: "#faf6ec",
   },
   desk: {
     background: "#eef0ec",

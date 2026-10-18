@@ -174,7 +174,7 @@ export function productOgMarkup({
               marginTop: 24,
               fontSize: 36,
               fontWeight: 600,
-              color: palette.accent,
+              color: palette.priceColor ?? palette.accent,
             }}
           >
             {priceLabel}

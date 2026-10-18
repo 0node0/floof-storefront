@@ -2,6 +2,7 @@ import sharp from "sharp"
 import { OG_HEIGHT } from "./constants"
 import { loadImageBuffer } from "./images"
 import {
+  erodeAlphaEdge,
   knockOutNearWhiteMatte,
   trimAlphaBounds,
   trimContentPadding,
@@ -66,7 +67,7 @@ export async function prepareOgProductArt(
   src: string,
   options: PrepareOgArtOptions
 ): Promise<PreparedOgArt | null> {
-  const cacheKey = `v4:${options.forceTrim}:${src}`
+  const cacheKey = `v5:${options.forceTrim}:${src}`
   const hit = processedCache.get(cacheKey)
   if (hit) return hit
 
@@ -92,17 +93,24 @@ export async function prepareOgProductArt(
 
     if (options.forceTrim) {
       artBuf = await knockOutNearWhiteMatte(artBuf)
+      artBuf = await erodeAlphaEdge(artBuf, 2)
       artBuf = await trimAlphaBounds(artBuf)
     } else if (significantMargins) {
       artBuf = await trimContentPadding(artBuf)
     }
 
+    const nativeMeta = await sharp(artBuf).metadata()
+    const nativeW = nativeMeta.width ?? OG_PRODUCT_ART_MAX_WIDTH
+    const nativeH = nativeMeta.height ?? OG_PRODUCT_ART_HEIGHT
+    const maxW = Math.min(OG_PRODUCT_ART_MAX_WIDTH, nativeW)
+    const maxH = Math.min(OG_PRODUCT_ART_HEIGHT, nativeH)
+
     const resized = await sharp(artBuf)
       .resize({
-        height: OG_PRODUCT_ART_HEIGHT,
-        width: OG_PRODUCT_ART_MAX_WIDTH,
+        width: maxW,
+        height: maxH,
         fit: "inside",
-        withoutEnlargement: false,
+        withoutEnlargement: true,
       })
       .png()
       .toBuffer()
