@@ -11,7 +11,7 @@ import {
   sortFloofProducts,
   type FloofProduct,
 } from "@/lib/product";
-import { ogImageAbsoluteUrl, OG_STORE_PATH } from "@/lib/og/urls";
+import { ogStoreImageUrl } from "@/lib/og/socialUrl";
 
 export const prerender = false;
 
@@ -87,7 +87,7 @@ const countLabel =
 <Layout
   title={pageTitle}
   description="Browse Floof tees, hoodies, mugs, stickers, and more — witty SW Florida goods, printed fresh when you order."
-  image={ogImageAbsoluteUrl(OG_STORE_PATH)}
+  image={ogStoreImageUrl()}
   imageAlt="Shop all Floof mugs, stickers, tees and hoodies"
 >
   <section class="page-band">

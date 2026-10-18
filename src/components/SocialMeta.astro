@@ -1,8 +1,6 @@
 ---
-import {
-  OG_IMAGE_DIMENSIONS,
-  defaultOgImageUrl,
-} from "@/lib/og/urls"
+import { OG_IMAGE_DIMENSIONS } from "@/lib/og/urls"
+import { defaultOgImageUrlVersioned } from "@/lib/og/socialUrl"
 import { site } from "@/lib/site"
 
 interface Props {
@@ -17,7 +15,7 @@ const {
   pageTitle,
   description,
   canonicalUrl,
-  image = defaultOgImageUrl(),
+  image = defaultOgImageUrlVersioned(),
   imageAlt = `${site.name} — ${site.tagline}`,
 } = Astro.props
 

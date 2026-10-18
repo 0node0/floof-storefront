@@ -8,7 +8,7 @@ import { listCollections } from "@/lib/medusa";
 import SocialMeta from "@/components/SocialMeta.astro";
 import { site } from "@/lib/site";
 import { DEFAULT_GOOGLE_FONTS_HREF } from "@/lib/collectionThemes";
-import { defaultOgImageUrl } from "@/lib/og/urls";
+import { defaultOgImageUrlVersioned } from "@/lib/og/socialUrl";
 import "@/styles/global.css";
 
 let shopCollections: { href: string; label: string; handle: string }[] = [];
@@ -39,7 +39,7 @@ interface Props {
 const {
   title,
   description = site.description,
-  image = defaultOgImageUrl(),
+  image = defaultOgImageUrlVersioned(),
   imageAlt,
   noIndex = false,
   googleFontsHref = DEFAULT_GOOGLE_FONTS_HREF,

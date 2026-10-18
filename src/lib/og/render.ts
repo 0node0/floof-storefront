@@ -13,7 +13,7 @@ import {
   listProducts,
   listProductsByCollection,
 } from "@/lib/medusa"
-import { mapProduct } from "@/lib/product"
+import { mapProduct, type FloofProduct } from "@/lib/product"
 import { productTypeSizeLabel } from "@/lib/productCard"
 import type { ReactNode } from "react"
 import { site } from "@/lib/site"
@@ -27,7 +27,24 @@ import {
   productOgMarkup,
 } from "./markup"
 import { paletteForTheme } from "./palette"
-import { resolveApparelOgSourceUrl } from "./apparelSource"
+import { resolveApparelOgArt } from "./apparelSource"
+
+async function collectionThumbDataUrl(p: FloofProduct): Promise<string | null> {
+  const sticker = p.category === "stickers" || /sticker/i.test(p.name)
+  if (sticker) {
+    const url = await resolveOgProductSourceUrl(p)
+    const art = await prepareOgProductArt(url, { forceTrim: true })
+    return art?.dataUrl ?? (await loadImageDataUrl(url))
+  }
+  if (p.category === "tees" || p.category === "hoodies") {
+    const art = await resolveApparelOgArt(p)
+    return art?.dataUrl ?? null
+  }
+  const url = ogProductSourceUrl(p)
+  const art = await prepareOgProductArt(url, { forceTrim: false })
+  return art?.dataUrl ?? (await loadImageDataUrl(url))
+}
+import { OG_RENDER_REVISION } from "./revision"
 import { pickCollectionOgProducts } from "./collectionPicks"
 import { ogProductSourceUrl } from "./productImage"
 import { resolveOgProductSourceUrl } from "./resolveSource"
@@ -67,16 +84,23 @@ export async function renderProductOg(handle: string): Promise<Uint8Array | null
     product.category === "stickers" || /sticker/i.test(product.name)
   const isApparel =
     product.category === "tees" || product.category === "hoodies"
-  const src = isSticker
-    ? await resolveOgProductSourceUrl(product)
-    : isApparel
-      ? await resolveApparelOgSourceUrl(product)
-      : ogProductSourceUrl(product)
-  const prepared = await prepareOgProductArt(src, {
-    forceTrim: isSticker || isApparel,
-  })
+  let prepared: Awaited<ReturnType<typeof prepareOgProductArt>> = null
+  let src = ""
+
+  if (isSticker) {
+    src = await resolveOgProductSourceUrl(product)
+    prepared = await prepareOgProductArt(src, { forceTrim: true })
+  } else if (isApparel) {
+    prepared = await resolveApparelOgArt(product)
+    src = prepared ? "apparel-trimmed" : ogProductSourceUrl(product)
+  } else {
+    src = ogProductSourceUrl(product)
+    prepared = await prepareOgProductArt(src, { forceTrim: false })
+  }
+
   const imageDataUrl =
-    prepared?.dataUrl ?? (await loadImageDataUrl(src))
+    prepared?.dataUrl ??
+    (isApparel ? null : await loadImageDataUrl(src))
   const priceLabel = formatPrice(Math.round(product.price * 100))
   const typeLabel = productTypeSizeLabel(product)
 
@@ -90,7 +114,7 @@ export async function renderProductOg(handle: string): Promise<Uint8Array | null
       artWidth: prepared?.width,
       artHeight: prepared?.height,
     }),
-    `product:v9:${handle}:${src}:${themeId}`
+    `product:${OG_RENDER_REVISION.product}:${handle}:${src}:${themeId}`
   )
 }
 
@@ -108,17 +132,7 @@ export async function renderCollectionOg(handle: string): Promise<Uint8Array | n
     const { products: raw } = await listProductsByCollection(collection.id)
     const mapped = raw.map(mapProduct)
     const picks = pickCollectionOgProducts(mapped, collection.handle, 3)
-    const loaded = await Promise.all(
-      picks.map(async (p) => {
-        const sticker =
-          p.category === "stickers" || /sticker/i.test(p.name)
-        const url = sticker
-          ? await resolveOgProductSourceUrl(p)
-          : ogProductSourceUrl(p)
-        const art = await prepareOgProductArt(url, { forceTrim: sticker })
-        return art?.dataUrl ?? (await loadImageDataUrl(url))
-      })
-    )
+    const loaded = await Promise.all(picks.map((p) => collectionThumbDataUrl(p)))
     thumbs = loaded.filter((u): u is string => Boolean(u))
   } catch {}
 
@@ -133,15 +147,7 @@ export async function renderCollectionOg(handle: string): Promise<Uint8Array | n
         3
       )
       const loaded = await Promise.all(
-        fallback.map(async (p) => {
-          const sticker =
-            p.category === "stickers" || /sticker/i.test(p.name)
-          const url = sticker
-            ? await resolveOgProductSourceUrl(p)
-            : ogProductSourceUrl(p)
-          const art = await prepareOgProductArt(url, { forceTrim: sticker })
-          return art?.dataUrl ?? (await loadImageDataUrl(url))
-        })
+        fallback.map((p) => collectionThumbDataUrl(p))
       )
       thumbs = loaded.filter((u): u is string => Boolean(u))
     } catch {}
@@ -156,7 +162,7 @@ export async function renderCollectionOg(handle: string): Promise<Uint8Array | n
       tagline: hero.tagline,
       thumbs,
     }),
-    `collection:v6:${handle}:${thumbKey}`
+    `collection:${OG_RENDER_REVISION.collection}:${handle}:${thumbKey}`
   )
 }
 
@@ -169,7 +175,7 @@ export async function renderHomeOg(): Promise<Uint8Array> {
       subline: `${site.tagline} ${site.description}`,
       badge: "Southwest Florida",
     }),
-    "home:v2"
+    `home:${OG_RENDER_REVISION.home}`
   )
 }
 

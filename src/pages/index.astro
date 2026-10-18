@@ -5,7 +5,7 @@ import TrustBar from "@/components/TrustBar.astro";
 import Icon from "@/components/Icon.astro";
 import { listProducts } from "@/lib/medusa";
 import { mapProduct, type FloofProduct } from "@/lib/product";
-import { ogImageAbsoluteUrl, OG_HOME_PATH } from "@/lib/og/urls";
+import { ogHomeImageUrl } from "@/lib/og/socialUrl";
 
 export const prerender = false;
 
@@ -15,7 +15,7 @@ try {
   products = raw.map(mapProduct).slice(0, 8);
 } catch {}
 
-const ogImage = ogImageAbsoluteUrl(OG_HOME_PATH);
+const ogImage = ogHomeImageUrl();
 const heroImg = products[0]?.image;
 
 const manifesto = [
