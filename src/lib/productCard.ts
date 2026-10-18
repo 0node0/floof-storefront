@@ -3,6 +3,7 @@ import type { FloofProduct } from "./product"
 const SPEC_SPLIT_RE =
   / (?=11 oz|3"|4"|Bella|Cotton Heritage|A soft, patch)/i
 
+import { pickPrintfulDesignPreview } from "./printfulDesignImage"
 import { pickStickerCatalogImage } from "./stickerCatalogImage"
 import { stickerStaticArtUrl } from "./stickerStaticArt"
 
@@ -70,6 +71,23 @@ function isStickerProduct(product: FloofProduct): boolean {
   return product.category === "stickers" || /sticker/i.test(product.name)
 }
 
+/** Apparel / non-sticker: prefer flat Printful design file over on-model mockup. */
+export function catalogDesignImageUrl(product: FloofProduct): string {
+  if (product.stickerArtUrl) return product.stickerArtUrl
+  const picked = pickPrintfulDesignPreview(product.images, product.image)
+  if (picked) return picked
+  return product.image ?? product.images[0] ?? ""
+}
+
+/** Dogs collection cards — static sticker art, flat tee art, or product photo for mugs. */
+export function dogsCatalogImageUrl(product: FloofProduct): string {
+  if (isStickerProduct(product)) return stickerCatalogImageUrl(product)
+  if (product.category === "tees" || product.category === "hoodies") {
+    return catalogDesignImageUrl(product)
+  }
+  return product.image ?? product.images[0] ?? ""
+}
+
 /** Sticker catalog image for desk and reads cards (plain background, centred art). */
 export function stickerCatalogImageUrl(product: FloofProduct): string {
   if (!isStickerProduct(product)) {
@@ -92,7 +110,7 @@ export function deskCatalogImageUrl(product: FloofProduct): string {
   return stickerCatalogImageUrl(product)
 }
 
-/** PDP / gallery: prefer static sticker art, then Medusa lifestyle shots. */
+/** PDP / gallery: prefer static sticker art or flat design file, then lifestyle shots. */
 export function productGalleryImages(product: FloofProduct): string[] {
   const staticArt = stickerStaticArtUrl(product.slug)
   const fromMedusa =
@@ -101,7 +119,23 @@ export function productGalleryImages(product: FloofProduct): string[] {
       : product.image
         ? [product.image]
         : []
-  if (!staticArt) return fromMedusa
-  const rest = fromMedusa.filter((url) => url !== staticArt)
-  return [staticArt, ...rest]
+
+  if (staticArt) {
+    const rest = fromMedusa.filter((url) => url !== staticArt)
+    return [staticArt, ...rest]
+  }
+
+  if (isStickerProduct(product)) return fromMedusa
+
+  const design = catalogDesignImageUrl(product)
+  if (design && !fromMedusa.includes(design)) {
+    const rest = fromMedusa.filter((url) => url !== design)
+    return [design, ...rest]
+  }
+  if (design && fromMedusa[0] !== design) {
+    const rest = fromMedusa.filter((url) => url !== design)
+    return [design, ...rest]
+  }
+
+  return fromMedusa
 }

@@ -1,5 +1,8 @@
 import type { FloofProduct } from "@/lib/product"
-import { stickerCatalogImageUrl } from "@/lib/productCard"
+import {
+  catalogDesignImageUrl,
+  stickerCatalogImageUrl,
+} from "@/lib/productCard"
 
 export function ogProductSourceUrl(product: FloofProduct): string {
   const sticker =
@@ -7,5 +10,7 @@ export function ogProductSourceUrl(product: FloofProduct): string {
   if (sticker) {
     return stickerCatalogImageUrl(product)
   }
+  const design = catalogDesignImageUrl(product)
+  if (design) return design
   return product.image || product.images[0] || ""
 }

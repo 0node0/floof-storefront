@@ -19,6 +19,10 @@ export const FLOWER_CROWN_STICKER_HANDLES = [
 
 const HANDLE_SET = new Set<string>(FLOWER_CROWN_STICKER_HANDLES)
 
+export function isFlowerCrownStickerHandle(handle: string): boolean {
+  return HANDLE_SET.has(handle)
+}
+
 export function flowerCrownStickerStaticArtUrl(
   handle: string
 ): string | undefined {

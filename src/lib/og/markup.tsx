@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import type { OgPalette } from "./palette"
-import { OG_HEIGHT, OG_WIDTH } from "./constants"
+import { OG_HEIGHT, OG_SAFE_MARGIN, OG_WIDTH } from "./constants"
 import {
   OG_PRODUCT_ART_HEIGHT,
   OG_PRODUCT_ART_MAX_WIDTH,
@@ -199,6 +199,24 @@ export function collectionOgMarkup({
   tagline,
   thumbs,
 }: CollectionOgProps): ReactNode {
+  const innerWidth = OG_WIDTH - OG_SAFE_MARGIN * 2
+  const gridThumbs = thumbs.slice(0, 3)
+  const headerGap = 20
+  const titleBlockHeight = 156
+  const gridGap = 16
+  const gridHeight =
+    OG_HEIGHT -
+    OG_SAFE_MARGIN * 2 -
+    titleBlockHeight -
+    headerGap -
+    gridGap
+  const cellWidth =
+    gridThumbs.length > 0
+      ? Math.floor(
+          (innerWidth - gridGap * (gridThumbs.length - 1)) / gridThumbs.length
+        )
+      : 0
+
   return (
     <div
       style={{
@@ -210,18 +228,29 @@ export function collectionOgMarkup({
         color: palette.ink,
         position: "relative",
         overflow: "hidden",
-        padding: "48px 56px",
+        padding: OG_SAFE_MARGIN,
         fontFamily: MONO,
+        boxSizing: "border-box",
       }}
     >
       {grainOverlay(palette.ink)}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          gap: 24,
+          width: innerWidth,
+          minHeight: titleBlockHeight,
+        }}
+      >
+        <div style={{ flex: 1, minWidth: 0, maxWidth: innerWidth - 280 }}>
           <div
             style={{
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: 600,
-              letterSpacing: "0.16em",
+              letterSpacing: "0.14em",
               textTransform: "uppercase",
               color: palette.accent,
             }}
@@ -230,9 +259,9 @@ export function collectionOgMarkup({
           </div>
           <div
             style={{
-              marginTop: 12,
+              marginTop: 10,
               fontFamily: DISPLAY,
-              fontSize: 72,
+              fontSize: 58,
               lineHeight: 0.92,
               textTransform: "uppercase",
             }}
@@ -241,47 +270,52 @@ export function collectionOgMarkup({
           </div>
           <div
             style={{
-              marginTop: 16,
-              fontSize: 22,
+              marginTop: 12,
+              fontSize: 20,
               color: palette.inkMuted,
-              maxWidth: 640,
+              maxWidth: 560,
               lineHeight: 1.35,
             }}
           >
             {tagline}
           </div>
         </div>
-        {wordmark(palette)}
+        <div style={{ flexShrink: 0, maxWidth: 260 }}>{wordmark(palette)}</div>
       </div>
       <div
         style={{
-          marginTop: 40,
+          marginTop: headerGap,
           display: "flex",
           flexDirection: "row",
-          gap: 20,
-          flex: 1,
-          alignItems: "flex-end",
+          gap: gridGap,
+          width: innerWidth,
+          height: gridHeight,
         }}
       >
-        {thumbs.map((src, i) => (
+        {gridThumbs.map((src, i) => (
           <div
             key={i}
             style={{
-              flex: 1,
-              height: 280,
+              width: cellWidth,
+              height: gridHeight,
               border: `4px solid ${palette.border}`,
               background: palette.backgroundWash,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              padding: 16,
+              padding: 14,
+              boxSizing: "border-box",
             }}
           >
             <img
               src={src}
-              width={220}
-              height={240}
-              style={{ objectFit: "contain", maxWidth: "100%", maxHeight: "100%" }}
+              width={cellWidth - 28}
+              height={gridHeight - 28}
+              style={{
+                objectFit: "contain",
+                width: cellWidth - 28,
+                height: gridHeight - 28,
+              }}
             />
           </div>
         ))}
@@ -303,6 +337,8 @@ export function brandOgMarkup({
   subline,
   badge,
 }: BrandOgProps): ReactNode {
+  const innerWidth = OG_WIDTH - OG_SAFE_MARGIN * 2
+
   return (
     <div
       style={{
@@ -310,74 +346,87 @@ export function brandOgMarkup({
         height: OG_HEIGHT,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
         background: `linear-gradient(135deg, ${palette.background} 0%, ${palette.backgroundWash} 45%, ${palette.background} 100%)`,
         color: palette.ink,
         position: "relative",
         overflow: "hidden",
-        padding: "64px 72px",
+        padding: OG_SAFE_MARGIN,
         fontFamily: MONO,
+        boxSizing: "border-box",
       }}
     >
       {grainOverlay(palette.ink)}
       <div
         style={{
-          position: "absolute",
-          top: 48,
-          right: 56,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          width: innerWidth,
+          marginBottom: 20,
         }}
       >
-        {wordmark(palette)}
+        <div style={{ maxWidth: 280 }}>{wordmark(palette)}</div>
       </div>
-      {badge ? (
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          width: innerWidth,
+          maxWidth: innerWidth,
+        }}
+      >
+        {badge ? (
+          <div
+            style={{
+              display: "inline-flex",
+              alignSelf: "flex-start",
+              padding: "10px 16px",
+              background: palette.accent,
+              color: palette.accentInk,
+              fontSize: 18,
+              fontWeight: 600,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              border: `3px solid ${palette.border}`,
+            }}
+          >
+            {badge}
+          </div>
+        ) : null}
         <div
           style={{
-            display: "inline-flex",
-            alignSelf: "flex-start",
-            padding: "10px 16px",
-            background: palette.accent,
-            color: palette.accentInk,
-            fontSize: 18,
-            fontWeight: 600,
-            letterSpacing: "0.14em",
+            fontFamily: DISPLAY,
+            fontSize: 80,
+            lineHeight: 0.9,
             textTransform: "uppercase",
-            border: `3px solid ${palette.border}`,
+            maxWidth: innerWidth,
+            marginTop: badge ? 24 : 0,
           }}
         >
-          {badge}
+          {headline}
         </div>
-      ) : null}
-      <div
-        style={{
-          fontFamily: DISPLAY,
-          fontSize: 88,
-          lineHeight: 0.9,
-          textTransform: "uppercase",
-          maxWidth: 900,
-          marginTop: badge ? 28 : 0,
-        }}
-      >
-        {headline}
+        <div
+          style={{
+            marginTop: 24,
+            fontSize: 24,
+            color: palette.inkMuted,
+            maxWidth: Math.min(780, innerWidth),
+            lineHeight: 1.4,
+          }}
+        >
+          {subline}
+        </div>
+        <div
+          style={{
+            marginTop: 40,
+            width: 120,
+            height: 8,
+            background: palette.accent,
+          }}
+        />
       </div>
-      <div
-        style={{
-          marginTop: 28,
-          fontSize: 26,
-          color: palette.inkMuted,
-          maxWidth: 780,
-          lineHeight: 1.4,
-        }}
-      >
-        {subline}
-      </div>
-      <div
-        style={{
-          marginTop: 48,
-          width: 120,
-          height: 8,
-          background: palette.accent,
-        }}
-      />
     </div>
   )
 }
