@@ -67,7 +67,7 @@ export async function prepareOgProductArt(
   src: string,
   options: PrepareOgArtOptions
 ): Promise<PreparedOgArt | null> {
-  const cacheKey = `v5:${options.forceTrim}:${src}`
+  const cacheKey = `v6:${options.forceTrim}:${src}`
   const hit = processedCache.get(cacheKey)
   if (hit) return hit
 

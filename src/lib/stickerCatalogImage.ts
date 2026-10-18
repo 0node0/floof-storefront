@@ -1,7 +1,5 @@
-export const PRINTFUL_FILE_PREVIEW_PATTERN =
+const PRINTFUL_FILE_PREVIEW_RE =
   /files\.cdn\.printful\.com\/files\/[^/]+\/[^/]+_preview\.png/i
-
-const PRINTFUL_FILE_PREVIEW_RE = PRINTFUL_FILE_PREVIEW_PATTERN
 
 const PRINTFUL_GENERIC_PRODUCT_RE = /files\.cdn\.printful\.com\/products\//i
 

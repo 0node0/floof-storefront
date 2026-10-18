@@ -2,14 +2,18 @@ import sharp from "sharp"
 import type { FloofProduct } from "@/lib/product"
 import { stickerCatalogImageUrl } from "@/lib/productCard"
 import { readsStickerStaticArtUrl } from "@/lib/readsStickerArt"
-import {
-  pickStickerCatalogImage,
-  PRINTFUL_FILE_PREVIEW_PATTERN,
-} from "@/lib/stickerCatalogImage"
 import { loadImageBuffer } from "./images"
 
 function isStickerProduct(product: FloofProduct): boolean {
   return product.category === "stickers" || /sticker/i.test(product.name)
+}
+
+/** Print-file / designer PNG — not Printful laptop flat-lay previews. */
+export function isIsolatedStickerArtUrl(url: string): boolean {
+  if (url.includes("/sticker-art/")) return true
+  if (/\/static\/[^?]*-sticker-art\.png/i.test(url)) return true
+  if (/\/static\/[^?]*art\.png/i.test(url)) return true
+  return false
 }
 
 async function imagePixelArea(src: string): Promise<number> {
@@ -24,26 +28,21 @@ function stickerArtCandidates(product: FloofProduct): string[] {
   const staticArt = readsStickerStaticArtUrl(product.slug)
   if (staticArt) urls.add(staticArt)
 
-  urls.add(stickerCatalogImageUrl(product))
-
-  if (product.stickerArtUrl) urls.add(product.stickerArtUrl)
-
-  const catalogPick = pickStickerCatalogImage(
-    product.images,
-    product.image
-  )
-  if (catalogPick) urls.add(catalogPick)
-
-  for (const url of product.images) {
-    if (url && PRINTFUL_FILE_PREVIEW_PATTERN.test(url)) {
-      urls.add(url)
-    }
+  if (product.stickerArtUrl && isIsolatedStickerArtUrl(product.stickerArtUrl)) {
+    urls.add(product.stickerArtUrl)
   }
 
-  return [...urls].filter(Boolean)
+  for (const url of product.images) {
+    if (url && isIsolatedStickerArtUrl(url)) urls.add(url)
+  }
+  if (product.image && isIsolatedStickerArtUrl(product.image)) {
+    urls.add(product.image)
+  }
+
+  return [...urls]
 }
 
-/** Largest sticker print-file / static art — never lifestyle mockups from the full gallery. */
+/** Largest isolated sticker art raster (never lifestyle mockups). */
 export async function resolveOgProductSourceUrl(
   product: FloofProduct
 ): Promise<string> {
@@ -52,19 +51,17 @@ export async function resolveOgProductSourceUrl(
   }
 
   const candidates = stickerArtCandidates(product)
-  let bestUrl = stickerCatalogImageUrl(product)
-  let bestScore = -1
+  if (candidates.length === 0) {
+    return stickerCatalogImageUrl(product)
+  }
+
+  let bestUrl = candidates[0]
+  let bestArea = 0
 
   for (const url of candidates) {
     const area = await imagePixelArea(url)
-    let priority = 1
-    if (url.includes("/sticker-art/")) priority = 4
-    else if (url.includes("/static/") && /art\.png/i.test(url)) priority = 3
-    else if (PRINTFUL_FILE_PREVIEW_PATTERN.test(url)) priority = 2
-
-    const score = priority * 1_000_000 + area
-    if (score > bestScore) {
-      bestScore = score
+    if (area > bestArea) {
+      bestArea = area
       bestUrl = url
     }
   }
