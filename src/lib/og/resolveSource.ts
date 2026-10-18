@@ -1,7 +1,7 @@
 import sharp from "sharp"
 import type { FloofProduct } from "@/lib/product"
 import { stickerCatalogImageUrl } from "@/lib/productCard"
-import { readsStickerStaticArtUrl } from "@/lib/readsStickerArt"
+import { stickerStaticArtUrl } from "@/lib/stickerStaticArt"
 import { loadImageBuffer } from "./images"
 
 function isStickerProduct(product: FloofProduct): boolean {
@@ -25,7 +25,7 @@ async function imagePixelArea(src: string): Promise<number> {
 
 function stickerArtCandidates(product: FloofProduct): string[] {
   const urls = new Set<string>()
-  const staticArt = readsStickerStaticArtUrl(product.slug)
+  const staticArt = stickerStaticArtUrl(product.slug)
   if (staticArt) urls.add(staticArt)
 
   if (product.stickerArtUrl && isIsolatedStickerArtUrl(product.stickerArtUrl)) {

@@ -13,6 +13,7 @@ import {
   buildGoogleFontsHref,
   themeStyleAttribute,
 } from "@/lib/collectionThemes";
+import { productGalleryImages } from "@/lib/productCard";
 import {
   productPageThemeBundle,
   relatedProductsForShelf,
@@ -74,12 +75,7 @@ const collectionHref = pageTheme.collectionHandle
     ? `/${product.collectionHandle}`
     : `/store?type=${product.category}`;
 const collectionCrumbLabel = pageTheme.collectionLabel || catLabel;
-const galleryImages =
-  product.images?.length > 0
-    ? product.images
-    : product.image
-      ? [product.image]
-      : [];
+const galleryImages = productGalleryImages(product);
 
 const canonicalHref = new URL(`/products/${slug}`, site.url).href;
 const cardVariant = isThemed ? pageTheme.themeId : "floof";

@@ -4,7 +4,7 @@ const SPEC_SPLIT_RE =
   / (?=11 oz|3"|4"|Bella|Cotton Heritage|A soft, patch)/i
 
 import { pickStickerCatalogImage } from "./stickerCatalogImage"
-import { readsStickerStaticArtUrl } from "./readsStickerArt"
+import { stickerStaticArtUrl } from "./stickerStaticArt"
 
 const CATEGORY_TYPE_LABEL: Record<string, string> = {
   mugs: "Mug",
@@ -76,7 +76,7 @@ export function stickerCatalogImageUrl(product: FloofProduct): string {
     return product.image ?? product.images[0] ?? ""
   }
 
-  const staticArt = readsStickerStaticArtUrl(product.slug)
+  const staticArt = stickerStaticArtUrl(product.slug)
   if (staticArt) return staticArt
 
   if (product.stickerArtUrl) return product.stickerArtUrl
@@ -90,4 +90,18 @@ export function readsCatalogImageUrl(product: FloofProduct): string {
 
 export function deskCatalogImageUrl(product: FloofProduct): string {
   return stickerCatalogImageUrl(product)
+}
+
+/** PDP / gallery: prefer static sticker art, then Medusa lifestyle shots. */
+export function productGalleryImages(product: FloofProduct): string[] {
+  const staticArt = stickerStaticArtUrl(product.slug)
+  const fromMedusa =
+    product.images?.length > 0
+      ? product.images
+      : product.image
+        ? [product.image]
+        : []
+  if (!staticArt) return fromMedusa
+  const rest = fromMedusa.filter((url) => url !== staticArt)
+  return [staticArt, ...rest]
 }

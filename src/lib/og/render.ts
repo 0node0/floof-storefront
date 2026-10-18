@@ -82,7 +82,7 @@ export async function renderProductOg(handle: string): Promise<Uint8Array | null
       artWidth: prepared?.width,
       artHeight: prepared?.height,
     }),
-    `product:v6:${handle}:${src}:${themeId}`
+    `product:v7:${handle}:${src}:${themeId}`
   )
 }
 
