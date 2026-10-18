@@ -19,6 +19,8 @@ import {
   resolveProductPageTheme,
 } from "@/lib/productPageTheme";
 import { site } from "@/lib/site";
+import { formatPrice } from "@/lib/formatPrice";
+import { ogImageAbsoluteUrl, ogProductPath } from "@/lib/og/urls";
 
 export const prerender = false;
 
@@ -63,7 +65,8 @@ related = relatedProductsForShelf(
   pageTheme.collectionHandle
 );
 
-const ogImage = image.startsWith("http") ? image : image;
+const ogImage = ogImageAbsoluteUrl(ogProductPath(product.slug));
+const ogImageAlt = `${product.name} — ${formatPrice(Math.round(product.price * 100))} at Floof`;
 const catLabel = categoryLabels[product.category] || product.category;
 const collectionHref = pageTheme.collectionHandle
   ? `/${pageTheme.collectionHandle}`
@@ -86,6 +89,7 @@ const cardVariant = isThemed ? pageTheme.themeId : "floof";
   title={product.name}
   description={product.description || `Shop ${product.name} from Floof.`}
   image={ogImage}
+  imageAlt={ogImageAlt}
   googleFontsHref={buildGoogleFontsHref(theme)}
   themeColor={theme.themeColor}
   canonicalHref={canonicalHref}

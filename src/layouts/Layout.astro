@@ -5,8 +5,10 @@ import AnnouncementBar from "@/components/AnnouncementBar.astro";
 import CartCelebration from "@/components/CartCelebration";
 import { collectionPath } from "@/lib/collections";
 import { listCollections } from "@/lib/medusa";
+import SocialMeta from "@/components/SocialMeta.astro";
 import { site } from "@/lib/site";
 import { DEFAULT_GOOGLE_FONTS_HREF } from "@/lib/collectionThemes";
+import { defaultOgImageUrl } from "@/lib/og/urls";
 import "@/styles/global.css";
 
 let shopCollections: { href: string; label: string; handle: string }[] = [];
@@ -26,6 +28,7 @@ interface Props {
   title?: string
   description?: string
   image?: string
+  imageAlt?: string
   noIndex?: boolean
   googleFontsHref?: string
   themeColor?: string
@@ -36,7 +39,8 @@ interface Props {
 const {
   title,
   description = site.description,
-  image = `${site.url}/favicon.svg`,
+  image = defaultOgImageUrl(),
+  imageAlt,
   noIndex = false,
   googleFontsHref = DEFAULT_GOOGLE_FONTS_HREF,
   themeColor = "#1a1524",
@@ -45,6 +49,7 @@ const {
 const pageTitle = title ? `${title} | ${site.name}` : `${site.name} — ${site.tagline}`;
 const canonicalUrl = canonicalHref ?? new URL(Astro.url.pathname, site.url).href;
 const ogImage = image.startsWith("http") ? image : new URL(image, site.url).href;
+const ogImageAlt = imageAlt ?? `${site.name} — ${site.tagline}`;
 ---
 <!doctype html>
 <html lang="en">
@@ -61,16 +66,13 @@ const ogImage = image.startsWith("http") ? image : new URL(image, site.url).href
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalUrl} />
   {noIndex && <meta name="robots" content="noindex,nofollow" />}
-  <meta property="og:title" content={pageTitle} />
-  <meta property="og:description" content={description} />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content={canonicalUrl} />
-  <meta property="og:site_name" content={site.name} />
-  <meta property="og:image" content={ogImage} />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={pageTitle} />
-  <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={ogImage} />
+  <SocialMeta
+    pageTitle={pageTitle}
+    description={description}
+    canonicalUrl={canonicalUrl}
+    image={ogImage}
+    imageAlt={ogImageAlt}
+  />
   <meta name="theme-color" content={themeColor} />
 </head>
 <body class="min-h-screen bg-paper text-ink antialiased font-sans">
