@@ -20,7 +20,7 @@ import {
   resolveCollectionTheme,
   themeStyleAttribute,
 } from "@/lib/collectionThemes";
-import { ogCollectionPath, ogImageAbsoluteUrl } from "@/lib/og/urls";
+import { ogCollectionImageUrl } from "@/lib/og/socialUrl";
 import { themeAwareHeroCopy } from "@/lib/themeHeroCopy";
 import {
   mapProduct,
@@ -66,7 +66,10 @@ const showTrustBar = theme.id === "floof";
 <Layout
   title={hero.seoTitle}
   description={hero.seoDescription}
-  image={ogImageAbsoluteUrl(ogCollectionPath(collection.handle))}
+  image={ogCollectionImageUrl(
+    collection.handle,
+    collection.updated_at ?? collection.created_at
+  )}
   imageAlt={`${collection.title} collection at Floof`}
   googleFontsHref={buildGoogleFontsHref(theme)}
   themeColor={theme.themeColor}

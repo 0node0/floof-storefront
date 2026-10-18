@@ -22,6 +22,8 @@ export interface FloofProduct {
   formatSize?: string
   /** Transparent sticker art when distinct from lifestyle mockup */
   stickerArtUrl?: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 /** Map common garment color names → CSS swatches */
@@ -107,6 +109,8 @@ export function mapProduct(p: MedusaProduct): FloofProduct {
     collectionTitle: p.collection?.title,
     formatSize,
     stickerArtUrl: stickerArtFromMeta || undefined,
+    createdAt: p.created_at,
+    updatedAt: p.updated_at,
   }
 }
 

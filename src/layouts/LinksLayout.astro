@@ -2,7 +2,7 @@
 import SiteHeader from "@/components/SiteHeader.astro";
 import SocialMeta from "@/components/SocialMeta.astro";
 import CartCelebration from "@/components/CartCelebration";
-import { ogImageAbsoluteUrl, OG_LINKS_PATH } from "@/lib/og/urls";
+import { ogLinksImageUrl } from "@/lib/og/socialUrl";
 import { site } from "@/lib/site";
 import { DEFAULT_GOOGLE_FONTS_HREF } from "@/lib/collectionThemes";
 import "@/styles/global.css";
@@ -42,7 +42,7 @@ const canonicalUrl =
     pageTitle={pageTitle}
     description={description}
     canonicalUrl={canonicalUrl}
-    image={ogImageAbsoluteUrl(OG_LINKS_PATH)}
+    image={ogLinksImageUrl()}
     imageAlt="Floof link in bio — shop Dogs, Reads, Desk and new drops"
   />
   <meta name="robots" content="noindex,nofollow" />

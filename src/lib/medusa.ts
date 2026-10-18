@@ -29,6 +29,8 @@ export interface MedusaCollection {
   handle: string
   title: string
   metadata?: Record<string, unknown>
+  updated_at?: string
+  created_at?: string
 }
 
 export interface MedusaProduct {
@@ -43,6 +45,7 @@ export interface MedusaProduct {
   collection_id?: string
   collection?: MedusaCollection
   created_at?: string
+  updated_at?: string
 }
 export interface MedusaLineItem {
   id: string
