@@ -5,6 +5,7 @@ import TrustBar from "@/components/TrustBar.astro";
 import Icon from "@/components/Icon.astro";
 import { listProducts } from "@/lib/medusa";
 import { mapProduct, type FloofProduct } from "@/lib/product";
+import { ogImageAbsoluteUrl, OG_HOME_PATH } from "@/lib/og/urls";
 
 export const prerender = false;
 
@@ -14,7 +15,7 @@ try {
   products = raw.map(mapProduct).slice(0, 8);
 } catch {}
 
-const ogImage = products[0]?.image || "/favicon.svg";
+const ogImage = ogImageAbsoluteUrl(OG_HOME_PATH);
 const heroImg = products[0]?.image;
 
 const manifesto = [
@@ -35,6 +36,7 @@ const cats: { href: string; label: string; icon: string; blurb: string }[] = [
   title="Funny Dog, Book & Desk Mugs, Tees & Stickers"
   description="Witty mugs, stickers and tees for dog people, readers and desk dwellers. Designed in Southwest Florida, printed fresh when you order. Free US shipping $75+."
   image={ogImage}
+  imageAlt="Floof — witty mugs, stickers and tees from Southwest Florida"
 >
   {/* Poster hero */}
   <section class="relative overflow-hidden border-b-[3px] border-ink">

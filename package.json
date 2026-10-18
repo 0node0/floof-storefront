@@ -16,15 +16,21 @@
   "dependencies": {
     "@astrojs/node": "^10.1.4",
     "@astrojs/react": "^4.4.2",
+    "@fontsource/archivo-black": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@stripe/stripe-js": "^5.5.0",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^6.4.3",
     "clsx": "^2.1.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "satori": "^0.62.0",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
+    "@types/node": "^26.6.5",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "typescript": "^5.9.0"
