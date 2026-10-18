@@ -9,6 +9,7 @@ import {
   productTypeSizeLabel,
   readsCardDescription,
   readsCatalogImageUrl,
+  dogsCatalogImageUrl,
 } from "@/lib/productCard"
 
 interface Props {
@@ -31,6 +32,8 @@ const isSticker = product.category === "stickers" || /sticker/i.test(product.nam
 const breed = variant === "dogs" ? breedForProduct(product) : null
 const typeSizeLabel = productTypeSizeLabel(product)
 const priceLabel = `$${product.price.toFixed(2)}`
+const dogsCardImage =
+  variant === "dogs" ? dogsCatalogImageUrl(product) : product.image
 
 ---
 
@@ -123,9 +126,9 @@ const priceLabel = `$${product.price.toFixed(2)}`
           Preview
         </span>
       )}
-      {product.image ? (
+      {dogsCardImage ? (
         <img
-          src={product.image}
+          src={dogsCardImage}
           alt={`${product.name} — Floof`}
           class:list={[
             "w-full h-full transition-transform duration-300",
