@@ -26,6 +26,39 @@ function readPublicFile(pathname: string): string | null {
 }
 
 const remoteCache = new Map<string, string>()
+const bufferCache = new Map<string, Buffer>()
+
+export async function loadImageBuffer(src: string): Promise<Buffer | null> {
+  if (!src) return null
+
+  if (src.startsWith("/")) {
+    const clean = src.split("?")[0]
+    const filePath = join(process.cwd(), "public", clean.replace(/^\//, ""))
+    if (existsSync(filePath)) {
+      return readFileSync(filePath)
+    }
+  }
+
+  const absolute = src.startsWith("http")
+    ? src
+    : new URL(src, site.url).href
+
+  const cached = bufferCache.get(absolute)
+  if (cached) return cached
+
+  try {
+    const res = await fetch(absolute, {
+      headers: { Accept: "image/*" },
+      signal: AbortSignal.timeout(12_000),
+    })
+    if (!res.ok) return null
+    const buf = Buffer.from(await res.arrayBuffer())
+    bufferCache.set(absolute, buf)
+    return buf
+  } catch {
+    return null
+  }
+}
 
 export async function loadImageDataUrl(src: string): Promise<string | null> {
   if (!src) return null

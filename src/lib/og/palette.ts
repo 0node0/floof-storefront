@@ -9,6 +9,9 @@ export interface OgPalette {
   accentInk: string
   border: string
   collectionLabel: string
+  /** Soft shadow under product art on the left panel */
+  artShadow: string
+  panelAccent?: string
 }
 
 export const OG_PALETTES: Record<CollectionThemeId, OgPalette> = {
@@ -21,36 +24,44 @@ export const OG_PALETTES: Record<CollectionThemeId, OgPalette> = {
     accentInk: "#1a1524",
     border: "#f5f4f0",
     collectionLabel: "Floof",
+    artShadow: "rgba(0,0,0,0.35)",
+    panelAccent: "#e85d9a",
   },
   dogs: {
     background: "#f7f4ee",
-    backgroundWash: "#efe8dc",
+    backgroundWash: "#ebe3d4",
     ink: "#3d3428",
     inkMuted: "#6b5f52",
     accent: "#c4693a",
     accentInk: "#fffaf5",
     border: "#3d3428",
     collectionLabel: "Dogs",
+    artShadow: "rgba(61,52,40,0.28)",
+    panelAccent: "#c4693a",
   },
   reads: {
-    background: "#f2ecdf",
-    backgroundWash: "#e8dfd0",
-    ink: "#2a3040",
-    inkMuted: "#4f5563",
+    background: "#2a3040",
+    backgroundWash: "#1e2430",
+    ink: "#faf6ec",
+    inkMuted: "#c5c9d4",
     accent: "#7a3b32",
     accentInk: "#faf6ec",
-    border: "#2a3040",
+    border: "#faf6ec",
     collectionLabel: "Reads",
+    artShadow: "rgba(0,0,0,0.45)",
+    panelAccent: "#7a3b32",
   },
   desk: {
     background: "#eef0ec",
-    backgroundWash: "#e1e5df",
+    backgroundWash: "#dde3db",
     ink: "#263232",
     inkMuted: "#4a5656",
     accent: "#55705b",
     accentInk: "#f6f7f4",
     border: "#263232",
     collectionLabel: "Desk",
+    artShadow: "rgba(38,50,50,0.3)",
+    panelAccent: "#55705b",
   },
 }
 

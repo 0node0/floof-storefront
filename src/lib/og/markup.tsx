@@ -1,6 +1,10 @@
 import type { ReactNode } from "react"
 import type { OgPalette } from "./palette"
 import { OG_HEIGHT, OG_WIDTH } from "./constants"
+import {
+  OG_PRODUCT_ART_HEIGHT,
+  OG_PRODUCT_ART_MAX_WIDTH,
+} from "./prepareArt"
 
 const DISPLAY = "Archivo Black"
 const MONO = "IBM Plex Mono"
@@ -47,12 +51,20 @@ function wordmark(palette: OgPalette): ReactNode {
   )
 }
 
+function leftPanelBackground(palette: OgPalette): string {
+  const accent = palette.panelAccent ?? palette.accent
+  return `linear-gradient(155deg, ${palette.backgroundWash} 0%, ${palette.background} 52%, ${palette.background} 100%),
+    radial-gradient(ellipse 90% 70% at 18% 88%, ${accent}33 0%, transparent 55%)`
+}
+
 export interface ProductOgProps {
   palette: OgPalette
   title: string
   priceLabel: string
   typeLabel: string
   imageDataUrl: string | null
+  artWidth?: number
+  artHeight?: number
 }
 
 export function productOgMarkup({
@@ -61,6 +73,8 @@ export function productOgMarkup({
   priceLabel,
   typeLabel,
   imageDataUrl,
+  artWidth,
+  artHeight,
 }: ProductOgProps): ReactNode {
   return (
     <div
@@ -84,21 +98,22 @@ export function productOgMarkup({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: 56,
+          padding: "20px 28px",
           borderRight: `4px solid ${palette.border}`,
-          background: `linear-gradient(145deg, ${palette.backgroundWash} 0%, ${palette.background} 55%)`,
+          background: leftPanelBackground(palette),
           position: "relative",
         }}
       >
         {imageDataUrl ? (
           <img
             src={imageDataUrl}
-            width={480}
-            height={520}
+            width={artWidth ?? OG_PRODUCT_ART_MAX_WIDTH}
+            height={artHeight ?? OG_PRODUCT_ART_HEIGHT}
             style={{
               objectFit: "contain",
-              maxWidth: "100%",
-              maxHeight: "100%",
+              width: artWidth ?? OG_PRODUCT_ART_MAX_WIDTH,
+              height: artHeight ?? OG_PRODUCT_ART_HEIGHT,
+              filter: `drop-shadow(0 16px 32px ${palette.artShadow})`,
             }}
           />
         ) : (

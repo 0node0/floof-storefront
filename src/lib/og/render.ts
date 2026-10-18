@@ -20,6 +20,7 @@ import { site } from "@/lib/site"
 import { OG_HEIGHT, OG_WIDTH } from "./constants"
 import { getOgFonts } from "./fonts"
 import { loadImageDataUrl } from "./images"
+import { prepareOgProductArt } from "./prepareArt"
 import {
   brandOgMarkup,
   collectionOgMarkup,
@@ -60,7 +61,11 @@ export async function renderProductOg(handle: string): Promise<Uint8Array | null
   const themeId = themeForProduct(product.collectionHandle)
   const palette = paletteForTheme(themeId)
   const src = ogProductSourceUrl(product)
-  const imageDataUrl = await loadImageDataUrl(src)
+  const isSticker =
+    product.category === "stickers" || /sticker/i.test(product.name)
+  const prepared = await prepareOgProductArt(src, { forceTrim: isSticker })
+  const imageDataUrl =
+    prepared?.dataUrl ?? (await loadImageDataUrl(src))
   const priceLabel = formatPrice(Math.round(product.price * 100))
   const typeLabel = productTypeSizeLabel(product)
 
@@ -71,8 +76,10 @@ export async function renderProductOg(handle: string): Promise<Uint8Array | null
       priceLabel,
       typeLabel,
       imageDataUrl,
+      artWidth: prepared?.width,
+      artHeight: prepared?.height,
     }),
-    `product:${handle}:${src}`
+    `product:v4:${handle}:${src}:${themeId}`
   )
 }
 
@@ -89,11 +96,16 @@ export async function renderCollectionOg(handle: string): Promise<Uint8Array | n
   try {
     const { products: raw } = await listProductsByCollection(collection.id)
     const mapped = raw.map(mapProduct).filter((p) => !p.isWip)
-    const urls = mapped
-      .map((p) => ogProductSourceUrl(p))
-      .filter(Boolean)
-      .slice(0, 4)
-    const loaded = await Promise.all(urls.map((u) => loadImageDataUrl(u)))
+    const picks = mapped.slice(0, 4)
+    const loaded = await Promise.all(
+      picks.map(async (p) => {
+        const url = ogProductSourceUrl(p)
+        const sticker =
+          p.category === "stickers" || /sticker/i.test(p.name)
+        const art = await prepareOgProductArt(url, { forceTrim: sticker })
+        return art?.dataUrl ?? (await loadImageDataUrl(url))
+      })
+    )
     thumbs = loaded.filter((u): u is string => Boolean(u))
   } catch {}
 
@@ -117,7 +129,7 @@ export async function renderCollectionOg(handle: string): Promise<Uint8Array | n
       tagline: hero.tagline,
       thumbs,
     }),
-    `collection:${handle}:${thumbs.length}`
+    `collection:v3:${handle}:${thumbs.length}`
   )
 }
 
