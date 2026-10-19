@@ -195,7 +195,8 @@ export async function renderLinksOg(): Promise<Uint8Array> {
     brandOgMarkup({
       palette,
       headline: "Link in bio",
-      subline: "Shop Dogs, Reads, Desk & fresh drops — printed when you order.",
+      subline:
+        "Shop Dogs, Reads, Desk, Florida Floofs & fresh drops — printed when you order.",
       badge: site.name,
     }),
     "links"

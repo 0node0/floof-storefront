@@ -6,6 +6,7 @@ import {
   breedChipSlug,
   type DogBreedChip,
 } from "@/lib/dogBreeds"
+import { FLORIDA_FLOOF_ANIMALS } from "@/lib/floridaFloofs"
 import { categoryLabels, type FloofProduct } from "@/lib/product"
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
   typeParam: string
   sortParam: string
   breedParam?: string
+  animalParam?: string
   typeOptions: string[]
   basePath: string
   collectionTitle: string
@@ -28,19 +30,35 @@ const {
   typeParam,
   sortParam,
   breedParam = "all",
+  animalParam = "all",
   typeOptions,
   basePath,
   collectionTitle,
   countLabel,
 } = Astro.props
 
-function queryHref(type: string, sort: string, breed: string = breedParam) {
+function queryHref(
+  type: string,
+  sort: string,
+  breed: string = breedParam,
+  animal: string = animalParam
+) {
   const params = new URLSearchParams()
   if (type !== "all") params.set("type", type)
   if (sort !== "featured") params.set("sort", sort)
   if (breed && breed !== "all") params.set("breed", breed)
+  if (animal && animal !== "all") params.set("animal", animal)
   const q = params.toString()
   return q ? `${basePath}?${q}` : basePath
+}
+
+function animalHref(slug: string) {
+  return queryHref(typeParam, sortParam, breedParam, slug)
+}
+
+function isAnimalActive(slug: string) {
+  if (slug === "all") return !animalParam || animalParam === "all"
+  return decodeURIComponent(animalParam).toLowerCase() === slug
 }
 
 function breedHref(chip: DogBreedChip) {
@@ -155,6 +173,37 @@ const chipClass = (active: boolean) =>
       </div>
     )}
 
+    {variant === "floridaFloofs" && (
+      <div class="collection-catalog__bar collection-catalog__bar--florida-floofs">
+        <div>
+          <h2 class="collection-catalog__heading">Meet the natives</h2>
+          <p class="collection-catalog__sub collection-handwriting">
+            Stickers, tees &amp; mugs — flower crowns for Gulf-coast locals.
+          </p>
+        </div>
+        <div class="collection-catalog__types" role="tablist" aria-label="Product type">
+          <a
+            href={queryHref("all", sortParam)}
+            role="tab"
+            aria-selected={typeParam === "all"}
+            class:list={["collection-catalog__type", typeParam === "all" && "is-active"]}
+          >
+            All
+          </a>
+          {typeOptions.map((type) => (
+            <a
+              href={queryHref(type, sortParam)}
+              role="tab"
+              aria-selected={typeParam === type}
+              class:list={["collection-catalog__type", typeParam === type && "is-active"]}
+            >
+              {categoryLabels[type] || type}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
     {variant === "desk" && (
       <div class="collection-catalog__bar collection-catalog__bar--desk">
         <div>
@@ -182,6 +231,29 @@ const chipClass = (active: boolean) =>
             </a>
           ))}
         </div>
+      </div>
+    )}
+
+    {variant === "floridaFloofs" && (
+      <div id="animal-filters" class="collection-catalog__chips collection-catalog__chips--florida" role="tablist" aria-label="Animal">
+        <a
+          href={animalHref("all")}
+          role="tab"
+          aria-selected={isAnimalActive("all")}
+          class:list={["collection-catalog__breed-chip", isAnimalActive("all") && "is-active"]}
+        >
+          All animals
+        </a>
+        {FLORIDA_FLOOF_ANIMALS.map((animal) => (
+          <a
+            href={animalHref(animal.slug)}
+            role="tab"
+            aria-selected={isAnimalActive(animal.slug)}
+            class:list={["collection-catalog__breed-chip", isAnimalActive(animal.slug) && "is-active"]}
+          >
+            {animal.label}
+          </a>
+        ))}
       </div>
     )}
 
@@ -233,7 +305,7 @@ const chipClass = (active: boolean) =>
         <select
           id="sort"
           class="collection-catalog__sort border-[3px] border-ink bg-paper px-4 py-2 text-sm text-ink focus:border-accent focus:outline-none"
-          onchange={`const type='${typeParam}'; const breed='${breedParam}'; const v=this.value; const p=new URLSearchParams(); if(type!=='all')p.set('type',type); if(v!=='featured')p.set('sort',v); if(breed&&breed!=='all')p.set('breed',breed); const q=p.toString(); location.href='${basePath}'+(q?'?'+q:'')`}
+          onchange={`const type='${typeParam}'; const breed='${breedParam}'; const animal='${animalParam}'; const v=this.value; const p=new URLSearchParams(); if(type!=='all')p.set('type',type); if(v!=='featured')p.set('sort',v); if(breed&&breed!=='all')p.set('breed',breed); if(animal&&animal!=='all')p.set('animal',animal); const q=p.toString(); location.href='${basePath}'+(q?'?'+q:'')`}
         >
           <option value="featured" selected={sortParam === "featured"}>Featured</option>
           <option value="price-asc" selected={sortParam === "price-asc"}>Price: Low to high</option>

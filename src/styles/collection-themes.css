@@ -25,9 +25,11 @@
 .collection-theme[data-collection-theme="dogs"] h1,
 .collection-theme[data-collection-theme="desk"] h1,
 .collection-theme[data-collection-theme="reads"] h1,
+.collection-theme[data-collection-theme="floridaFloofs"] h1,
 .collection-theme[data-collection-theme="dogs"] .collection-catalog__heading,
 .collection-theme[data-collection-theme="desk"] .collection-catalog__heading,
-.collection-theme[data-collection-theme="reads"] .collection-catalog__heading {
+.collection-theme[data-collection-theme="reads"] .collection-catalog__heading,
+.collection-theme[data-collection-theme="floridaFloofs"] .collection-catalog__heading {
   text-transform: none;
 }
 

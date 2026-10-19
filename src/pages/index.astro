@@ -5,6 +5,7 @@ import TrustBar from "@/components/TrustBar.astro";
 import Icon from "@/components/Icon.astro";
 import { listProducts } from "@/lib/medusa";
 import { mapProduct, type FloofProduct } from "@/lib/product";
+import { collectionPath } from "@/lib/collections";
 import { ogHomeImageUrl } from "@/lib/og/socialUrl";
 
 export const prerender = false;
@@ -24,6 +25,17 @@ const manifesto = [
   { n: "03", line: "Designed in SW Florida.", tag: "origin" },
   { n: "04", line: "Made when you order.", tag: "fulfillment" },
   { n: "05", line: "Life's too short for boring clothes.", tag: "thesis" },
+];
+
+const collections: { href: string; label: string; blurb: string }[] = [
+  { href: collectionPath("dogs"), label: "Dogs", blurb: "Flower-crown breeds & insider jokes" },
+  { href: collectionPath("reads"), label: "Reads", blurb: "Mugs & stickers for book people" },
+  { href: collectionPath("desk"), label: "Desk", blurb: "Camera-off work-from-home wit" },
+  {
+    href: collectionPath("florida-floofs"),
+    label: "Florida Floofs",
+    blurb: "Gulf-coast natives in flower crowns",
+  },
 ];
 
 const cats: { href: string; label: string; icon: string; blurb: string }[] = [
@@ -115,6 +127,31 @@ const cats: { href: string; label: string; icon: string; blurb: string }[] = [
   </section>
 
   <TrustBar />
+
+  <section class="border-b-[3px] border-ink bg-paper-2">
+    <div class="mx-auto max-w-7xl px-5 md:px-6 py-12">
+      <div class="mb-8">
+        <p class="eyebrow">Collections</p>
+        <h2 class="mt-2 font-display text-3xl md:text-4xl text-ink">Pick your shelf</h2>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {collections.map((c) => (
+          <a
+            href={c.href}
+            class="group block p-6 sm:p-7 bg-paper hover:bg-accent hover:text-accent-ink transition-colors border-[3px] border-ink min-w-0"
+          >
+            <p class="font-display text-xl md:text-2xl group-hover:text-inherit">{c.label}</p>
+            <p class="mt-2 text-sm opacity-80 normal-case tracking-normal font-normal group-hover:opacity-90">
+              {c.blurb}
+            </p>
+            <span class="mt-4 inline-block text-[0.72rem] font-semibold tracking-[0.12em] uppercase border-b-2 border-current pb-0.5">
+              Shop collection →
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
 
   <section class="border-b-[3px] border-ink">
     <div class="mx-auto max-w-7xl px-5 md:px-6 py-12">

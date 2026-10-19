@@ -80,6 +80,14 @@ export function catalogDesignImageUrl(product: FloofProduct): string {
 }
 
 /** Dogs collection cards — static sticker art, flat tee art, or product photo for mugs. */
+export function floridaFloofsCatalogImageUrl(product: FloofProduct): string {
+  if (isStickerProduct(product)) return stickerCatalogImageUrl(product)
+  if (product.category === "tees" || product.category === "hoodies") {
+    return catalogDesignImageUrl(product)
+  }
+  return product.image ?? product.images[0] ?? ""
+}
+
 export function dogsCatalogImageUrl(product: FloofProduct): string {
   if (isStickerProduct(product)) return stickerCatalogImageUrl(product)
   if (product.category === "tees" || product.category === "hoodies") {

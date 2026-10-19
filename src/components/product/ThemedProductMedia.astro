@@ -54,6 +54,33 @@ const caption =
   </figure>
 )}
 
+{themeId === "floridaFloofs" && (
+  <figure class="product-pdp-media product-pdp-media--florida">
+    <div class="product-pdp-shore">
+      <img
+        class="product-pdp-shore__palm"
+        src="/collections/florida-floofs/palm-doodle.svg"
+        alt=""
+        width="36"
+        height="48"
+        aria-hidden="true"
+      />
+      <div class="product-pdp-shore__frame">
+        <ProductGallery client:load images={images} alt={galleryAlt} phrase={phrase} variant="bare" />
+      </div>
+      <figcaption class="collection-handwriting product-pdp-shore__cap">{caption}</figcaption>
+      <img
+        class="product-pdp-shore__wave"
+        src="/collections/florida-floofs/wave-doodle.svg"
+        alt=""
+        width="160"
+        height="20"
+        aria-hidden="true"
+      />
+    </div>
+  </figure>
+)}
+
 {themeId === "desk" && (
   <figure class="product-pdp-media product-pdp-media--desk">
     <div class="product-pdp-call">

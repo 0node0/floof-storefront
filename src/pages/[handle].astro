@@ -5,6 +5,8 @@ import CollectionCatalog from "@/components/collection/CollectionCatalog.astro";
 import CollectionHabitatBand from "@/components/collection/CollectionHabitatBand.astro";
 import CollectionReadsQuote from "@/components/collection/CollectionReadsQuote.astro";
 import CollectionDeskWeek from "@/components/collection/CollectionDeskWeek.astro";
+import CollectionFloridaFloofsTeaser from "@/components/collection/CollectionFloridaFloofsTeaser.astro";
+import CollectionFloridaFloofsShore from "@/components/collection/CollectionFloridaFloofsShore.astro";
 import TrustBar from "@/components/TrustBar.astro";
 import {
   getCollectionByHandle,
@@ -15,6 +17,7 @@ import {
   filterByProductType,
 } from "@/lib/collections";
 import { filterByBreed } from "@/lib/dogBreeds";
+import { filterFloridaFloofsByAnimal } from "@/lib/floridaFloofsProducts";
 import {
   buildGoogleFontsHref,
   resolveCollectionTheme,
@@ -42,6 +45,7 @@ const theme = resolveCollectionTheme(collection);
 const typeParam = Astro.url.searchParams.get("type") || "all";
 const sortParam = Astro.url.searchParams.get("sort") || "featured";
 const breedParam = Astro.url.searchParams.get("breed") || "all";
+const animalParam = Astro.url.searchParams.get("animal") || "all";
 
 let products: FloofProduct[] = [];
 try {
@@ -54,6 +58,9 @@ const typeOptions = availableProductTypes(products);
 let filtered = filterByProductType(products, typeParam);
 if (theme.id === "dogs") {
   filtered = filterByBreed(filtered, breedParam);
+}
+if (theme.id === "floridaFloofs") {
+  filtered = filterFloridaFloofsByAnimal(filtered, animalParam);
 }
 filtered = sortFloofProducts(filtered, sortParam);
 
@@ -88,21 +95,27 @@ const showTrustBar = theme.id === "floof";
 
     {showTrustBar && <TrustBar compact />}
 
-    <CollectionCatalog
-      variant={theme.cardVariant}
-      products={products}
-      filtered={filtered}
-      typeParam={typeParam}
-      sortParam={sortParam}
-      breedParam={breedParam}
-      typeOptions={typeOptions}
-      basePath={basePath}
-      collectionTitle={hero.title}
-      countLabel={countLabel}
-    />
+    {theme.id === "floridaFloofs" && products.length === 0 ? (
+      <CollectionFloridaFloofsTeaser />
+    ) : (
+      <CollectionCatalog
+        variant={theme.cardVariant}
+        products={products}
+        filtered={filtered}
+        typeParam={typeParam}
+        sortParam={sortParam}
+        breedParam={breedParam}
+        animalParam={animalParam}
+        typeOptions={typeOptions}
+        basePath={basePath}
+        collectionTitle={hero.title}
+        countLabel={countLabel}
+      />
+    )}
 
     {theme.id === "dogs" && <CollectionHabitatBand theme={theme.id} />}
     {theme.id === "reads" && <CollectionReadsQuote />}
     {theme.id === "desk" && <CollectionDeskWeek />}
+    {theme.id === "floridaFloofs" && <CollectionFloridaFloofsShore />}
   </div>
 </Layout>

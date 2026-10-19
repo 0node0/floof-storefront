@@ -66,6 +66,18 @@ export const OG_PALETTES: Record<CollectionThemeId, OgPalette> = {
     artShadow: "rgba(38,50,50,0.3)",
     panelAccent: "#55705b",
   },
+  floridaFloofs: {
+    background: "#f4f0e6",
+    backgroundWash: "#e6f0ee",
+    ink: "#1f3d38",
+    inkMuted: "#3d5c56",
+    accent: "#e07a5f",
+    accentInk: "#fffbf5",
+    border: "#1f3d38",
+    collectionLabel: "Florida Floofs",
+    artShadow: "rgba(31,61,56,0.22)",
+    panelAccent: "#5ba8a0",
+  },
 }
 
 export function paletteForTheme(themeId: CollectionThemeId): OgPalette {
