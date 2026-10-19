@@ -1,12 +1,12 @@
 /** Southwest Florida native animals in the Florida Floofs collection. */
 export const FLORIDA_FLOOF_ANIMALS = [
-  { slug: "american-alligator", label: "American Alligator" },
+  { slug: "alligator", label: "American Alligator" },
   { slug: "bottlenose-dolphin", label: "Bottlenose Dolphin" },
   { slug: "brown-pelican", label: "Brown Pelican" },
   { slug: "burrowing-owl", label: "Burrowing Owl" },
   { slug: "florida-panther", label: "Florida Panther" },
   { slug: "gopher-tortoise", label: "Gopher Tortoise" },
-  { slug: "loggerhead-sea-turtle", label: "Loggerhead Sea Turtle" },
+  { slug: "loggerhead", label: "Loggerhead Sea Turtle" },
   { slug: "manatee", label: "Manatee" },
   { slug: "river-otter", label: "River Otter" },
   { slug: "roseate-spoonbill", label: "Roseate Spoonbill" },
