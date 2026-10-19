@@ -3,7 +3,7 @@ import { readOgBuildIdFromRuntime } from "./buildId"
 /** Keep in sync with render.ts PNG cache key segments. Bump when OG output changes. */
 export const OG_RENDER_REVISION = {
   product: "v11",
-  collection: "v7",
+  collection: "v8",
   home: "v2",
   links: "links",
   store: "store",

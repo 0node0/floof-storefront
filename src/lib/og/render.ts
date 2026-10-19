@@ -30,6 +30,9 @@ import { paletteForTheme } from "./palette"
 import { resolveApparelOg } from "./apparelSource"
 import { isApparelProduct } from "./apparelProduct"
 import { pickCollectionOgProducts } from "./collectionPicks"
+import { floridaFloofStaticCollectionThumbs } from "./floridaFloofStaticOg"
+import { FLORIDA_FLOOFS_COLLECTION_HANDLE } from "@/lib/floridaFloofs"
+import { FLORIDA_FLOOFS_SYNTHETIC_COLLECTION } from "@/lib/floridaFloofsProducts"
 import { ogProductSourceUrl } from "./productImage"
 import { OG_RENDER_REVISION } from "./revision"
 import { resolveOgProductSourceUrl } from "./resolveSource"
@@ -129,9 +132,14 @@ export async function renderProductOg(handle: string): Promise<Uint8Array | null
 }
 
 export async function renderCollectionOg(handle: string): Promise<Uint8Array | null> {
-  const { collection } = await getCollectionByHandle(handle).catch(() => ({
+  const { collection: fromApi } = await getCollectionByHandle(handle).catch(() => ({
     collection: undefined,
   }))
+  const collection =
+    fromApi ??
+    (handle === FLORIDA_FLOOFS_COLLECTION_HANDLE
+      ? FLORIDA_FLOOFS_SYNTHETIC_COLLECTION
+      : undefined)
   if (!collection) return null
   const theme = resolveCollectionTheme(collection)
   const palette = paletteForTheme(theme.id)
@@ -161,6 +169,10 @@ export async function renderCollectionOg(handle: string): Promise<Uint8Array | n
       )
       thumbs = loaded.filter((u): u is string => Boolean(u))
     } catch {}
+  }
+
+  if (thumbs.length === 0 && collection.handle === FLORIDA_FLOOFS_COLLECTION_HANDLE) {
+    thumbs = await floridaFloofStaticCollectionThumbs()
   }
 
   const thumbKey = thumbs.map((t) => t.slice(0, 48)).join("|")
