@@ -19,6 +19,10 @@ export default defineConfig({
   output: "server",
   adapter: node({ mode: "standalone" }),
   site: "https://floof.space",
+  /** Astro dev toolbar is dev-only by default; keep it off so it never ships or appears in previews. */
+  devToolbar: {
+    enabled: false,
+  },
   env: {
     schema: {
       PUBLIC_OG_BUILD_ID: envField.string({
