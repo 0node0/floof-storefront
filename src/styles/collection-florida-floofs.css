@@ -13,7 +13,7 @@
   text-transform: none;
 }
 
-/* Hero */
+/* Hero — option D: big type + horizontal art strip */
 .collection-hero--florida-floofs {
   border-bottom: 2px solid rgba(31, 61, 56, 0.12);
   background: transparent;
@@ -22,11 +22,7 @@
 .collection-hero--florida-floofs__inner {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 3rem 1.5rem 4rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-  align-items: center;
+  padding: 2.5rem 1.25rem 2rem;
 }
 
 .collection-hero--florida-floofs__eyebrow {
@@ -37,40 +33,36 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ff-mangrove, #2f5d4a);
+  margin: 0 0 1rem;
+}
+
+.collection-hero--florida-floofs__headline-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: end;
 }
 
 .collection-hero--florida-floofs__title {
-  font: 600 clamp(2.5rem, 5vw, 4.25rem) / 1.02 var(--font-display);
+  font: 600 clamp(3.25rem, 11vw, 6.75rem) / 0.95 var(--font-display);
   color: var(--color-ink);
-  margin: 1rem 0 0.75rem;
+  margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .collection-hero--florida-floofs__title em {
   font-style: italic;
   color: var(--ff-coral, #e07a5f);
-  position: relative;
-  display: inline-block;
-  padding-bottom: 0.35rem;
-  z-index: 1;
 }
 
-.collection-hero--florida-floofs__wave {
-  position: absolute;
-  left: -2%;
-  bottom: -0.15rem;
-  width: 104%;
-  max-width: 20rem;
-  height: 22px;
-  object-fit: contain;
-  opacity: 0.9;
-  z-index: 0;
-  pointer-events: none;
+.collection-hero--florida-floofs__aside {
+  max-width: 22rem;
 }
 
 .collection-hero--florida-floofs__lede {
-  max-width: 38ch;
+  margin: 0;
   font-size: 1.0625rem;
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--color-ink-2);
 }
 
@@ -78,7 +70,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.65rem;
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
 }
 
 .collection-hero--florida-floofs__btn {
@@ -101,104 +93,135 @@
   box-shadow: 3px 3px 0 var(--color-ink);
 }
 
+.collection-hero--florida-floofs__btn--shop {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  border-color: var(--color-ink);
+  padding: 0.85rem 1.35rem;
+  border-radius: 999px;
+}
+
 .collection-hero--florida-floofs__btn--alt {
   background: var(--color-cream);
   color: var(--color-ink);
 }
 
-.collection-hero--florida-floofs__scribble {
-  margin-top: 1.25rem;
-  font-size: 1.35rem;
-  color: var(--ff-mangrove, #2f5d4a);
-}
-
-.collection-hero--florida-floofs__art {
+.collection-hero--florida-floofs__strip-outer {
   position: relative;
-  margin: 0;
-  min-width: 0;
+  margin-top: 2.25rem;
+  padding: 1.75rem 0 1.25rem;
+  border-top: 1px solid rgba(31, 61, 56, 0.12);
 }
 
-.collection-hero--florida-floofs__scene {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 5 / 4;
-  border-radius: 0.75rem;
-  border: 2px solid rgba(31, 61, 56, 0.15);
-  overflow: hidden;
-  box-shadow: 0 18px 40px -20px rgba(31, 61, 56, 0.35);
-}
-
-.collection-hero--florida-floofs__bg {
+.collection-hero--florida-floofs__strip-fade {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.collection-hero--florida-floofs__floofs {
-  position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 2.5rem;
+  width: min(12vw, 5.5rem);
+  z-index: 2;
   pointer-events: none;
 }
 
-.collection-hero--florida-floofs__floof {
-  position: absolute;
+.collection-hero--florida-floofs__strip-fade--left {
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    var(--color-paper) 0%,
+    color-mix(in srgb, var(--color-paper) 85%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+.collection-hero--florida-floofs__strip-fade--right {
+  right: 0;
+  background: linear-gradient(
+    270deg,
+    var(--color-paper) 0%,
+    color-mix(in srgb, var(--color-paper) 85%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+.collection-hero--florida-floofs__strip {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0.75rem 0.25rem;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.25rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.collection-hero--florida-floofs__strip::-webkit-scrollbar {
+  display: none;
+}
+
+.collection-hero--florida-floofs__strip-item {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  transform: rotate(var(--strip-rotate, 0deg));
+  transition: transform 180ms ease;
+}
+
+.collection-hero--florida-floofs__strip-item img {
+  width: clamp(6.5rem, 14vw, 10.5rem);
+  height: clamp(6.5rem, 14vw, 10.5rem);
   object-fit: contain;
-  filter: drop-shadow(0 10px 18px rgba(31, 61, 56, 0.22));
-  transition: transform 200ms ease;
+  filter: drop-shadow(0 14px 22px rgba(31, 61, 56, 0.2));
 }
 
-.collection-hero--florida-floofs__floof.slot-manatee {
-  width: 46%;
-  left: 22%;
-  bottom: 4%;
-  z-index: 4;
-  transform: rotate(-4deg);
+.collection-hero--florida-floofs__strip-item:hover {
+  transform: rotate(0deg) translateY(-4px);
 }
 
-.collection-hero--florida-floofs__floof.slot-spoonbill {
-  width: 38%;
-  left: -2%;
-  top: 18%;
-  z-index: 3;
-  transform: rotate(-8deg);
+.collection-hero--florida-floofs__strip-hint {
+  margin: 0.75rem 0 0;
+  text-align: center;
+  font: 600 0.65rem/1 var(--font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
 }
 
-.collection-hero--florida-floofs__floof.slot-panther {
-  width: 40%;
-  right: -4%;
-  top: 22%;
-  z-index: 5;
-  transform: rotate(6deg);
+.collection-hero--florida-floofs__strip-hint span {
+  opacity: 0.65;
 }
 
-.collection-hero--florida-floofs__floof.slot-dolphin {
-  width: 32%;
-  right: 8%;
-  top: -2%;
-  z-index: 2;
-  transform: rotate(12deg);
-}
+@media (min-width: 900px) {
+  .collection-hero--florida-floofs__inner {
+    padding: 3rem 2.5rem 2.5rem;
+  }
 
-.collection-hero--florida-floofs__floof.slot-pelican {
-  width: 34%;
-  left: 6%;
-  top: 2%;
-  z-index: 2;
-  transform: rotate(-5deg);
-}
+  .collection-hero--florida-floofs__headline-row {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 2.5rem;
+    align-items: end;
+  }
 
-.collection-hero--florida-floofs__floof.slot-turtle {
-  width: 36%;
-  right: 18%;
-  bottom: 2%;
-  z-index: 3;
-  transform: rotate(4deg);
-}
+  .collection-hero--florida-floofs__aside {
+    justify-self: end;
+    text-align: left;
+    padding-bottom: 0.35rem;
+  }
 
-.collection-hero--florida-floofs__art:hover .collection-hero--florida-floofs__floof {
-  transform: translateY(-3px) rotate(0deg);
+  .collection-hero--florida-floofs__strip {
+    gap: 0.35rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .collection-hero--florida-floofs__strip-item img {
+    width: clamp(7.5rem, 9vw, 10rem);
+    height: clamp(7.5rem, 9vw, 10rem);
+  }
+
+  .collection-hero--florida-floofs__strip-hint {
+    display: none;
+  }
 }
 
 /* Teaser (empty catalog) */
@@ -393,56 +416,16 @@
 
 @media (max-width: 767px) {
   .collection-hero--florida-floofs__inner {
-    grid-template-columns: 1fr;
-    padding: 2rem 1.25rem 3rem;
+    padding: 1.75rem 1rem 1.5rem;
   }
 
-  .collection-hero--florida-floofs__art {
-    order: -1;
-  }
-
-  .collection-hero--florida-floofs__scene {
-    aspect-ratio: 1 / 1;
-    max-height: min(88vw, 22rem);
-    margin: 0 auto;
-  }
-
-  .collection-hero--florida-floofs__floof.slot-manatee {
-    width: 52%;
-    left: 18%;
-    bottom: 2%;
-  }
-
-  .collection-hero--florida-floofs__floof.slot-spoonbill {
-    width: 44%;
-    left: -6%;
-    top: 14%;
-  }
-
-  .collection-hero--florida-floofs__floof.slot-panther {
-    width: 46%;
-    right: -8%;
-    top: 16%;
-  }
-
-  .collection-hero--florida-floofs__floof.slot-dolphin {
-    width: 36%;
-    right: 4%;
-  }
-
-  .collection-hero--florida-floofs__floof.slot-pelican {
-    width: 38%;
-    left: 0;
-  }
-
-  .collection-hero--florida-floofs__floof.slot-turtle {
-    width: 40%;
-    right: 12%;
+  .collection-hero--florida-floofs__aside {
+    max-width: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .collection-hero--florida-floofs__art:hover .collection-hero--florida-floofs__floof {
-    transform: none;
+  .collection-hero--florida-floofs__strip-item:hover {
+    transform: rotate(var(--strip-rotate, 0deg));
   }
 }
