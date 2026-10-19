@@ -2,6 +2,8 @@
 import type { ThemeAwareHeroCopy } from "@/lib/themeHeroCopy"
 import type { ThemeHeroAssets } from "@/lib/collectionThemes"
 import { FLORIDA_FLOOF_ANIMALS } from "@/lib/floridaFloofs"
+import { floridaFloofStaticArtByAnimal } from "@/lib/floridaFloofStickerArt"
+import type { FloridaFloofAnimalSlug } from "@/lib/floridaFloofs"
 
 interface Props {
   hero: ThemeAwareHeroCopy
@@ -12,6 +14,22 @@ interface Props {
 const { hero, productCount = 0 } = Astro.props
 const assetBase = "/collections/florida-floofs"
 const animalCount = FLORIDA_FLOOF_ANIMALS.length
+
+const primaryCta =
+  productCount > 0 ? "Shop by animal" : "Meet the natives"
+const catalogHref = productCount > 0 ? "#collection-grid" : "#animal-filters"
+const secondaryLabel =
+  productCount > 0 ? `See all ${productCount}` : `${animalCount} natives`
+
+/** Hero sticker collage — order and slot classes tuned for shore overlap. */
+const HERO_FLOOFS: { slug: FloridaFloofAnimalSlug; slot: string }[] = [
+  { slug: "manatee", slot: "slot-manatee" },
+  { slug: "roseate-spoonbill", slot: "slot-spoonbill" },
+  { slug: "florida-panther", slot: "slot-panther" },
+  { slug: "bottlenose-dolphin", slot: "slot-dolphin" },
+  { slug: "brown-pelican", slot: "slot-pelican" },
+  { slug: "loggerhead-sea-turtle", slot: "slot-turtle" },
+]
 ---
 <section
   class="collection-hero collection-hero--florida-floofs"
@@ -46,12 +64,12 @@ const animalCount = FLORIDA_FLOOF_ANIMALS.length
       </h1>
       <p class="collection-hero--florida-floofs__lede">{hero.tagline}</p>
       <div class="collection-hero--florida-floofs__btns">
-        <a class="collection-hero--florida-floofs__btn" href="#animal-filters">Shop by animal</a>
+        <a class="collection-hero--florida-floofs__btn" href="#animal-filters">{primaryCta}</a>
         <a
           class="collection-hero--florida-floofs__btn collection-hero--florida-floofs__btn--alt"
-          href="#collection-grid"
+          href={catalogHref}
         >
-          {productCount > 0 ? `See all ${productCount}` : `${animalCount} natives`}
+          {secondaryLabel}
         </a>
       </div>
       <p class="collection-handwriting collection-hero--florida-floofs__scribble">
@@ -60,18 +78,28 @@ const animalCount = FLORIDA_FLOOF_ANIMALS.length
     </div>
 
     <figure class="collection-hero--florida-floofs__art">
-      <img
-        src={`${assetBase}/hero-bg.svg`}
-        alt=""
-        class="collection-hero--florida-floofs__bg"
-        width="640"
-        height="480"
-        aria-hidden="true"
-      />
-      <div class="collection-hero--florida-floofs__sticker-row" aria-hidden="true">
-        <img src="/sticker-art/florida-floof-manatee-sticker-art.png" alt="" width="120" height="120" />
-        <img src="/sticker-art/florida-floof-roseate-spoonbill-sticker-art.png" alt="" width="120" height="120" />
-        <img src="/sticker-art/florida-floof-florida-panther-sticker-art.png" alt="" width="120" height="120" />
+      <div class="collection-hero--florida-floofs__scene">
+        <img
+          src={`${assetBase}/hero-bg.svg`}
+          alt=""
+          class="collection-hero--florida-floofs__bg"
+          width="640"
+          height="480"
+          aria-hidden="true"
+        />
+        <div class="collection-hero--florida-floofs__floofs" aria-hidden="true">
+          {HERO_FLOOFS.map(({ slug, slot }) => (
+            <img
+              class:list={["collection-hero--florida-floofs__floof", slot]}
+              src={floridaFloofStaticArtByAnimal(slug)}
+              alt=""
+              width="280"
+              height="280"
+              loading="eager"
+              decoding="async"
+            />
+          ))}
+        </div>
       </div>
     </figure>
   </div>
