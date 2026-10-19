@@ -177,6 +177,7 @@
 }
 
 .product-pdp-theme[data-collection-theme="floridaFloofs"] .collection-product-card--floridaFloofs h3 {
+  font: 700 1.125rem/1.25 var(--font-display);
   text-transform: none;
 }
 

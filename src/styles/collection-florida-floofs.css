@@ -394,8 +394,12 @@
 }
 
 .collection-product-card--floridaFloofs h3 {
+  font: 700 1.125rem/1.25 var(--font-display);
   text-transform: none;
-  font-weight: 700;
+}
+
+.collection-product-card--floridaFloofs .collection-product-card__footer .font-display {
+  font: 600 1rem/1.25 var(--font-display);
 }
 
 .collection-product-grid--floridaFloofs {
