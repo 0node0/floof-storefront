@@ -11,6 +11,8 @@ const defaultTaglines: Record<string, string> = {
   reads: "For dog-eared pages and hardcover loyalty.",
   pets: "Apparel and goods for the professional snugglers.",
   dogs: "Apparel and goods for the professional snugglers.",
+  "florida-floofs":
+    "Twelve Southwest Florida natives in flower crowns — stickers, tees and mugs.",
 }
 
 export function collectionHeroCopy(collection: MedusaCollection) {

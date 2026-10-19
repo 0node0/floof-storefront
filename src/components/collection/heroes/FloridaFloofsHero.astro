@@ -1,0 +1,78 @@
+---
+import type { ThemeAwareHeroCopy } from "@/lib/themeHeroCopy"
+import type { ThemeHeroAssets } from "@/lib/collectionThemes"
+import { FLORIDA_FLOOF_ANIMALS } from "@/lib/floridaFloofs"
+
+interface Props {
+  hero: ThemeAwareHeroCopy
+  assets: ThemeHeroAssets
+  productCount?: number
+}
+
+const { hero, productCount = 0 } = Astro.props
+const assetBase = "/collections/florida-floofs"
+const animalCount = FLORIDA_FLOOF_ANIMALS.length
+---
+<section
+  class="collection-hero collection-hero--florida-floofs"
+  data-hero-variant="floridaFloofs"
+  aria-labelledby="collection-hero-title"
+>
+  <div class="collection-hero--florida-floofs__inner">
+    <div class="collection-hero--florida-floofs__copy">
+      <p class="collection-hero--florida-floofs__eyebrow">
+        <img src={`${assetBase}/palm-doodle.svg`} alt="" width="22" height="28" aria-hidden="true" />
+        {hero.eyebrow ?? "Gulf-coast natives"}
+      </p>
+      <h1 id="collection-hero-title" class="collection-hero--florida-floofs__title">
+        {hero.titleAccent ? (
+          <>
+            {hero.title}{" "}
+            <em>
+              {hero.titleAccent}
+              <img
+                src={`${assetBase}/wave-doodle.svg`}
+                alt=""
+                width="280"
+                height="24"
+                class="collection-hero--florida-floofs__wave"
+                aria-hidden="true"
+              />
+            </em>
+          </>
+        ) : (
+          hero.title
+        )}
+      </h1>
+      <p class="collection-hero--florida-floofs__lede">{hero.tagline}</p>
+      <div class="collection-hero--florida-floofs__btns">
+        <a class="collection-hero--florida-floofs__btn" href="#animal-filters">Shop by animal</a>
+        <a
+          class="collection-hero--florida-floofs__btn collection-hero--florida-floofs__btn--alt"
+          href="#collection-grid"
+        >
+          {productCount > 0 ? `See all ${productCount}` : `${animalCount} natives`}
+        </a>
+      </div>
+      <p class="collection-handwriting collection-hero--florida-floofs__scribble">
+        Flower crowns optional. Attitude included.
+      </p>
+    </div>
+
+    <figure class="collection-hero--florida-floofs__art">
+      <img
+        src={`${assetBase}/hero-bg.svg`}
+        alt=""
+        class="collection-hero--florida-floofs__bg"
+        width="640"
+        height="480"
+        aria-hidden="true"
+      />
+      <div class="collection-hero--florida-floofs__sticker-row" aria-hidden="true">
+        <img src="/sticker-art/florida-floof-manatee-sticker-art.png" alt="" width="120" height="120" />
+        <img src="/sticker-art/florida-floof-roseate-spoonbill-sticker-art.png" alt="" width="120" height="120" />
+        <img src="/sticker-art/florida-floof-florida-panther-sticker-art.png" alt="" width="120" height="120" />
+      </div>
+    </figure>
+  </div>
+</section>

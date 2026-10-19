@@ -39,6 +39,13 @@ const THEME_DEFAULTS: Partial<
     tagline:
       "Mugs and stickers for the nine-to-five, done from the couch. Quietly funny, safe for the background of any meeting.",
   },
+  floridaFloofs: {
+    eyebrow: "Gulf-coast natives",
+    title: "Florida",
+    titleAccent: "floofs.",
+    tagline:
+      "Twelve Southwest Florida animals in flower crowns — manatees, spoonbills, panthers and friends on stickers, tees and mugs.",
+  },
 }
 
 export function themeAwareHeroCopy(
@@ -52,7 +59,9 @@ export function themeAwareHeroCopy(
   }
   const useThemed =
     collection.handle === themeId ||
-    (themeId === "dogs" && collection.handle === "pets")
+    (themeId === "dogs" && collection.handle === "pets") ||
+    (themeId === "floridaFloofs" &&
+      collection.handle === "florida-floofs")
   return {
     ...base,
     handle: collection.handle,

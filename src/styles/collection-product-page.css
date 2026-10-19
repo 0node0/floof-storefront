@@ -115,6 +115,71 @@
   border-radius: 0.875rem;
 }
 
+.product-pdp-theme[data-collection-theme="floridaFloofs"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: normal;
+  opacity: 0.2;
+  background: url(/collections/florida-floofs/wave-doodle.svg) repeat-x left bottom / 280px 22px;
+}
+
+.product-pdp-theme[data-collection-theme="floridaFloofs"] .product-pdp__panel {
+  background: #fffbf5;
+  border: 2px solid rgba(31, 61, 56, 0.2);
+  border-radius: 1rem;
+  box-shadow: 4px 4px 0 rgba(91, 168, 160, 0.3);
+}
+
+.product-pdp-shore {
+  position: relative;
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: 1rem 0 2.5rem;
+}
+
+.product-pdp-shore__palm {
+  position: absolute;
+  top: -0.5rem;
+  left: 0.5rem;
+  z-index: 2;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.product-pdp-shore__frame {
+  background: linear-gradient(165deg, #e6f0ee 0%, #faf7f0 100%);
+  border: 2px solid rgba(31, 61, 56, 0.15);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+
+.product-pdp-shore__cap {
+  display: block;
+  margin-top: 0.75rem;
+  text-align: center;
+  font-size: 1.25rem;
+  color: #2f5d4a;
+}
+
+.product-pdp-shore__wave {
+  display: block;
+  margin: 0.75rem auto 0;
+  opacity: 0.75;
+}
+
+.product-pdp-theme[data-collection-theme="floridaFloofs"] .product-pdp-cart .btn {
+  background: #5ba8a0;
+  border-color: #1f3d38;
+  color: #fffbf5;
+}
+
+.product-pdp-theme[data-collection-theme="floridaFloofs"] .collection-product-card--floridaFloofs h3 {
+  text-transform: none;
+}
+
 .product-pdp__title {
   font-family: var(--font-display);
   font-size: clamp(1.75rem, 4vw, 2.5rem);

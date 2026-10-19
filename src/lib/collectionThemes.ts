@@ -1,8 +1,18 @@
 import type { MedusaCollection } from "./medusa"
 
-export type CollectionThemeId = "floof" | "dogs" | "reads" | "desk"
-export type HeroVariant = "floof" | "dogs" | "reads" | "desk"
-export type CardVariant = "floof" | "dogs" | "reads" | "desk"
+export type CollectionThemeId =
+  | "floof"
+  | "dogs"
+  | "reads"
+  | "desk"
+  | "floridaFloofs"
+export type HeroVariant = "floof" | "dogs" | "reads" | "desk" | "floridaFloofs"
+export type CardVariant =
+  | "floof"
+  | "dogs"
+  | "reads"
+  | "desk"
+  | "floridaFloofs"
 
 export interface ThemeFonts {
   display: { family: string; googleParam: string }
@@ -46,6 +56,7 @@ const HANDLE_THEME: Record<string, CollectionThemeId> = {
   pets: "dogs",
   reads: "reads",
   desk: "desk",
+  "florida-floofs": "floridaFloofs",
 }
 
 const DOGS_VARS: Record<string, string> = {
@@ -84,6 +95,29 @@ const READS_VARS: Record<string, string> = {
   "--color-surface": "#EFE7D6",
   "--theme-radius-card": "0",
   "--theme-rule": "1px",
+}
+
+const FLORIDA_FLOOFS_VARS: Record<string, string> = {
+  "--color-paper": "#F4F0E6",
+  "--color-paper-2": "#FAF7F0",
+  "--color-paper-3": "#E8E2D4",
+  "--color-ink": "#1F3D38",
+  "--color-ink-2": "#3D5C56",
+  "--color-muted": "#5A726C",
+  "--color-accent": "#E07A5F",
+  "--color-accent-deep": "#C45E48",
+  "--color-accent-soft": "rgba(224, 122, 95, 0.18)",
+  "--color-accent-ink": "#FFFBF5",
+  "--color-secondary": "#5BA8A0",
+  "--color-cream": "#FFFBF5",
+  "--color-focus": "#5BA8A0",
+  "--color-surface": "#E6F0EE",
+  "--theme-radius-card": "0.5rem",
+  "--theme-rule": "2px",
+  "--ff-teal": "#5BA8A0",
+  "--ff-sand": "#F4F0E6",
+  "--ff-coral": "#E07A5F",
+  "--ff-mangrove": "#2F5D4A",
 }
 
 const DESK_VARS: Record<string, string> = {
@@ -168,6 +202,32 @@ const THEMES: Record<CollectionThemeId, CollectionTheme> = {
       imageAlt: "Reader with a stack of books and a Floof tee",
     },
   },
+  floridaFloofs: {
+    id: "floridaFloofs",
+    label: "Florida Floofs",
+    fonts: {
+      display: {
+        family: '"Fraunces", Georgia, serif',
+        googleParam: "Fraunces:opsz,wght@9..144,500;600;700",
+      },
+      body: {
+        family: '"Nunito", system-ui, sans-serif',
+        googleParam: "Nunito:wght@400;600;700;800",
+      },
+      mono: {
+        family: '"IBM Plex Mono", ui-monospace, monospace',
+        googleParam: "IBM+Plex+Mono:wght@500",
+      },
+    },
+    cssVars: FLORIDA_FLOOFS_VARS,
+    heroVariant: "floridaFloofs",
+    cardVariant: "floridaFloofs",
+    themeColor: "#F4F0E6",
+    hero: {
+      imageBase: "/collections/florida-floofs/hero",
+      imageAlt: "Gulf-coast palms and watercolor sky — Florida Floofs collection",
+    },
+  },
   desk: {
     id: "desk",
     label: "Desk",
@@ -197,7 +257,13 @@ const THEMES: Record<CollectionThemeId, CollectionTheme> = {
 }
 
 function isThemeId(value: unknown): value is CollectionThemeId {
-  return value === "floof" || value === "dogs" || value === "reads" || value === "desk"
+  return (
+    value === "floof" ||
+    value === "dogs" ||
+    value === "reads" ||
+    value === "desk" ||
+    value === "floridaFloofs"
+  )
 }
 
 /** Map collection URL handles to themed landing IDs (pets → dogs). */
@@ -215,6 +281,7 @@ export function parseProductFromThemeParam(
   if (!param) return null
   const raw = param.trim().toLowerCase()
   if (raw === "pets") return "dogs"
+  if (raw === "florida-floofs") return "floridaFloofs"
   if (isThemeId(raw) && raw !== "floof") return raw
   return null
 }
@@ -243,6 +310,7 @@ const THEME_HAND_FONT: Partial<Record<CollectionThemeId, string>> = {
   dogs: "Gochi+Hand",
   reads: "Caveat:wght@500;600;700",
   desk: "Kalam:wght@400;700",
+  floridaFloofs: "Caveat:wght@500;600;700",
 }
 
 export function buildGoogleFontsHref(theme: CollectionTheme): string {
@@ -281,6 +349,7 @@ const HAND_FONT_FAMILY: Partial<Record<CollectionThemeId, string>> = {
   dogs: '"Gochi Hand", "Segoe Print", cursive',
   reads: '"Caveat", "Segoe Print", cursive',
   desk: '"Kalam", "Segoe Print", cursive',
+  floridaFloofs: '"Caveat", "Segoe Print", cursive',
 }
 
 export function themeStyleAttribute(theme: CollectionTheme): string {

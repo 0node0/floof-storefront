@@ -4,6 +4,7 @@ import Footer from "@/components/Footer.astro";
 import AnnouncementBar from "@/components/AnnouncementBar.astro";
 import CartCelebration from "@/components/CartCelebration";
 import { collectionPath } from "@/lib/collections";
+import { mergeFeaturedCollectionLinks } from "@/lib/featuredCollections";
 import { listCollections } from "@/lib/medusa";
 import SocialMeta from "@/components/SocialMeta.astro";
 import { site } from "@/lib/site";
@@ -14,14 +15,13 @@ import "@/styles/global.css";
 let shopCollections: { href: string; label: string; handle: string }[] = [];
 try {
   const { collections } = await listCollections();
-  shopCollections = collections
-    .slice()
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .map((c) => ({
+  shopCollections = mergeFeaturedCollectionLinks(
+    collections.map((c) => ({
       href: collectionPath(c.handle),
       label: c.title,
       handle: c.handle,
-    }));
+    }))
+  );
 } catch {}
 
 interface Props {

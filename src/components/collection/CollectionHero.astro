@@ -5,6 +5,7 @@ import FloofHero from "./heroes/FloofHero.astro"
 import DogsHero from "./heroes/DogsHero.astro"
 import ReadsHero from "./heroes/ReadsHero.astro"
 import DeskHero from "./heroes/DeskHero.astro"
+import FloridaFloofsHero from "./heroes/FloridaFloofsHero.astro"
 
 interface Props {
   variant: HeroVariant
@@ -22,6 +23,8 @@ const { variant, hero, assets, productCount = 0 } = Astro.props
     <ReadsHero hero={hero} assets={assets} productCount={productCount} />
   ) : variant === "desk" ? (
     <DeskHero hero={hero} assets={assets} productCount={productCount} />
+  ) : variant === "floridaFloofs" ? (
+    <FloridaFloofsHero hero={hero} assets={assets} productCount={productCount} />
   ) : (
     <FloofHero hero={hero} />
   )

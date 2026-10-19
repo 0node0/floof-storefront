@@ -39,6 +39,11 @@ const SHELF_COPY: Record<
     heading: "Still on mute, still shopping",
     collectionLabel: "Desk",
   },
+  floridaFloofs: {
+    eyebrow: "More from the shore",
+    heading: "Meet the other locals",
+    collectionLabel: "Florida Floofs",
+  },
 }
 
 export function resolveProductPageTheme(
@@ -55,9 +60,11 @@ export function resolveProductPageTheme(
       ? product.collectionHandle === "pets"
         ? "pets"
         : product.collectionHandle || "dogs"
-      : themeId !== "floof"
-        ? product.collectionHandle || themeId
-        : product.collectionHandle || null
+      : themeId === "floridaFloofs"
+        ? product.collectionHandle || "florida-floofs"
+        : themeId !== "floof"
+          ? product.collectionHandle || themeId
+          : product.collectionHandle || null
 
   const collectionLabel =
     product.collectionTitle ||

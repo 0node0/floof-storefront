@@ -1,10 +1,18 @@
 import type { FloofProduct } from "@/lib/product"
 import {
+  FLORIDA_FLOOF_STICKER_HANDLES,
+  isFloridaFloofStickerHandle,
+} from "@/lib/floridaFloofStickerArt"
+import {
   FLOWER_CROWN_STICKER_HANDLES,
   isFlowerCrownStickerHandle,
 } from "@/lib/flowerCrownStickerArt"
 const FLOWER_CROWN_ORDER = new Map<string, number>(
   FLOWER_CROWN_STICKER_HANDLES.map((handle, index) => [handle, index])
+)
+
+const FLORIDA_FLOOF_ORDER = new Map<string, number>(
+  FLORIDA_FLOOF_STICKER_HANDLES.map((handle, index) => [handle, index])
 )
 
 function isStickerProduct(product: FloofProduct): boolean {
@@ -27,6 +35,11 @@ function flowerCrownRank(slug: string): number {
   return FLOWER_CROWN_ORDER.get(slug) ?? 999
 }
 
+function floridaFloofRank(slug: string): number {
+  if (!isFloridaFloofStickerHandle(slug)) return 999
+  return FLORIDA_FLOOF_ORDER.get(slug) ?? 999
+}
+
 /** Up to `limit` products with art suitable for collection OG cards. */
 export function pickCollectionOgProducts(
   products: FloofProduct[],
@@ -44,6 +57,17 @@ export function pickCollectionOgProducts(
     }
     const rest = eligible.filter((p) => !isFlowerCrownStickerHandle(p.slug))
     return [...crowns, ...rest].slice(0, limit)
+  }
+
+  if (collectionHandle === "florida-floofs") {
+    const stickers = eligible
+      .filter((p) => isFloridaFloofStickerHandle(p.slug))
+      .sort((a, b) => floridaFloofRank(a.slug) - floridaFloofRank(b.slug))
+    if (stickers.length >= limit) {
+      return stickers.slice(0, limit)
+    }
+    const rest = eligible.filter((p) => !isFloridaFloofStickerHandle(p.slug))
+    return [...stickers, ...rest].slice(0, limit)
   }
 
   const stickers = eligible.filter(isStickerProduct)
