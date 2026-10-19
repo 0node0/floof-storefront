@@ -1,18 +1,7 @@
 /* Florida Floofs — Gulf-coast collection landing + cards */
 
-.collection-theme[data-collection-theme="floridaFloofs"]::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.35;
-  background: url(/collections/florida-floofs/wave-doodle.svg) repeat-x left bottom / 320px 24px;
-}
-
 .collection-theme[data-collection-theme="floridaFloofs"] {
   position: relative;
-  z-index: 1;
   background:
     radial-gradient(ellipse 80% 50% at 90% 0%, rgba(91, 168, 160, 0.2), transparent 55%),
     radial-gradient(ellipse 60% 40% at 5% 100%, rgba(224, 122, 95, 0.12), transparent 50%),
@@ -61,16 +50,21 @@
   color: var(--ff-coral, #e07a5f);
   position: relative;
   display: inline-block;
+  padding-bottom: 0.35rem;
+  z-index: 1;
 }
 
 .collection-hero--florida-floofs__wave {
   position: absolute;
-  left: 0;
-  bottom: -0.35rem;
-  width: 100%;
-  max-width: 18rem;
-  height: auto;
-  opacity: 0.85;
+  left: -2%;
+  bottom: -0.15rem;
+  width: 104%;
+  max-width: 20rem;
+  height: 22px;
+  object-fit: contain;
+  opacity: 0.9;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .collection-hero--florida-floofs__lede {
@@ -297,6 +291,8 @@
 }
 
 .collection-catalog__chips--florida {
+  position: relative;
+  z-index: 1;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
 }
@@ -332,8 +328,18 @@
   border-color: var(--color-ink);
 }
 
+.collection-catalog__bar--florida-floofs {
+  position: relative;
+  z-index: 1;
+  background: var(--color-paper);
+  border-radius: 0.5rem;
+  padding-bottom: 0.25rem;
+}
+
 /* Product cards */
 .collection-product-card--floridaFloofs {
+  position: relative;
+  text-decoration: none;
   background: var(--color-paper-2);
   border: 2px solid rgba(31, 61, 56, 0.18);
   border-radius: var(--theme-radius-card, 0.5rem);
@@ -352,9 +358,10 @@
   border-bottom: 2px dashed rgba(31, 61, 56, 0.12);
 }
 
-.collection-product-card__collar-tag--florida {
+.collection-product-card--floridaFloofs .collection-product-card__collar-tag b {
   background: var(--ff-mangrove, #2f5d4a);
   color: var(--color-cream);
+  border-color: rgba(31, 61, 56, 0.85);
 }
 
 .collection-product-card__palmstamp {
