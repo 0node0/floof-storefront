@@ -4,7 +4,7 @@ import {
   type FloridaFloofAnimalSlug,
 } from "./floridaFloofs"
 
-const FLORIDA_FLOOF_STICKER_ART_CACHE_VERSION = "1"
+const FLORIDA_FLOOF_STICKER_ART_CACHE_VERSION = "2"
 
 export const FLORIDA_FLOOF_STICKER_HANDLES = FLORIDA_FLOOF_ANIMALS.map((a) =>
   floridaFloofStickerHandle(a.slug)
