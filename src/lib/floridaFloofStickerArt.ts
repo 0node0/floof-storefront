@@ -5,7 +5,7 @@ import {
 } from "./floridaFloofs"
 
 /** Bump when sticker display assets or PNG masters change. */
-export const FLORIDA_FLOOF_STICKER_ART_CACHE_VERSION = "3"
+export const FLORIDA_FLOOF_STICKER_ART_CACHE_VERSION = "4"
 
 export const FLORIDA_FLOOF_STICKER_DISPLAY_WIDTHS = {
   strip: 400,
