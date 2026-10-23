@@ -1,0 +1,47 @@
+---
+import type { FloridaFloofAnimalSlug } from "@/lib/floridaFloofs"
+import {
+  floridaFloofStickerDisplayUrls,
+  type FloridaFloofStickerDisplayRole,
+} from "@/lib/floridaFloofStickerArt"
+
+interface Props {
+  animal: FloridaFloofAnimalSlug
+  role: FloridaFloofStickerDisplayRole
+  alt?: string
+  loading?: "lazy" | "eager"
+  decoding?: "async" | "sync" | "auto"
+  class?: string
+  imgClass?: string
+  width?: number
+  height?: number
+}
+
+const {
+  animal,
+  role,
+  alt = "",
+  loading = "lazy",
+  decoding = "auto",
+  class: className,
+  imgClass,
+  width = role === "card" ? 400 : 200,
+  height = role === "card" ? 400 : 200,
+} = Astro.props
+
+const urls = floridaFloofStickerDisplayUrls(animal, role)
+---
+<picture class:list={className}>
+  <source type="image/avif" srcset={urls.avif} />
+  <source type="image/webp" srcset={urls.webp} />
+  <img
+    src={urls.webp}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    decoding={decoding}
+    data-floof-sticker-fallback={urls.png}
+    class:list={["floof-sticker-img", imgClass]}
+  />
+</picture>

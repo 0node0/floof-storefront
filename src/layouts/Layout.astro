@@ -91,5 +91,26 @@ const ogImageAlt = imageAlt ?? `${site.name} — ${site.tagline}`;
     <Footer collections={shopCollections} />
   </div>
   <CartCelebration client:load />
+  <script is:inline>
+    document.addEventListener(
+      "error",
+      (event) => {
+        const img = event.target;
+        if (!(img instanceof HTMLImageElement)) return;
+        const fallback = img.dataset.floofStickerFallback;
+        if (!fallback) return;
+        if (img.dataset.floofStickerRetry === "png") {
+          if (img.dataset.floofStickerRetryBust) return;
+          img.dataset.floofStickerRetryBust = "1";
+          const join = fallback.includes("?") ? "&" : "?";
+          img.src = `${fallback}${join}r=${Date.now()}`;
+          return;
+        }
+        img.dataset.floofStickerRetry = "png";
+        img.src = fallback;
+      },
+      true
+    );
+  </script>
 </body>
 </html>

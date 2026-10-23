@@ -70,6 +70,22 @@ h1, h2, h3, .font-display {
   min-width: 0;
 }
 
+/* Site wordmark — calm mangrove (not accent magenta) */
+#site-logo.site-logo {
+  background: #1f3d38;
+  color: #fffbf5;
+  transition: background-color 140ms ease;
+}
+
+#site-logo.site-logo:hover {
+  background: #2f5d4a;
+}
+
+#site-logo.site-logo:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: -3px;
+}
+
 /* Accent word — solid magenta, never gradient */
 .text-floof-gradient {
   color: var(--color-accent);

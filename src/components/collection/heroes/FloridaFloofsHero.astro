@@ -1,7 +1,7 @@
 ---
 import type { ThemeAwareHeroCopy } from "@/lib/themeHeroCopy"
 import type { ThemeHeroAssets } from "@/lib/collectionThemes"
-import { floridaFloofStaticArtByAnimal } from "@/lib/floridaFloofStickerArt"
+import FloridaFloofStickerImage from "@/components/florida/FloridaFloofStickerImage.astro"
 import type { FloridaFloofAnimalSlug } from "@/lib/floridaFloofs"
 
 interface Props {
@@ -87,13 +87,12 @@ const STRIP_ROTATIONS = [-7, 5, -4, 6, -5, 4, -6, 3, -3, 5, -4, 6]
             class="collection-hero--florida-floofs__strip-item"
             style={`--strip-rotate: ${STRIP_ROTATIONS[i % STRIP_ROTATIONS.length]}deg`}
           >
-            <img
-              src={floridaFloofStaticArtByAnimal(slug)}
+            <FloridaFloofStickerImage
+              animal={slug}
+              role="strip"
               alt=""
-              width="200"
-              height="200"
-              loading={i < 4 ? "eager" : "lazy"}
-              decoding="async"
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding="auto"
             />
           </li>
         ))}

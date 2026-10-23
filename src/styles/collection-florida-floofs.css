@@ -167,7 +167,9 @@
   transition: transform 180ms ease;
 }
 
+.collection-hero--florida-floofs__strip-item picture,
 .collection-hero--florida-floofs__strip-item img {
+  display: block;
   width: clamp(6.5rem, 14vw, 10.5rem);
   height: clamp(6.5rem, 14vw, 10.5rem);
   object-fit: contain;
