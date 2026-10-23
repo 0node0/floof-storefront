@@ -5,6 +5,11 @@ const SPEC_SPLIT_RE =
 
 import { pickPrintfulDesignPreview } from "./printfulDesignImage"
 import { pickStickerCatalogImage } from "./stickerCatalogImage"
+import { animalSlugFromProductHandle } from "./floridaFloofs"
+import {
+  floridaFloofStickerCatalogWebpUrl,
+  isFloridaFloofStickerHandle,
+} from "./floridaFloofStickerArt"
 import { stickerStaticArtUrl } from "./stickerStaticArt"
 
 const CATEGORY_TYPE_LABEL: Record<string, string> = {
@@ -121,6 +126,13 @@ export function deskCatalogImageUrl(product: FloofProduct): string {
 /** PDP / gallery: prefer static sticker art or flat design file, then lifestyle shots. */
 export function productGalleryImages(product: FloofProduct): string[] {
   const staticArt = stickerStaticArtUrl(product.slug)
+  const floridaAnimal = animalSlugFromProductHandle(product.slug)
+  const catalogArt =
+    staticArt &&
+    floridaAnimal &&
+    isFloridaFloofStickerHandle(product.slug)
+      ? floridaFloofStickerCatalogWebpUrl(floridaAnimal)
+      : staticArt
   const fromMedusa =
     product.images?.length > 0
       ? product.images
@@ -128,9 +140,11 @@ export function productGalleryImages(product: FloofProduct): string[] {
         ? [product.image]
         : []
 
-  if (staticArt) {
-    const rest = fromMedusa.filter((url) => url !== staticArt)
-    return [staticArt, ...rest]
+  if (catalogArt) {
+    const rest = fromMedusa.filter(
+      (url) => url !== staticArt && url !== catalogArt
+    )
+    return [catalogArt, ...rest]
   }
 
   if (isStickerProduct(product)) return fromMedusa

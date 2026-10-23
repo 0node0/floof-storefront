@@ -1,6 +1,6 @@
 ---
 import { FLORIDA_FLOOF_ANIMALS } from "@/lib/floridaFloofs"
-import { floridaFloofStaticArtByAnimal } from "@/lib/floridaFloofStickerArt"
+import FloridaFloofStickerImage from "@/components/florida/FloridaFloofStickerImage.astro"
 
 const assetBase = "/collections/florida-floofs"
 ---
@@ -18,11 +18,10 @@ const assetBase = "/collections/florida-floofs"
     {FLORIDA_FLOOF_ANIMALS.map((animal) => (
       <li class="florida-floofs-teaser__tile">
         <div class="florida-floofs-teaser__art">
-          <img
-            src={floridaFloofStaticArtByAnimal(animal.slug)}
+          <FloridaFloofStickerImage
+            animal={animal.slug}
+            role="teaser"
             alt={`${animal.label} flower-crown sticker art`}
-            width="200"
-            height="200"
             loading="lazy"
           />
         </div>
