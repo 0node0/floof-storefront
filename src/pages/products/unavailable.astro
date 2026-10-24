@@ -1,0 +1,26 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Icon from "@/components/Icon.astro";
+
+const slug = Astro.url.searchParams.get("slug");
+const headline = "Shop is taking a short breather";
+const detail = slug
+  ? `We couldn't load "${slug}" right now. Your product is probably still here — our catalog service hiccuped.`
+  : "We couldn't reach the catalog right now. Give it a moment and try again.";
+---
+
+<Layout title="Temporarily unavailable — Floof" description={detail}>
+  <section class="mx-auto max-w-2xl px-6 py-20 text-center">
+    <span class="inline-flex h-16 w-16 items-center justify-center border-[3px] border-ink bg-paper mb-6">
+      <Icon name="spark" class="w-8 h-8" size={32} />
+    </span>
+    <h1 class="font-display text-3xl md:text-4xl text-ink">{headline}</h1>
+    <p class="mt-4 text-lg text-ink-2 normal-case tracking-normal font-normal">{detail}</p>
+    <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+      <a href={slug ? `/products/${slug}` : "/store"} class="btn">
+        Try again
+      </a>
+      <a href="/store" class="btn btn--outline">Browse the shop</a>
+    </div>
+  </section>
+</Layout>
