@@ -6,7 +6,8 @@ import ProductCard from "@/components/ProductCard.astro";
 import ProductJsonLd from "@/components/ProductJsonLd.astro";
 import ThemedProductMedia from "@/components/product/ThemedProductMedia.astro";
 import TrustBar from "@/components/TrustBar.astro";
-import { listProducts, getProduct } from "@/lib/medusa";
+import { listProducts, getProductWithRetry } from "@/lib/medusa";
+import { productCarePanel } from "@/lib/productCare";
 import type { MedusaVariant } from "@/lib/medusa";
 import { mapProduct, categoryLabels, type FloofProduct } from "@/lib/product";
 import {
@@ -33,22 +34,29 @@ let image = "/favicon.svg";
 let related: FloofProduct[] = [];
 let allProducts: FloofProduct[] = [];
 
-try {
-  const { product: raw } = await getProduct(slug || "");
-  if (!raw) return Astro.redirect("/404");
-  product = mapProduct(raw);
-  variants = raw.variants || [];
-  image = product.image || "/favicon.svg";
+const handle = slug || "";
+const { product: raw, fetchFailed } = await getProductWithRetry(handle);
 
-  try {
-    const { products } = await listProducts();
-    allProducts = products.map(mapProduct);
-  } catch {}
-} catch {
-  return Astro.redirect("/404");
+if (fetchFailed) {
+  return Astro.redirect(
+    `/products/unavailable?slug=${encodeURIComponent(handle)}`
+  );
 }
 
+if (!raw) return Astro.redirect("/404");
+
+product = mapProduct(raw);
+variants = raw.variants || [];
+image = product.image || "/favicon.svg";
+
+try {
+  const { products } = await listProducts();
+  allProducts = products.map(mapProduct);
+} catch {}
+
 if (!product) return Astro.redirect("/404");
+
+const carePanel = productCarePanel(product);
 
 const fromParam = Astro.url.searchParams.get("from");
 const pageTheme = resolveProductPageTheme(fromParam, product);
@@ -150,16 +158,19 @@ const cardVariant = isThemed ? pageTheme.themeId : "floof";
                   <p><a href="/shipping-returns" class="text-accent underline">Full shipping & returns policy</a></p>
                 </div>
               </details>
-              <details class="group border-b border-ink/20">
-                <summary class="flex cursor-pointer list-none items-center justify-between font-semibold py-4 text-sm tracking-wide">
-                  Materials & care
-                  <span class="text-muted group-open:rotate-180 transition-transform inline-block" aria-hidden="true">▾</span>
-                </summary>
-                <div class="pb-4 text-sm text-ink-2 space-y-2 leading-relaxed">
-                  <p>Soft retail blanks (tees & hoodies). Exact fabric depends on the style you pick.</p>
-                  <p>Machine wash cold, inside out. Tumble dry low. Do not iron directly on the print.</p>
-                </div>
-              </details>
+              {carePanel.show && (
+                <details class="group border-b border-ink/20">
+                  <summary class="flex cursor-pointer list-none items-center justify-between font-semibold py-4 text-sm tracking-wide">
+                    {carePanel.title}
+                    <span class="text-muted group-open:rotate-180 transition-transform inline-block" aria-hidden="true">▾</span>
+                  </summary>
+                  <div class="pb-4 text-sm text-ink-2 space-y-2 leading-relaxed">
+                    {carePanel.paragraphs.map((paragraph) => (
+                      <p>{paragraph}</p>
+                    ))}
+                  </div>
+                </details>
+              )}
               <details class="group">
                 <summary class="flex cursor-pointer list-none items-center justify-between font-semibold py-4 text-sm tracking-wide">
                   Returns
@@ -255,18 +266,21 @@ const cardVariant = isThemed ? pageTheme.themeId : "floof";
                   <p><a href="/shipping-returns" class="text-accent underline">Full shipping & returns policy</a></p>
                 </div>
               </details>
-              <details class="group border-b-[3px] border-ink">
-                <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-ink py-4 uppercase tracking-wide text-sm">
-                  Materials & care
-                  <span class="text-muted group-open:rotate-180 transition-transform inline-block">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 7l4 4 4-4"/></svg>
-                  </span>
-                </summary>
-                <div class="pb-4 text-sm text-ink-2 space-y-2 leading-relaxed normal-case tracking-normal font-normal">
-                  <p>Soft retail blanks (tees & hoodies). Exact fabric depends on the style you pick.</p>
-                  <p>Machine wash cold, inside out. Tumble dry low. Do not iron directly on the print.</p>
-                </div>
-              </details>
+              {carePanel.show && (
+                <details class="group border-b-[3px] border-ink">
+                  <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-ink py-4 uppercase tracking-wide text-sm">
+                    {carePanel.title}
+                    <span class="text-muted group-open:rotate-180 transition-transform inline-block">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 7l4 4 4-4"/></svg>
+                    </span>
+                  </summary>
+                  <div class="pb-4 text-sm text-ink-2 space-y-2 leading-relaxed normal-case tracking-normal font-normal">
+                    {carePanel.paragraphs.map((paragraph) => (
+                      <p>{paragraph}</p>
+                    ))}
+                  </div>
+                </details>
+              )}
               <details class="group">
                 <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-ink py-4 uppercase tracking-wide text-sm">
                   Returns

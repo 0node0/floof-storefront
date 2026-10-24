@@ -227,13 +227,39 @@ export async function listProducts(): Promise<{
   )
 }
 
-export async function getProduct(
+async function fetchProductByHandle(
   handle: string
-): Promise<{ product: MedusaProduct }> {
+): Promise<MedusaProduct | undefined> {
   const r = await medusaFetch<{ products: MedusaProduct[] }>(
     `/store/products?handle=${encodeURIComponent(handle)}&fields=${PRODUCT_FIELDS}`
   )
-  return { product: r.products?.[0] }
+  return r.products?.[0]
+}
+
+export async function getProduct(
+  handle: string
+): Promise<{ product: MedusaProduct | undefined }> {
+  const product = await fetchProductByHandle(handle)
+  return { product }
+}
+
+/** One retry for transient Medusa/network failures on PDP. */
+export async function getProductWithRetry(
+  handle: string
+): Promise<{ product: MedusaProduct | undefined; fetchFailed: boolean }> {
+  try {
+    const product = await fetchProductByHandle(handle)
+    return { product, fetchFailed: false }
+  } catch (firstError) {
+    try {
+      await new Promise((r) => setTimeout(r, 400))
+      const product = await fetchProductByHandle(handle)
+      return { product, fetchFailed: false }
+    } catch {
+      console.error("getProductWithRetry failed:", firstError)
+      return { product: undefined, fetchFailed: true }
+    }
+  }
 }
 
 export async function listCollections(): Promise<{

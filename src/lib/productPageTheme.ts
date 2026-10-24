@@ -4,6 +4,7 @@ import {
   parseProductFromThemeParam,
   themeIdFromCollectionHandle,
 } from "./collectionThemes"
+import { animalSlugFromProductHandle, isFloridaFloofProductSlug } from "./floridaFloofs"
 import type { FloofProduct } from "./product"
 
 export interface ProductPageThemeContext {
@@ -98,6 +99,73 @@ function relatedShelfLimit(themeId: CollectionThemeId): number {
   return 4
 }
 
+function stableProductSort(a: FloofProduct, b: FloofProduct): number {
+  return a.slug.localeCompare(b.slug)
+}
+
+function hashSlug(slug: string): number {
+  let h = 0
+  for (let i = 0; i < slug.length; i++) {
+    h = (Math.imul(31, h) + slug.charCodeAt(i)) | 0
+  }
+  return Math.abs(h)
+}
+
+function matchesCollectionShelf(
+  p: FloofProduct,
+  themeId: CollectionThemeId,
+  collectionHandle: string | null
+): boolean {
+  if (collectionHandle && p.collectionHandle === collectionHandle) return true
+  if (themeId === "floridaFloofs" && isFloridaFloofProductSlug(p.slug)) {
+    return true
+  }
+  return false
+}
+
+function pickRotatedShelf(
+  pool: FloofProduct[],
+  product: FloofProduct,
+  limit: number,
+  themeId: CollectionThemeId
+): FloofProduct[] {
+  if (pool.length <= limit) return pool
+
+  const sorted = [...pool].sort(stableProductSort)
+  const start = hashSlug(product.slug) % sorted.length
+  const rotated: FloofProduct[] = []
+  for (let i = 0; i < sorted.length; i++) {
+    rotated.push(sorted[(start + i) % sorted.length])
+  }
+
+  if (themeId !== "floridaFloofs") {
+    return rotated.slice(0, limit)
+  }
+
+  const currentAnimal = animalSlugFromProductHandle(product.slug)
+  const picked: FloofProduct[] = []
+  const animalsUsed = new Set<string>()
+
+  for (const candidate of rotated) {
+    if (picked.length >= limit) break
+    const animal = animalSlugFromProductHandle(candidate.slug)
+    if (animal && animal === currentAnimal) continue
+    if (animal && animalsUsed.has(animal)) continue
+    if (animal) animalsUsed.add(animal)
+    picked.push(candidate)
+  }
+
+  if (picked.length < limit) {
+    for (const candidate of rotated) {
+      if (picked.length >= limit) break
+      if (picked.some((p) => p.slug === candidate.slug)) continue
+      picked.push(candidate)
+    }
+  }
+
+  return picked.slice(0, limit)
+}
+
 export function relatedProductsForShelf(
   all: FloofProduct[],
   product: FloofProduct,
@@ -106,13 +174,20 @@ export function relatedProductsForShelf(
 ): FloofProduct[] {
   const limit = relatedShelfLimit(themeId)
   const others = all.filter((p) => p.slug !== product.slug)
-  if (themeId !== "floof" && collectionHandle) {
-    const sameCollection = others.filter(
-      (p) => p.collectionHandle === collectionHandle
+
+  if (themeId !== "floof") {
+    const sameCollection = others.filter((p) =>
+      matchesCollectionShelf(p, themeId, collectionHandle)
     )
-    if (sameCollection.length >= 2) return sameCollection.slice(0, limit)
+    if (sameCollection.length >= 1) {
+      return pickRotatedShelf(sameCollection, product, limit, themeId)
+    }
   }
+
   const sameCategory = others.filter((p) => p.category === product.category)
-  if (sameCategory.length >= 2) return sameCategory.slice(0, limit)
-  return others.slice(0, limit)
+  if (sameCategory.length >= 1) {
+    return pickRotatedShelf(sameCategory, product, limit, themeId)
+  }
+
+  return pickRotatedShelf(others, product, limit, themeId)
 }

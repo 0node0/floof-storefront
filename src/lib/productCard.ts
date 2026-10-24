@@ -149,15 +149,6 @@ export function productGalleryImages(product: FloofProduct): string[] {
 
   if (isStickerProduct(product)) return fromMedusa
 
-  const design = catalogDesignImageUrl(product)
-  if (design && !fromMedusa.includes(design)) {
-    const rest = fromMedusa.filter((url) => url !== design)
-    return [design, ...rest]
-  }
-  if (design && fromMedusa[0] !== design) {
-    const rest = fromMedusa.filter((url) => url !== design)
-    return [design, ...rest]
-  }
-
+  // Mugs, tees, hoodies: keep Medusa / Printful gallery order (mockup first).
   return fromMedusa
 }
